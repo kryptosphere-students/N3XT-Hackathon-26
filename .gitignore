@@ -1,0 +1,28 @@
+# Secrets — never commit (seed phrases, private keys, API keys, ring passwords)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets*
+*.enc
+wallet-cli-session*
+
+# Dependencies & builds
+node_modules/
+dist/
+build/
+out/
+.next/
+cache/
+artifacts/
+coverage/
+__pycache__/
+.venv/
+
+# Tooling & OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.log
