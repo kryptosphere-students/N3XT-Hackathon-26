@@ -1,72 +1,80 @@
-# Ideation — v1 (9 Oct 2026)
+# Ideation
 
-Living document. Decisions are logged in [DECISIONS.md](./DECISIONS.md).
+Last update: 9 Oct 2026. Decisions are logged in [DECISIONS.md](./DECISIONS.md).
 
-## 1. Problem
-Long-term BTC holders sometimes need cash: an apartment deposit, a project, an emergency. Today they face three options:
-- **Sell:** they lose their BTC exposure.
-- **Borrow from a centralized lender:** they hand over their coins. Celsius and BlockFi did not end well.
-- **Borrow in DeFi themselves:** complex, risky (liquidation), and a lot of blind signing.
+## Problem
+
+People who have held BTC for years sometimes need cash, for an apartment deposit or an unexpected bill. They have three options today:
+
+- Sell, and lose their BTC exposure.
+- Borrow from a centralized lender and hand over their coins. Celsius and BlockFi showed how that can end.
+- Borrow in DeFi themselves. It's complex, liquidation is a real risk, and they end up blind signing a lot.
 
 Ledger users self-custody precisely because they want neither to sell nor to hand over their coins.
 
-## 2. Promise
-> Get cash from your BTC without selling it and without handing it to a lender. An AI plans and explains; your Ledger decides.
+## What we're building
 
-*Wording note:* we say "without handing it to a lender", not "to anyone". On Base, BTC is used as cbBTC, a token backed 1:1 by BTC that Coinbase holds. That wrapper is a trust point and we state it openly (see §8).
+Get cash from your BTC without selling it and without handing it to a lender. An AI plans and explains; your Ledger decides.
 
-## 3. Persona and journey (v1)
-**Thomas, 34**, has held 0.4 BTC on a Ledger Flex since 2020. He needs €5,000 in early March and does not want to sell.
+We say "without handing it to a lender", not "without handing it to anyone". On Base, BTC is used as cbBTC, a token that Coinbase backs 1:1 with BTC it holds. That is a trust point, and we say it openly.
 
-1. **Connect:** the Flex is plugged in and the agent reads his accounts (read-only).
-2. **Rules:** Thomas sets his limits (max LTV 30%, max loan). He **signs them on the Flex**, and they are stored **encrypted with the Key Ring**.
-3. **Ask:** "I need €5,000 in early March without selling my BTC."
-4. **Plan, explained:** collateral, loan amount, liquidation price and the drop it represents, estimated cost, and a comparison with selling.
-5. **Check:** deterministic rules approve or block the plan, with the reason.
-6. **Sign:** every transaction is shown in clear on the Flex.
-7. **Cash out:** USDC is sent to his exchange account to get euros.
-8. **Watch, 24/7, read-only:** early proposals with an expiry date; in a crash, the Protection Vault repays automatically within the limits he signed.
-9. **Close:** a repayment plan when Thomas decides.
+## Example user
 
-*Step 3 of ideation: detail how each step is built.*
+Thomas, 34, has held 0.4 BTC on a Ledger Flex since 2020. He needs €5,000 in early March and doesn't want to sell.
 
-## 4. Architecture: three layers
+1. He plugs in his Flex. The agent reads his accounts, read-only.
+2. He sets his limits (max LTV 30%, a max loan amount), signs them on the Flex, and they are stored encrypted with the Key Ring.
+3. He asks: "I need €5,000 in early March without selling my BTC."
+4. The agent shows a plan: collateral, loan, liquidation price and how far the price can fall before it, cost, and what selling would look like instead.
+5. Our code checks the plan against his rules and approves or blocks it, with the reason.
+6. He signs each transaction on the Flex and can read it there.
+7. He sends the USDC to his exchange account to get euros.
+8. The agent keeps watching. If the price drops it warns him early, and its proposals expire. In a crash, the Protection Vault repays part of the loan within the limits he signed.
+9. When he wants out, the agent prepares the repayment.
+
+[SPEC.md](./SPEC.md) explains how each step is built.
+
+## Three layers
+
 | Layer | Role | Can it move funds? |
 |---|---|---|
-| **AI (LLM)** | Understands the need, plans, explains, prepares transactions | No |
-| **Policy engine** (deterministic code + on-chain vault) | Checks every proposal against the signed policy; the vault can only *reduce* risk | Only to repay the user's own debt, within signed limits |
-| **Ledger Flex** | Human approval of every risk-adding action and every policy change | Yes, with a physical confirmation |
+| LLM | Understands the request, plans, explains, prepares transactions | No |
+| Our code and the vault | Check every proposal against the signed rules. The vault can only reduce risk. | Only to repay the user's own debt, within the signed limits |
+| Ledger Flex | The user approves every action that adds risk and every change of rules | Yes, with a press on the device |
 
-**Asymmetric autonomy:** the agent can make you safer on its own. Anything that adds risk needs your Ledger.
+The agent can act alone only to make the user safer. Anything that adds risk needs the Ledger.
 
-**Two Ledger primitives, two jobs:** *the Key Ring stops anyone from reading your data; the Ledger signature stops anyone from changing your rules.*
-- **Key Ring:** the user's profile (holdings, address, goal) and the agent's secrets are stored encrypted under a key derived from the user's Ledger. A breached server leaks nothing readable.
-- **Ledger signature on the policy:** every version of the rules (max LTV, caps) must be signed on the Flex. The policy engine rejects unsigned rules, so neither a prompt injection nor a compromised agent can loosen them silently.
+The Key Ring stops anyone from reading your data; the Ledger signature stops anyone from changing your rules.
 
-### Data the agent relies on (oracles)
-Liquidation on Morpho is decided by **the oracle of the market**, not by the price on an exchange. So:
-- The agent, the policy engine and the Protection Vault all compute LTV with **the same oracle as the Morpho market** (the `oracle` field of the market parameters, read on-chain). The Protection Vault reads it on-chain itself.
-- Off-chain market data (price history, volatility) is used **only for planning and early alerts**, never as the trigger of an on-chain action.
-- Every number the agent explains (liquidation price, LTV) comes from deterministic code, not from the LLM.
+- **Key Ring:** the profile (holdings, address, goal) and the agent's secrets are encrypted with a key derived from the user's Ledger. If the server leaks, nobody can read them.
+- **Signed rules:** each version of the rules is signed on the Flex, and our code ignores rules that aren't signed. A prompt injection or a compromised agent can't loosen them.
 
-## 5. Innovation
-1. **Asymmetric autonomy:** a new kind of agent/human boundary.
-2. **"What the AI told you = what your Ledger shows":** the decoded transaction is checked against the AI's explanation before signing.
-3. **Goal-based, self-custodial credit:** a new Ledger use case built for Ledger's core user.
+## Price data
 
-## 6. Business model
-- **Freemium:** the plan and explanations are free.
-- **Subscription:** 24/7 protection.
-- **Interface fee:** charged when a loan is opened.
-- **Distribution:** inside Ledger Wallet, with revenue sharing.
+Morpho decides liquidations with the market's oracle, not with an exchange price. So the agent, the rules check and the vault all compute the LTV with that same oracle, read on-chain. Off-chain data such as price history or volatility only feeds the plan and the early warnings. It never triggers an on-chain action. Every number shown to the user comes from our code, never from the LLM.
 
-## 7. Value for Ledger
-- The BTC to cbBTC conversion goes through **Ledger's swap**, which earns Ledger fees.
-- **More engagement** on Ledger Wallet.
-- A **showcase for Agent Intent and the Key Ring**.
-- Real-world **DX feedback** on the Agent Stack.
+## What's new
 
-## 8. Out of scope for the hackathon (roadmap)
-- Zero-cost collar and basis trade
-- tBTC (Threshold): BTC held by a decentralized network of signers instead of a single company. It removes the cbBTC trust point.
-- Mobile approvals
+- The agent is autonomous only in the direction that protects the user.
+- What the AI explains has to match what the Ledger will show, and we check it before signing.
+- It gives Ledger's core users a use case built around a cash need, not trading.
+
+## Business model
+
+- Free: the plan and the explanations.
+- Subscription: 24/7 protection.
+- A small fee when a loan is opened.
+- Distribution inside Ledger Wallet, with revenue sharing.
+
+## What Ledger gets out of it
+
+- The BTC to cbBTC conversion can go through Ledger's swap, which earns them fees.
+- People use Ledger Wallet more.
+- A real use case for Agent Intent and the Key Ring.
+- Honest feedback on their developer tools.
+
+## Later, not for the hackathon
+
+- Zero-cost collar and basis trade.
+- tBTC (Threshold), where BTC is held by a network of signers instead of one company.
+- Approvals from a phone.

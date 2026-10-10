@@ -1,17 +1,22 @@
-# Developer-experience feedback — Ledger Agent Stack
+# Developer experience feedback
 
-Ledger Dev Rel reads this first. They ask for blunt feedback. Log friction **as it happens** (date, what you tried, what broke) and write the summary at the end.
+Notes on building with the Ledger Agent Stack. We log problems as they happen and write the summary at the end.
 
-## Summary (write on 13 Oct)
-1. **Where the documentation lost us:**
-2. **The workflow that confused us:**
-3. **The context that was missing:**
-4. **One concrete suggestion:**
+## Summary
 
-## Friction log
-| Date & time | Tool (CLI / Agent Intent / Key Ring / DMK / Clear Signing) | What we tried | What happened (error in a code block if any) | Time lost | Resolved how |
+1. Where the docs lost us:
+2. The workflow that confused us:
+3. What context was missing:
+4. One concrete suggestion:
+
+## Log
+
+| Date | Tool | What we tried | What happened | Time lost | How we fixed it |
 |---|---|---|---|---|---|
-| | | | | | |
+| 9 Oct | Docs | Find which chains Agent Intent and wallet-cli support | Not documented (only "ethereum" appears for EVM). Asked on Discord. | 30 min | Waiting |
+| 9 Oct | Docs | `how_to_use_a_signer` link from the Discord welcome message | 404 (the link has `dmk--ts`, the working URL is `dmk-ts`) | 5 min | Found the right URL |
+| 10 Oct | Docs | Ethereum signer setup | The builder parameter is `dmk` in one page and `sdk` in another | | |
 
 ## What worked well
+
 -

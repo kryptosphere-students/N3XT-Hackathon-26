@@ -1,19 +1,17 @@
 # Disclosure
 
-Required by the hackathon terms: undisclosed pre-existing code, designs or assets, or a project generated in substance by AI, are grounds for disqualification.
+The hackathon started on 7 October 2026 at 15:00 CEST. Everything in this repository and its history was made after that.
 
-## Contest period
-Building started on **7 October 2026, 15:00 CEST**. Everything in this repository and its git history was produced during the contest.
+## Before the hackathon
 
-## Pre-existing work
-The team discussed the idea before the contest and wrote a short concept note (text only: no code, no designs). It is not included here. The scope was redesigned during the hackathon (see [docs/DECISIONS.md](./docs/DECISIONS.md)).
+We had discussed the idea and written a short concept note (text only, no code, no designs). It isn't in this repository. We changed the scope a lot during the hackathon, see [docs/DECISIONS.md](./docs/DECISIONS.md).
 
-No code, designs or assets created before the contest are included in this repository.
+No code, designs or assets from before the hackathon are included here.
 
 ## Third-party code
-Open-source dependencies are declared in the package manifests. Code copied or adapted from documentation or examples is marked with a comment linking to its source.
 
-## Use of AI tools
-We used AI assistants (Claude) as **working tools**: brainstorming, challenging our reasoning, explaining documentation, suggesting code that we then read, tested and adapted, and proofreading English text.
+Dependencies are listed in the package files. Code adapted from documentation or examples has a comment with a link to the source.
 
-The product decisions, the architecture, the financial logic and the integration work are ours. Commits are small and frequent so the history shows how the project was built.
+## AI tools
+
+We used Claude as a tool: to brainstorm, to question our choices, to explain documentation, to suggest code that we then read, tested and changed, and to proofread our English. The product choices, the architecture, the financial logic and the integration are ours. We commit often and in small steps, so the history shows how the project was built.

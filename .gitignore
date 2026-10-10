@@ -1,4 +1,4 @@
-# Secrets — never commit (seed phrases, private keys, API keys, ring passwords)
+# Secrets: never commit seed phrases, private keys, API keys or ring passwords
 .env
 .env.*
 !.env.example
@@ -8,7 +8,7 @@ secrets*
 *.enc
 wallet-cli-session*
 
-# Dependencies & builds
+# Dependencies and builds
 node_modules/
 dist/
 build/
@@ -20,7 +20,7 @@ coverage/
 __pycache__/
 .venv/
 
-# Tooling & OS
+# Editor and OS
 .DS_Store
 .idea/
 .vscode/*

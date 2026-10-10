@@ -1,59 +1,53 @@
-# <Project name>
+# Project name (TBD)
 
-> One-line pitch. *(to finalize after ideation)*
+One-line pitch to come.
 
-Built by **Kryptosphere** for the **Ledger N3XT Hackathon @ Ledger OP3N 2026** · #LedgerN3XTCollab
+Kryptosphere's project for the Ledger N3XT Hackathon at Ledger OP3N 2026. #LedgerN3XTCollab
 
----
-
-## The problem
-<!-- Who suffers, how often, how much it costs them today. 3–4 lines max. -->
+## Problem
 
 ## What it does
-<!-- 3 bullets. What the user experiences, not how it's built. -->
 
 ## Demo
-- 🎥 Video: <link>
-- ▶️ Try it: see [Run it locally](#run-it-locally)
 
-## Who decides what — agent vs. human
-The judges explicitly look for this boundary. Keep this table accurate.
+Video: link to come. To run it yourself, see "Run it locally" below.
 
-| Step | Done by | Ledger primitive |
+## What the agent does and what the human approves
+
+| Step | Who | Ledger part |
 |---|---|---|
-| e.g. Monitor position / risk | Agent (autonomous, read-only) | — |
-| e.g. Prepare a transaction | Agent | Wallet CLI `--dry-run` |
-| e.g. Check it against the user's policy | Deterministic code | Key Ring (encrypted policy) |
-| e.g. Approve and sign | **Human, on the Ledger device** | Clear Signing / Agent Intent |
+| Watch the position | Agent, read-only | |
+| Prepare a transaction | Agent | |
+| Check it against the user's rules | Our code | Key Ring, signed rules |
+| Approve and sign | The user, on the Ledger | Clear Signing |
 
-## Ledger stack used
-<!-- Only list what is actually implemented, with a link to the file where it happens. -->
-- [ ] Ledger Wallet CLI — `path/to/file`
-- [ ] Ledger Agent Intent — `path/to/file`
-- [ ] Ledger Key Ring (LKRP) — `path/to/file`
-- [ ] DMK signer — `path/to/file`
-- [ ] Clear Signing descriptor (ERC-7730) — `path/to/file`
+## Ledger tools used
+
+To fill in with links to the files where each one is used.
 
 ## Architecture
-<!-- One diagram + 5 lines. -->
 
 ## Run it locally
+
 ```bash
-# prerequisites, install, configure (.env from .env.example), run
+# to come
 ```
 
-## Limitations & what's next
-<!-- Be honest: what is mocked, what is out of scope, what the roadmap is. -->
+## Limits and next steps
 
-## Developer-experience feedback
+## Developer experience feedback
+
 See [DX_FEEDBACK.md](./DX_FEEDBACK.md).
 
-## Disclosure (pre-existing work & AI usage)
+## Disclosure
+
 See [DISCLOSURE.md](./DISCLOSURE.md).
 
 ## Team
-- <Name> — engineering · Kryptosphere
-- <Name> — business & product · Kryptosphere
+
+- Name, engineering, Kryptosphere
+- Name, business and product, Kryptosphere
 
 ## License
-MIT — see [LICENSE](./LICENSE).
+
+MIT, see [LICENSE](./LICENSE).

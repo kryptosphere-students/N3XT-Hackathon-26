@@ -1,51 +1,47 @@
-# Decision log
+# Decisions
 
-One entry per decision we validate. Short entries: they become the backbone of the README and the pitch.
+## D1. What the AI does (decided 8 Oct)
 
-## D1 — Role of the AI agent
-- **Status:** ✅ decided (8 Oct)
-- **Options considered:**
-  1. An autonomous agent that pilots positions
-  2. The full Ouroboros protocol (lending + collar + basis trade) with an agent on top
-  3. A pivot to a non-finance idea
-  4. A three-layer copilot
-- **Decision:** a three-layer copilot. **The AI proposes** (understands the need, plans, explains in plain language, prepares transactions). **Deterministic code checks** every proposal against the user's policy. **The Ledger decides:** the human signs on the device.
-- **Why:**
-  - Real problem for Ledger's core user: the long-term BTC holder who wants liquidity without selling and without handing coins to a CeFi lender.
-  - Matches Ledger's "agent proposes, human approves" model and the brief's demand for an explicit agent/human boundary.
-- **Consequences:**
-  - The collar and the basis trade move to the roadmap.
-  - We must answer the "3 a.m. crash" question (see D2).
-  - We never pitch tax: the promise is "keep your BTC exposure".
-- **Hardware:** Ledger Flex.
+We looked at four options: an agent that trades on its own, the full Ouroboros protocol (lending, collar, basis trade) with an agent on top, a non-finance idea, and a copilot.
 
-## D2 — Chain, protocol and autonomy model
-- **Status:** 🟡 proposed (9 Oct). To validate with the team and the Ledger mentors.
-- **Proposal:**
-  - **Base**, with **Morpho Blue** and a **cbBTC/USDC** market. Morpho Blue already has an official Clear Signing descriptor on Base, Base Sepolia and Sepolia (supplyCollateral, borrow, repay, withdrawCollateral).
-  - **Asymmetric autonomy through a "Protection Vault"** that we write. The user funds it with USDC through a plain token transfer. The agent can trigger only one action, `protect()`: repay the user's debt on Morpho, and only when the on-chain LTV is above the threshold the user signed. Morpho lets anyone repay on behalf of a borrower, so the vault needs no permission over the user's position.
-- **Why:** clear signing works out of the box. Morpho is the same infrastructure Coinbase uses for its BTC-backed loans (to cite only once verified). Base gas is cheap.
-- **Known trade-off:** cbBTC is custodied by Coinbase. We say so openly; tBTC (Threshold, which also has descriptors) is on the roadmap.
-- **Demo network (proposed):** **Base Sepolia** as the main demo. Because we deploy our own mock oracle there, we can **simulate a BTC crash live** and show the Protection Vault reacting, which mainnet cannot do on demand. Optional: a short mainnet clip with ~$20 if the testnet display on the Flex is less readable (mock tokens may not show their names). Depends on the mentors' answers.
+We picked the copilot. The AI plans, explains and prepares. Our code checks every proposal against rules the user signed. The user approves on the Ledger.
 
-## D3 — Ledger primitives used (and where)
-- **Status:** 🟡 proposed
-- **DMK + Ethereum signer** (web app, WebHID): every lending transaction, clear-signed on the Flex, plus the signature of each policy version.
-- **Key Ring** (Wallet CLI `ring`): encrypt the user's financial profile and the agent's secrets.
-- **Agent Intent** (stretch goal): the agent proposes the cash-out transfer (USDC to the user's exchange account).
-- **Wallet CLI**: read-only balances; BTC to cbBTC conversion through Ledger's swap if a provider supports the pair.
+Why:
 
-## D4 — MVP scope vs. roadmap
-- **Status:** open (step 3: detail every journey step)
+- The problem is real for Ledger's own users: people who hold BTC, need cash and don't want to sell or trust a lender again.
+- It's the model Ledger pushes (the agent proposes, the human approves), and the brief explicitly asks for a clear line between the two.
 
-## D5 — Business model
-- **Status:** ✅ decided (9 Oct)
-- **Model:**
-  - **Freemium:** the plan and explanations are free.
-  - **Subscription:** 24/7 protection (monitoring plus the Protection Vault).
-  - **Interface fee:** charged when a loan is opened.
-  - **Distribution through Ledger Wallet**, with revenue sharing.
-- **Value for Ledger (to state explicitly):**
-  - The BTC to cbBTC conversion goes through Ledger's swap, which earns Ledger fees.
-  - More engagement on Ledger Wallet.
-  - A showcase for Agent Intent and the Key Ring.
+What we dropped: the collar and the basis trade, now roadmap. We don't talk about taxes. The pitch is about keeping BTC exposure.
+
+Device: Ledger Flex.
+
+## D2. Chain and protocol (proposed 9 Oct, waiting on the mentors)
+
+Base with Morpho Blue and a cbBTC/USDC market. Morpho Blue already has a Clear Signing descriptor on Base, Base Sepolia and Sepolia, so supplyCollateral, borrow and repay show in clear on the Flex.
+
+For the crash case we add a Protection Vault. The user funds it with USDC. The agent can only call `protect()`, which repays the user's Morpho debt when the on-chain LTV goes above the threshold the user signed. Morpho lets anyone repay on behalf of a borrower, so the vault doesn't need any permission on the position.
+
+Downside: Coinbase holds the BTC behind cbBTC. We say so, and tBTC is on the roadmap.
+
+Demo network: Base Sepolia. We control the oracle there, so we can fake a crash live. If test tokens look bad on the Flex, we add a short mainnet clip with about $20.
+
+## D3. Ledger tools and where they go (proposed)
+
+- DMK and the Ethereum signer in the web app: every lending transaction, and the signature of the rules.
+- Key Ring (`wallet-cli ring`): encrypts the user's profile and the agent's secrets.
+- Agent Intent, if we have time: the agent proposes the USDC transfer to the user's exchange account.
+- Wallet CLI: read-only balances, and BTC to cbBTC through Ledger's swap if a provider supports the pair.
+
+## D4. MVP scope (decided 10 Oct)
+
+See [SPEC.md](./SPEC.md), section 1. We checked on-chain that Morpho Blue runs on Base Sepolia with the 86% LLTV and the adaptive IRM enabled, so we can create our own market with mock tokens and a mock oracle. Until the mentors answer on Monday, we build on the assumptions in SPEC.md section 6.
+
+## D5. Business model (decided 9 Oct)
+
+A free tier for the plan and the explanations, a subscription for 24/7 protection, a small fee when a loan is opened, and distribution inside Ledger Wallet with revenue sharing.
+
+For Ledger: swap fees on the BTC to cbBTC conversion, more use of Ledger Wallet, and a real use case for Agent Intent and the Key Ring.
+
+## D6. Project name
+
+Open. Business side decides by Sunday.
