@@ -23,7 +23,7 @@ En tant que **signataire**, je veux **connecter mon Flex depuis le navigateur**,
 - [x] Vérifier l'adresse affichée contre celle de l'écran du Flex.
 
 ## Résultat (11 oct)
-Fonctionne du premier coup dans Chrome sous Windows, Ledger Wallet fermé. Page de test dans `web/` (à déplacer dans `clearing-house-web3/apps/web` avec S-043). Versions : DMK 1.11.0, transport WebHID 1.2.4, signer ETH 1.18.1.
+Fonctionne du premier coup dans Chrome sous Windows, Ledger Wallet fermé. Page de test dans `clearing-house-web3/apps/web` (déplacée par S-043). Versions : DMK 1.11.0, transport WebHID 1.2.4, signer ETH 1.18.1.
 
 ## Dépendances
 - Bloque : S-006, S-007, S-019

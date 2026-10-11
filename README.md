@@ -26,7 +26,7 @@ Orders often arrive by email. An AI agent reads them, drafts the instruction and
 
 ## Status
 
-Documentation and backlog are ready. Flex connection and signing tested on 11 Oct (`web/README.md`). The code starts in `clearing-house-web3/`.
+Documentation and backlog are ready. Flex connection and signing tested on 11 Oct (`clearing-house-web3/apps/web/README.md`). The code starts in `clearing-house-web3/`.
 
 ## Repository layout
 

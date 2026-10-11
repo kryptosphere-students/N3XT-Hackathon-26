@@ -2,9 +2,11 @@
 
 Test page used to check what a Ledger Flex shows before we build the real interface. Vite + React + DMK over WebHID, Chrome only.
 
+From `clearing-house-web3/`:
+
 ```bash
 npm install
-npm run dev
+npm run dev -w apps/web
 ```
 
 Close Ledger Wallet first, otherwise Chrome can't see the device.
