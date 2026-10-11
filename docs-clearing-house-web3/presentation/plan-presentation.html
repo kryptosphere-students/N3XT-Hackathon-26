@@ -1,0 +1,640 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plan de présentation — netting pré-financé</title>
+<style>
+  :root {
+    --bg: #f7f5f0;
+    --panel: #ffffff;
+    --ink: #1d1f24;
+    --muted: #5d6270;
+    --accent: #1f6feb;
+    --accent-soft: #e6efff;
+    --ok: #1a7f4b;
+    --warn: #b35c00;
+    --line: #d9d6cc;
+    --radius: 14px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #14161b; --panel: #1d2028; --ink: #eceef2; --muted: #a2a8b5;
+      --accent: #6aa7ff; --accent-soft: #1d2b44; --ok: #52c583; --warn: #f0a34a; --line: #343946;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #14161b; --panel: #1d2028; --ink: #eceef2; --muted: #a2a8b5;
+    --accent: #6aa7ff; --accent-soft: #1d2b44; --ok: #52c583; --warn: #f0a34a; --line: #343946;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font: 18px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    overflow: hidden;
+  }
+  .deck { position: fixed; inset: 0 0 64px 0; overflow: auto; }
+  .slide {
+    display: none; min-height: 100%; padding: 48px 8vw 32px;
+    max-width: 1100px; margin: 0 auto; flex-direction: column; justify-content: center;
+  }
+  .slide.active { display: flex; }
+  .part {
+    font-size: 13px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--accent); font-weight: 700; margin-bottom: 8px;
+  }
+  h1 { font-size: clamp(30px, 4.6vw, 52px); line-height: 1.12; margin: 0 0 16px; }
+  h2 { font-size: clamp(26px, 3.6vw, 40px); line-height: 1.15; margin: 0 0 18px; }
+  p { margin: 0 0 14px; }
+  .lead { font-size: 22px; color: var(--muted); }
+  .card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 18px 22px; margin: 8px 0;
+  }
+  .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+  .big { font-size: 34px; font-weight: 700; color: var(--accent); }
+  .caption { font-size: 15px; color: var(--muted); }
+  .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 14px 0; }
+  .node {
+    background: var(--accent-soft); color: var(--ink); border-radius: 10px;
+    padding: 12px 16px; font-weight: 600; text-align: center; min-width: 120px;
+  }
+  .node.human { background: #fff1d6; }
+  .node.ledger { background: #dff5e9; }
+  .arrow { font-size: 22px; color: var(--muted); }
+  table { width: 100%; border-collapse: collapse; font-size: 16px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: .04em; }
+  .tag { display: inline-block; font-size: 13px; padding: 2px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+  .tag.warn { background: #ffe9cc; color: var(--warn); }
+  .tag.ok { background: #d9f3e4; color: var(--ok); }
+  ul { padding-left: 22px; margin: 6px 0 14px; }
+  li { margin: 4px 0; }
+  .notes {
+    margin-top: 28px; padding-top: 14px; border-top: 1px dashed var(--line);
+    font-size: 15px; color: var(--muted);
+  }
+  .notes strong { color: var(--ink); }
+  nav.controls {
+    position: fixed; left: 0; right: 0; bottom: 0; height: 64px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 0 16px; background: var(--panel); border-top: 1px solid var(--line);
+  }
+  nav.controls button {
+    font: inherit; font-size: 15px; padding: 8px 14px; border-radius: 8px;
+    border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer;
+  }
+  nav.controls button:disabled { opacity: .4; cursor: default; }
+  .progress { flex: 1; height: 6px; background: var(--line); border-radius: 6px; overflow: hidden; }
+  .progress > div { height: 100%; width: 0; background: var(--accent); transition: width .25s; }
+  .counter { font-variant-numeric: tabular-nums; min-width: 92px; text-align: center; color: var(--muted); font-size: 15px; }
+  @media (max-width: 640px) {
+    .slide { padding: 28px 16px; }
+    table { font-size: 14px; }
+    .flow { gap: 6px; }
+    .node { min-width: 0; padding: 10px 12px; }
+  }
+  .journey { display: grid; grid-template-columns: repeat(auto-fit, minmax(165px, 1fr)); gap: 12px; margin: 16px 0 10px; }
+  .step {
+    background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 14px 14px 12px; position: relative;
+  }
+  .step .num {
+    position: absolute; top: 10px; right: 12px; font-size: 13px; font-weight: 700; color: var(--muted);
+  }
+  .step h3 { margin: 10px 0 8px; font-size: 17px; line-height: 1.25; }
+  .step .today { font-size: 14px; color: var(--muted); margin: 0 0 10px; }
+  .step .with {
+    font-size: 14px; margin: 0; padding: 8px 10px; border-radius: 8px;
+    background: var(--accent-soft); color: var(--ink);
+  }
+  .step.acts { border-color: var(--accent); }
+  .ico {
+    width: 34px; height: 34px; fill: none; stroke: var(--accent); stroke-width: 1.8;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+  .legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 14px; color: var(--muted); }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+  .clients { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin: 14px 0; }
+  .client { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; }
+  .client h3 { margin: 0 0 2px; font-size: 19px; }
+  .client .sub { font-size: 14px; color: var(--muted); margin: 0 0 10px; }
+  .client p { font-size: 15px; margin: 0 0 8px; }
+  .diagram { width: 100%; height: auto; display: block; margin: 6px 0 14px; }
+  .diagram .flows line, .diagram .flows path { stroke: var(--ink); stroke-width: 2.2; fill: none; }
+  .diagram .arrow-head { fill: var(--ink); }
+  .diagram .bx { stroke-width: 1.5; }
+  .diagram .actor { fill: #e6efff; stroke: #8fb0e8; }
+  .diagram .svc { fill: #d4f1e1; stroke: #1a7f4b; stroke-width: 2.5; }
+  .diagram .badge { fill: #ffe9cc; stroke: #b35c00; stroke-width: 1.5; }
+  .diagram .tt { font-size: 15px; font-weight: 700; fill: #1d1f24; text-anchor: middle; }
+  .diagram .ts { font-size: 13px; fill: #3d4250; text-anchor: middle; }
+  .diagram .tb { font-size: 12px; font-weight: 700; fill: #5a2d00; text-anchor: middle; }
+  .diagram .num circle { fill: #fff; stroke: #1d1f24; stroke-width: 2; }
+  .diagram .num text { font-size: 14px; font-weight: 700; fill: #1d1f24; text-anchor: middle; dominant-baseline: central; }
+  .legend-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px 18px; font-size: 15px; margin: 6px 0 16px; }
+  .legend-grid .sw {
+    display: inline-flex; align-items: center; justify-content: center; vertical-align: -5px;
+    width: 28px; height: 20px; border-radius: 5px; border: 1.5px solid var(--ink); margin-right: 8px;
+    font-size: 14px; font-weight: 700; color: var(--ink);
+  }
+  .legend-grid .sw-num { border-radius: 50%; width: 22px; height: 22px; background: #fff; color: #1d1f24; }
+  .legend-grid .sw-arrow { border: none; background: none; font-size: 20px; width: 28px; }
+  .steps { list-style: none; padding: 0; margin: 0 0 12px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px 16px; counter-reset: st; }
+  .steps li {
+    counter-increment: st; position: relative; padding: 10px 12px 10px 46px; border-radius: 10px;
+    background: var(--panel); border: 1px solid var(--line); font-size: 15px; line-height: 1.45;
+  }
+  .steps li::before {
+    content: counter(st); position: absolute; left: 10px; top: 10px; width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent); color: #fff; font-weight: 700; font-size: 14px; text-align: center; line-height: 26px;
+  }
+  .terms { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; margin: 10px 0 14px; }
+  .term { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; }
+  .term h3 { margin: 0 0 8px; font-size: 19px; }
+  .term h3 .tag { font-size: 12px; vertical-align: 2px; }
+  .term p { font-size: 15px; margin: 0 0 8px; }
+  .term .ex { background: var(--accent-soft); border-radius: 8px; padding: 8px 10px; }
+  @media print {
+    body { overflow: visible; background: #fff; color: #000; }
+    .deck { position: static; }
+    .slide { display: flex !important; page-break-after: always; min-height: 90vh; }
+    nav.controls { display: none; }
+    .notes { color: #333; }
+  }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="ic-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></symbol>
+    <symbol id="ic-doc" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 16h6"/></symbol>
+    <symbol id="ic-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+    <symbol id="ic-chart" viewBox="0 0 24 24"><path d="M4 20h16"/><path d="M7 16v-4M12 16V8M17 16v-7"/></symbol>
+    <symbol id="ic-net" viewBox="0 0 24 24"><path d="M4 8h13l-3-3M20 16H7l3 3"/></symbol>
+    <symbol id="ic-cash" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M15 9.5a3.5 3.5 0 1 0 0 5"/><path d="M8.5 11h4M8.5 13h4"/></symbol>
+    <symbol id="ic-proof" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
+    <symbol id="ic-building" viewBox="0 0 24 24"><path d="M4 21h16M6 21V8l6-4 6 4v13"/><path d="M10 12h4M10 16h4"/></symbol>
+  </defs>
+</svg>
+<main class="deck" id="deck">
+
+  <!-- ============ PARTIE 1 : VULGARISATION ============ -->
+
+  <section class="slide" data-part="Partie 1 · Pour tout le monde">
+    <div class="part">Partie 1 · Pour tout le monde</div>
+    <h1>Qui tient le cahier quand on échange ?</h1>
+    <p class="lead">Un service pour que les comptes soient justes, que personne ne triche, et que chacun puisse vérifier.</p>
+    <p class="caption">Projet : POC de netting pré-financé de parts de fonds, avec signature Ledger et agents. Hackathon N3XT × Ledger.</p>
+    <div class="notes"><strong>Notes pour l'orateur.</strong> Ouvrir par la question. Ne pas parler de blockchain avant la slide 7.</div>
+  </section>
+
+  <section class="slide" data-part="Partie 1 · Pour tout le monde">
+    <div class="part">Partie 1 · Pour tout le monde</div>
+    <h2>Un dépositaire central, c'est la maîtresse qui tient le cahier</h2>
+    <div class="card">
+      <p>Imagine une classe où chacun échange des cartes. Il faut savoir <strong>qui a quelle carte</strong>, et s'assurer que l'échange se fait bien.</p>
+      <p>Le <strong>dépositaire central</strong> (en anglais CSD), c'est la maîtresse de cette classe. Elle note qui possède quoi, et elle valide chaque échange.</p>
+    </div>
+    <p class="caption">Dans la vraie finance : les titres et les parts de fonds appartiennent à des personnes. Quelqu'un doit en garder la trace officielle.</p>
+    <div class="notes"><strong>Notes.</strong> La version adulte : le dépositaire central tient le registre des titres et les règlements.</div>
+  </section>
+
+  <section class="slide" data-part="Partie 1 · Pour tout le monde">
+    <div class="part">Partie 1 · Pour tout le monde</div>
+    <h2>Le problème : beaucoup d'échanges, chacun paie à chaque fois</h2>
+    <div class="grid">
+      <div class="card"><div class="big">2</div><p>échanges entre Léa et Tom : 5 billes, puis 3 billes.</p></div>
+      <div class="card"><div class="big">8</div><p>billes qui sortent des poches, alors qu'un petit calcul suffit.</p></div>
+      <div class="card"><div class="big">?</div><p>et si l'un ne peut pas payer à la fin ?</p></div>
+    </div>
+    <p>Chaque paiement prend du temps, et chacun doit avoir les billes sous la main avant de jouer.</p>
+    <div class="notes"><strong>Notes.</strong> Poser la question au public : « Et si on pouvait compter seulement ce qu'on doit vraiment ? »</div>
+  </section>
+
+  <section class="slide" data-part="Partie 1 · Pour tout le monde">
+    <div class="part">Partie 1 · Pour tout le monde</div>
+    <h2>Le netting : on paie seulement la différence</h2>
+    <div class="flow">
+      <div class="node">Léa</div><div class="arrow">→ 5 billes →</div><div class="node">Tom</div>
+    </div>
+    <div class="flow">
+      <div class="node">Tom</div><div class="arrow">→ 3 billes →</div><div class="node">Léa</div>
+    </div>
+    <div class="card">
+      <p>Sans netting : <strong>8 billes</strong> bougent dans la classe.</p>
+      <p>Avec netting : Léa rend la différence, soit <strong>2 billes à Tom</strong>. Une seule petite opération.</p>
+    </div>
+    <p class="caption">Exemple illustratif. Dans le POC, l'équivalent est 100 M€ de flux bruts ramenés à 10 M€ nets (chiffres simulés, voir Q-12).</p>
+    <div class="notes"><strong>Notes.</strong> C'est le cœur du service : moins de mouvements, donc moins de cash bloqué et moins de risque.</div>
+  </section>
+
+  <section class="slide" data-part="Partie 1 · Pour tout le monde">
+    <div class="part">Partie 1 · Pour tout le monde</div>
+    <h2>Le préfinancement : on met ses billes de côté avant de jouer</h2>
+    <div class="card">
+      <p>Avant le jeu, chacun range dans une boîte ce qu'il devra payer. Personne ne peut disparaître avec les billes de l'autre.</p>
+      <p>Ce n'est pas nous qui apportons les billes : chaque participant les met de côté. Le netting réduit seulement ce qu'il faut mettre de côté.</p>
+    </div>
+    <p class="caption">Dans le service : la règle est vérifiée par le code, et le contrat refuse tout règlement sans couverture.</p>
+    <div class="notes"><strong>Notes.</strong> Le préfinancement est une contrainte apportée par les participants, pas un bénéfice du service. Le netting réduit seulement le montant à immobiliser.</div>
+  </section>
+
+  <section class="slide" data-part="Partie 1 · Pour tout le monde">
+    <div class="part">Partie 1 · Pour tout le monde</div>
+    <h2>Je te donne, tu me donnes, en même temps</h2>
+    <div class="flow">
+      <div class="node">Ma carte</div><div class="arrow">⇄</div><div class="node">Ton bonbon</div>
+    </div>
+    <div class="card">
+      <p>Si l'un des deux ne donne pas, <strong>personne ne donne</strong>. C'est l'échange « livraison contre paiement » (DvP en anglais).</p>
+    </div>
+    <p class="caption">Dans le service : parts et cash changent de main dans une seule transaction, ou rien ne change.</p>
+    <div class="notes"><strong>Notes.</strong> Insister sur « atomique » : pas de demi-échange.</div>
+  </section>
+
+  <section class="slide" data-part="Partie 1 · Pour tout le monde">
+    <div class="part">Partie 1 · Pour tout le monde</div>
+    <h2>Le boîtier Ledger : un coffre dont toi seul as la clé</h2>
+    <div class="card">
+      <p>Avant de signer, le boîtier montre sur son petit écran <strong>ce que tu vas signer</strong>.</p>
+      <p>Tu appuies sur le bouton pour dire oui. Personne ne peut signer à ta place, même si l'ordinateur est piraté.</p>
+    </div>
+    <p class="caption">Le boîtier, c'est la confirmation humaine : l'ordinateur propose, la personne décide.</p>
+    <div class="notes"><strong>Notes.</strong> Ici on introduit la confiance matérielle : l'écran du boîtier est le seul affichage fiable.</div>
+  </section>
+
+  <section class="slide" data-part="Partie 1 · Pour tout le monde">
+    <div class="part">Partie 1 · Pour tout le monde</div>
+    <h2>Notre service, en une phrase</h2>
+    <div class="card">
+      <p class="lead">Un logiciel que les banques qui gardent les fonds installent pour faire les comptes plus vite, sans erreur de calcul, et avec une trace que n'importe qui peut vérifier.</p>
+    </div>
+    <p>Il est vendu sous forme de <strong>licence annuelle</strong> et de support, comme un logiciel d'entreprise.</p>
+    <div class="notes"><strong>Notes.</strong> Préciser ce qui n'est pas vendu : l'hébergement, les intégrations spécifiques, la formation.</div>
+  </section>
+
+  <section class="slide" data-part="Partie 1 · Pour tout le monde">
+    <div class="part">Partie 1 · Pour tout le monde</div>
+    <h2>En quoi le service est utile</h2>
+    <div class="grid">
+      <div class="card"><strong>Règlement plus rapide</strong><p>DvP instantané par ordre, ou cycle netté au choix.</p></div>
+      <div class="card"><strong>Moins de risque</strong><p>Pas de livraison sans paiement, pas de signature sans écran.</p></div>
+      <div class="card"><strong>Des comptes vérifiables</strong><p>Une empreinte du lot est publiée, n'importe qui peut la recalculer.</p></div>
+    </div>
+    <div class="notes"><strong>Notes.</strong> Le gain technologique vient de la vitesse, de la sécurité et de la vérifiabilité. La baisse du cash immobilisé par le netting est un gain monétaire pour les participants : à mesurer, et à présenter comme une conséquence.</div>
+  </section>
+
+  <section class="slide" data-part="Partie 1 · Pour tout le monde">
+    <div class="part">Partie 1 · Pour tout le monde</div>
+    <h2>Un agent qui surveille, mais ne touche pas au coffre</h2>
+    <div class="card">
+      <p>L'agent vérifie les prix officiels, signale un écart, et explique ce qu'il voit.</p>
+      <p>Il ne signe rien et ne calcule aucun chiffre. Il n'a pas le droit de toucher au coffre.</p>
+    </div>
+    <div class="notes"><strong>Notes.</strong> Dire clairement où s'arrête l'agent : c'est le critère « frontière » que le jury demande.</div>
+  </section>
+
+    <section class="slide" data-part="Partie 1 · Un rachat, pas à pas">
+    <div class="part">Partie 1 · Un rachat, pas à pas</div>
+    <h2>Le parcours d'un ordre, de bout en bout</h2>
+    <p class="lead">Un porteur demande à racheter ou souscrire des parts. Le schéma montre qui fait quoi, dans quel ordre, et où le service intervient.</p>
+    <svg class="diagram" viewBox="0 0 1100 420" role="img" aria-label="Parcours d'un ordre : porteur, distributeur, agent de transfert, moteur du service, administrateur, gérant et dépositaire">
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" class="arrow-head"/>
+        </marker>
+      </defs>
+
+      <g class="flows">
+        <line x1="170" y1="95" x2="240" y2="95" marker-end="url(#arr)"/>
+        <line x1="400" y1="95" x2="470" y2="95" marker-end="url(#arr)"/>
+        <line x1="630" y1="95" x2="700" y2="95" marker-end="url(#arr)"/>
+        <line x1="890" y1="95" x2="935" y2="95" marker-end="url(#arr)"/>
+        <line x1="550" y1="250" x2="550" y2="142" marker-end="url(#arr)"/>
+        <line x1="795" y1="250" x2="795" y2="162" marker-end="url(#arr)"/>
+        <path d="M1012 140 V390 H150 V142" marker-end="url(#arr)"/>
+      </g>
+
+      <rect class="bx actor" x="10" y="50" width="160" height="90" rx="10"/>
+      <text class="tt" x="90" y="92">Porteur</text>
+      <text class="ts" x="90" y="114">investisseur</text>
+
+      <rect class="bx actor" x="240" y="50" width="160" height="90" rx="10"/>
+      <text class="tt" x="320" y="92">Distributeur</text>
+      <text class="ts" x="320" y="114">teneur de compte</text>
+
+      <rect class="bx actor" x="470" y="50" width="160" height="90" rx="10"/>
+      <text class="tt" x="550" y="92">Agent de transfert</text>
+      <text class="ts" x="550" y="114">registre des porteurs</text>
+
+      <rect class="bx svc" x="700" y="30" width="190" height="130" rx="12"/>
+      <text class="tt" x="795" y="56">Moteur du service</text>
+      <text class="ts" x="795" y="84">[4] mandat vérifié</text>
+      <text class="ts" x="795" y="104">[6] compensation</text>
+      <text class="ts" x="795" y="124">[7] preuve publiée</text>
+      <text class="ts" x="795" y="146">agent IA : contrôle seul</text>
+
+      <rect class="bx actor" x="935" y="50" width="155" height="90" rx="10"/>
+      <text class="tt" x="1012" y="92">Dépositaire</text>
+      <text class="ts" x="1012" y="114">cash et parts</text>
+
+      <rect class="bx actor" x="470" y="250" width="160" height="90" rx="10"/>
+      <text class="tt" x="550" y="292">Administrateur</text>
+      <text class="ts" x="550" y="314">calcule la NAV</text>
+
+      <rect class="bx actor" x="700" y="250" width="190" height="90" rx="10"/>
+      <text class="tt" x="795" y="292">Gérant</text>
+      <text class="ts" x="795" y="314">signe le mandat</text>
+
+      <rect class="badge" x="10" y="150" width="120" height="24" rx="12"/>
+      <text class="tb" x="70" y="166">Signé sur Ledger</text>
+      <rect class="badge" x="700" y="346" width="130" height="24" rx="12"/>
+      <text class="tb" x="765" y="362">Signé sur Ledger</text>
+
+      <text class="ts" x="580" y="412">[7] parts et cash reviennent au porteur</text>
+
+      <g class="num"><circle cx="205" cy="95" r="14"/><text x="205" y="95">1</text></g>
+      <g class="num"><circle cx="435" cy="95" r="14"/><text x="435" y="95">2</text></g>
+      <g class="num"><circle cx="665" cy="95" r="14"/><text x="665" y="95">3</text></g>
+      <g class="num"><circle cx="912" cy="95" r="14"/><text x="912" y="95">7</text></g>
+      <g class="num"><circle cx="550" cy="196" r="14"/><text x="550" y="196">5</text></g>
+      <g class="num"><circle cx="795" cy="206" r="14"/><text x="795" y="206">4</text></g>
+    </svg>
+
+    <div class="legend-grid">
+      <div><span class="sw" style="background:#e6efff;border-color:#8fb0e8"></span><strong>Bleu</strong> : acteur existant. Son fonctionnement ne change pas.</div>
+      <div><span class="sw" style="background:#d4f1e1;border-color:#1a7f4b"></span><strong>Vert</strong> : moteur du service. Code déterministe, agent IA en lecture seule.</div>
+      <div><span class="sw" style="background:#ffe9cc;border-color:#b35c00"></span><strong>Orange</strong> : signature humaine sur le boîtier Ledger.</div>
+      <div><span class="sw sw-arrow">→</span><strong>Flèche</strong> : flux d'ordres, de NAV, de parts ou de cash. La pointe indique le sens.</div>
+      <div><span class="sw sw-num">1</span><strong>Cercle numéroté</strong> : étape détaillée ci-dessous. Les crochets [4], [6], [7] renvoient aux mêmes numéros.</div>
+      <div><span class="sw sw-arrow">↺</span><strong>Boucle du bas</strong> : retour des parts et du cash au porteur.</div>
+    </div>
+
+    <ol class="steps">
+      <li><strong>Ordre (porteur vers distributeur).</strong> Le porteur demande à souscrire (acheter) ou à racheter (revendre) des parts. Il signe son ordre sur le boîtier Ledger : l'écran affiche le fonds et le montant.</li>
+      <li><strong>Transmission (distributeur vers agent de transfert).</strong> Le distributeur transmet l'ordre avant l'heure limite de centralisation. L'agent de transfert tient le registre des porteurs.</li>
+      <li><strong>Entrée dans le moteur.</strong> Les ordres du cycle arrivent dans le moteur du service.</li>
+      <li><strong>Mandat (gérant vers moteur).</strong> Le moteur vérifie chaque ordre contre le mandat signé par le gérant : plafond, fonds autorisés. Un ordre hors mandat est refusé avant d'entrer dans le lot.</li>
+      <li><strong>NAV (administrateur vers agent).</strong> L'administrateur calcule la valeur liquidative du jour. Le service vérifie le calcul et publie l'empreinte des entrées et du résultat.</li>
+      <li><strong>Compensation (dans le moteur).</strong> Les ordres couverts sont regroupés : seul le solde net de chaque participant est réglé (mode netting). En mode instantané, chaque ordre est réglé dès son exécution.</li>
+      <li><strong>Règlement (moteur, dépositaire, porteur).</strong> Parts et cash changent de main ensemble (DvP), chaque participant ayant approuvé sur son boîtier. La racine du lot est publiée pour l'audit.</li>
+    </ol>
+    <p class="caption">L'agent IA contrôle et explique. Il ne signe jamais. Schéma simplifié : les délais réels restent à mesurer (Q-17).</p>
+    <div class="notes"><strong>Notes.</strong> Le même schéma vaut pour une souscription, avec le sens des flux inversé. Insister sur le trait orange : c'est là qu'un humain décide. Le service ne touche ni au calcul de NAV, ni à la décision de racheter.</div>
+  </section>
+
+  <section class="slide" data-part="Partie 1 · Les termes">
+    <div class="part">Partie 1 · Les termes</div>
+    <h2>Porteur, mandat, NAV, compensation</h2>
+    <p class="lead">Quatre mots reviennent dans le parcours. Voici ce qu'ils veulent dire, avec un exemple chiffré.</p>
+    <div class="terms">
+      <div class="term">
+        <h3>Porteur</h3>
+        <p>La personne ou la société qui détient des parts d'un OPCVM. Elle souscrit (achète) ou rachète (revend) ses parts au prix de la NAV du jour. Elle n'agit pas directement sur le fonds : elle passe par son distributeur.</p>
+        <p class="ex"><strong>Exemple</strong> : un porteur qui rachète 1 000 parts à 100 € reçoit environ 100 000 €, hors frais.</p>
+      </div>
+      <div class="term">
+        <h3>Mandat <span class="tag">propre au service</span></h3>
+        <p>Ensemble de règles signées par le gérant : plafond par cycle, fonds autorisés, sens autorisés. Le moteur ne traite que les ordres couverts par un mandat signé. Ce n'est pas le prospectus du fonds, qui reste la référence juridique.</p>
+        <p class="ex"><strong>Exemple</strong> : plafond de 5 M€ par cycle. Un ordre de 6 M€ est refusé avant d'entrer dans le lot.</p>
+      </div>
+      <div class="term">
+        <h3>NAV (valeur liquidative)</h3>
+        <p>Valeur d'une part, calculée par l'administrateur : (actifs moins passifs), divisé par le nombre de parts. Le dépositaire la contrôle. Le service ne la calcule pas : il vérifie le calcul et publie son empreinte.</p>
+        <p class="ex"><strong>Exemple</strong> : (1 000 000 € moins 10 000 €) divisé par 9 900 parts = 100 € par part.</p>
+      </div>
+      <div class="term">
+        <h3>Compensation (netting)</h3>
+        <p>Regrouper les ordres d'un même cycle pour ne régler que le solde net de chaque participant. Le netting ne remplace pas la couverture : chaque solde net doit être couvert par le participant concerné.</p>
+        <p class="ex"><strong>Exemple</strong> : un gérant souscrit pour 10 M€ et rachète pour 4 M€. Il ne règle que 6 M€ net, avec la couverture correspondante. En mode instantané, chaque ordre est réglé seul.</p>
+      </div>
+    </div>
+    <div class="notes"><strong>Notes.</strong> Le mandat est un mot de notre service, pas un terme du monde des fonds : le préciser, pour ne pas le confondre avec le prospectus. Pour la NAV, insister sur le fait que le calcul reste celui de l'administrateur. Pour la compensation, rappeler que le préfinancement est une contrainte apportée par les participants, pas une valeur du service.</div>
+  </section>
+
+<section class="slide" data-part="Partie 1 · Clients visés">
+    <div class="part">Partie 1 · Clients visés</div>
+    <h2>Qui pourrait utiliser le service</h2>
+    <p class="lead">Les acteurs qui administrent les fonds et tiennent les registres, pas seulement les dépositaires centraux.</p>
+    <div class="clients">
+      <div class="client">
+        <svg class="ico"><use href="#ic-building"/></svg>
+        <h3>CACEIS</h3>
+        <p class="sub">Dépositaire et administrateur de fonds</p>
+        <p><span class="tag ok">Référence vérifiée</span></p>
+        <p>Déjà actif sur les parts tokenisées (Amundi, Spiko). Argument : ajouter un moteur de règlement vérifiable à une offre existante.</p>
+      </div>
+      <div class="client">
+        <svg class="ico"><use href="#ic-building"/></svg>
+        <h3>BP2S</h3>
+        <p class="sub">BNP Paribas Securities Services, banque dépositaire</p>
+        <p><span class="tag warn">À qualifier</span></p>
+        <p>Aucune initiative vérifiée sur les fonds tokenisés. Argument : réduire le délai de règlement et la charge de réconciliation.</p>
+      </div>
+      <div class="client">
+        <svg class="ico"><use href="#ic-building"/></svg>
+        <h3>SGSS</h3>
+        <p class="sub">Société Générale Securities Services, dépositaire et administrateur</p>
+        <p><span class="tag warn">À qualifier</span></p>
+        <p>Aucune initiative vérifiée sur les fonds tokenisés. Même argument que pour BP2S, à valider.</p>
+      </div>
+      <div class="client">
+        <svg class="ico"><use href="#ic-building"/></svg>
+        <h3>Autres</h3>
+        <p class="sub">Agents de transfert, administrateurs indépendants, gérants</p>
+        <p><span class="tag warn">À qualifier</span></p>
+        <p>Gérants qui distribuent des parts tokenisées, plateformes de fonds, agents de transfert.</p>
+      </div>
+    </div>
+    <div class="card">
+      <p><strong>Entrée recommandée</strong> : un acteur déjà engagé sur les fonds tokenisés, en pilote. Aucune relation n'est établie avec ces entreprises : tout contact est à qualifier avant d'être présenté comme un partenariat.</p>
+    </div>
+    <div class="notes"><strong>Notes.</strong> Ne citer que CACEIS comme référence vérifiée. BP2S et SGSS sont des cibles possibles, sans initiative vérifiée. Sources : communiqués Amundi et CACEIS, et l'article MarketsMedia sur Spiko (voir la réponse de recherche précédente).</div>
+  </section>
+
+  <!-- ============ PARTIE 2 : TECHNIQUE ============ -->
+
+  <section class="slide" data-part="Partie 2 · Technique">
+    <div class="part">Partie 2 · Technique</div>
+    <h2>Architecture en six couches</h2>
+    <table>
+      <thead><tr><th>Couche</th><th>Rôle</th><th>Qui décide</th></tr></thead>
+      <tbody>
+        <tr><td>Instructions</td><td>Souscription ou rachat en EIP-712, affichée sur le Flex</td><td>Le gérant, sur son Ledger</td></tr>
+        <tr><td>NAV</td><td>Valeur de l'administrateur, mock pour le POC</td><td>Administrateur, puis code audité</td></tr>
+        <tr><td>Moteur de netting</td><td>Code déterministe en bigint : netting, couverture, racine de Merkle</td><td>Code, sans LLM</td></tr>
+        <tr><td>Agents</td><td>Rapprochement NAV, contrôle des instructions, explication</td><td>Aucune signature, mandat signé uniquement</td></tr>
+        <tr><td>Règlement</td><td>Escrow DvP sur Base Sepolia, parts contre cash</td><td>Smart contract</td></tr>
+        <tr><td>Secrets</td><td>Config et clés des agents chiffrées</td><td>Key Ring, repli fichier chiffré</td></tr>
+      </tbody>
+    </table>
+    <div class="notes"><strong>Notes.</strong> Source : <code>cadrage.md</code>, section Architecture. La couche Parts tokenisées (ERC-3643 écarté pour le POC) est simplifiée en token à liste blanche.</div>
+  </section>
+
+  <section class="slide" data-part="Partie 2 · Technique">
+    <div class="part">Partie 2 · Technique</div>
+    <h2>Le flux d'une démo (3 minutes)</h2>
+    <ol>
+      <li>Le gérant A signe ses règles de mandat sur le Flex (EIP-191).</li>
+      <li>A et B soumettent chacun une instruction, signée en EIP-712 (ou EIP-191 en repli).</li>
+      <li>L'agent rapproche la NAV du mock et signale les écarts.</li>
+      <li>Le moteur de netting calcule les soldes nets et vérifie la couverture.</li>
+      <li>Le règlement DvP s'exécute sur Base Sepolia, parts contre cash.</li>
+      <li>Scène d'injection : une dépêche malveillante demande un rachat total. Le mandat bloque, et le Ledger n'est jamais sollicité.</li>
+    </ol>
+    <div class="notes"><strong>Notes.</strong> Source : <code>spec-poc.md</code>, parcours de démo. Le 6e point est la preuve de la frontière.</div>
+  </section>
+
+  <section class="slide" data-part="Partie 2 · Technique">
+    <div class="part">Partie 2 · Technique</div>
+    <h2>Ce qui est signé sur le Ledger, et ce qui ne l'est pas</h2>
+    <table>
+      <thead><tr><th>Action</th><th>Exécutée par</th><th>Approuvée par</th></tr></thead>
+      <tbody>
+        <tr><td>Règles de mandat</td><td>Gérant A</td><td><span class="tag ok">Flex, EIP-191</span></td></tr>
+        <tr><td>Souscription ou rachat</td><td>Gérant A ou B</td><td><span class="tag ok">Flex, EIP-712 ou EIP-191</span></td></tr>
+        <tr><td>Contrôle NAV et explication</td><td>Agent</td><td><span class="tag warn">Aucune, lecture seule</span></td></tr>
+        <tr><td>Règlement DvP</td><td>Préparé par l'agent, à confirmer (Q-07)</td><td><span class="tag ok">Flex de chaque participant</span></td></tr>
+        <tr><td>Demande d'injection</td><td>Dépêche malveillante</td><td><span class="tag ok">Refusée par le mandat, jamais soumise</span></td></tr>
+      </tbody>
+    </table>
+    <div class="notes"><strong>Notes.</strong> Cette table est la réponse à « qu'est-ce que l'agent peut faire seul ? ». Elle suit la règle 12 du dossier de règles.</div>
+  </section>
+
+  <section class="slide" data-part="Partie 2 · Technique">
+    <div class="part">Partie 2 · Technique</div>
+    <h2>Stack figée pour le POC</h2>
+    <div class="grid">
+      <div class="card"><strong>Contrats</strong><p>Solidity, Foundry, Base Sepolia, vérification Basescan.</p></div>
+      <div class="card"><strong>Ledger</strong><p>DMK Ethereum signer en WebHID, Flex. Clear Signing si le test passe, EIP-191 sinon.</p></div>
+      <div class="card"><strong>Secrets</strong><p>wallet-cli ring, ou repli fichier chiffré local.</p></div>
+      <div class="card"><strong>Web</strong><p>Vite, React, viem.</p></div>
+      <div class="card"><strong>Agents</strong><p>Node, TypeScript. <code>claude-opus-5-5</code> appelle des outils en liste blanche et explique. Il ne calcule rien.</p></div>
+      <div class="card"><strong>Netting</strong><p>TypeScript en bigint, sans flottant.</p></div>
+    </div>
+    <div class="notes"><strong>Notes.</strong> Coût LLM estimé : environ 0,02 $ par appel, plafond proposé 50 $ (Q-01). Tarifs vérifiés sur la page Anthropic le 11 octobre 2026.</div>
+  </section>
+
+  <section class="slide" data-part="Partie 2 · Technique">
+    <div class="part">Partie 2 · Technique</div>
+    <h2>Le plan d'exécution, sans dates</h2>
+    <ol>
+      <li><strong>Débloquer</strong> : gouvernance, connexion Flex, test Clear Signing (en premier).</li>
+      <li><strong>En parallèle</strong> : contrats et moteur de netting.</li>
+      <li><strong>Signatures</strong> : règles, instructions, approbations DvP.</li>
+      <li><strong>Agents</strong> : NAV, contrôle, outils LLM, injection.</li>
+      <li><strong>Interface</strong> : instructions, gross contre net, bouton d'attaque.</li>
+      <li><strong>Démo et soumission</strong> : script, vidéo de secours, README, pitch.</li>
+    </ol>
+    <p class="caption">Suivi complet : 42 stories dans <code>stories/</code>. Coupes prévues dans <code>stories/README.md</code>.</p>
+    <div class="notes"><strong>Notes.</strong> Le chemin critique passe par le test Clear Signing. C'est la première tâche.</div>
+  </section>
+
+  <section class="slide" data-part="Partie 2 · Technique">
+    <div class="part">Partie 2 · Technique</div>
+    <h2>Décisions encore ouvertes</h2>
+    <table>
+      <thead><tr><th>Question</th><th>Statut</th></tr></thead>
+      <tbody>
+        <tr><td>originToken Ledger pour le Clear Signing</td><td><span class="tag warn">À demander à Ledger</span></td></tr>
+        <tr><td>Fournisseur LLM et plafond de dépense</td><td><span class="tag warn">Recommandation prête, à valider</span></td></tr>
+        <tr><td>Qui soumet le règlement DvP</td><td><span class="tag warn">Recommandation : humain signe</span></td></tr>
+        <tr><td>Soumission POC seul ou copilote BTC</td><td><span class="tag warn">Décision d'équipe</span></td></tr>
+        <tr><td>Code pré-existant au 7 octobre</td><td><span class="tag warn">Vérifier le copilote BTC</span></td></tr>
+      </tbody>
+    </table>
+    <div class="notes"><strong>Notes.</strong> Détail complet dans <code>QUESTIONS.md</code>.</div>
+  </section>
+
+  <!-- ============ PARTIE 3 : SUITE ============ -->
+
+  <section class="slide" data-part="Partie 3 · Après le hackathon">
+    <div class="part">Partie 3 · Après le hackathon</div>
+    <h2>Ce qui viendra ensuite</h2>
+    <div class="grid">
+      <div class="card"><strong>Agent Intent</strong><p>L'agent propose un transfert de cash vers le compte du participant, validé sur le Ledger.</p></div>
+      <div class="card"><strong>Conformité</strong><p>Parts à transfert restreint type ERC-3643, avec le volet réglementaire.</p></div>
+      <div class="card"><strong>NAV réelle</strong><p>Intégration avec l'administrateur du fonds, pas de mock.</p></div>
+      <div class="card"><strong>Multi-fonds</strong><p>Plusieurs fonds, plusieurs cycles, plusieurs participants.</p></div>
+      <div class="card"><strong>Réseau de règlement</strong><p>Réseau permissionné ou L2 choisi avec le dépositaire, avec confidentialité entre participants.</p></div>
+      <div class="card"><strong>Intégration CSD</strong><p>API, messagerie, ISO 20022.</p></div>
+      <div class="card"><strong>Sécurité</strong><p>Audit externe, plan de continuité, rôle de suspension d'un cycle.</p></div>
+      <div class="card"><strong>NAV on-chain</strong><p>Calcul de la NAV par contrat, avec un oracle de prix et la validation de l'administrateur.</p></div>
+      <div class="card"><strong>Clear Signing complet</strong><p>Descripteurs ERC-7730 pour les schémas de souscription et rachat.</p></div>
+    </div>
+    <div class="notes"><strong>Notes.</strong> Source : <code>cadrage.md</code> (questions ouvertes) et <code>spec-poc.md</code> (hors périmètre).</div>
+  </section>
+
+  <section class="slide" data-part="Partie 3 · Après le hackathon">
+    <div class="part">Partie 3 · Après le hackathon</div>
+    <h2>Les limites, dites clairement</h2>
+    <ul>
+      <li>Testnet uniquement (Base Sepolia). Aucune clé de production.</li>
+      <li>NAV simulée par un mock. Pas de valeur officielle.</li>
+      <li>Pas de contrepartie centrale, pas de fonds de défaut, pas de novation.</li>
+      <li>Repli possible sur EIP-191 si le Clear Signing EIP-712 n'est pas lisible.</li>
+      <li>Repli possible sur un fichier chiffré local si Key Ring ne s'installe pas.</li>
+      <li>Le LLM n'produit ni chiffre ni transaction.</li>
+      <li>Volet réglementaire mis en pause pour le POC.</li>
+    </ul>
+    <div class="notes"><strong>Notes.</strong> Dire les limites soi-même. Le jury note la clarté et la documentation (10 %).</div>
+  </section>
+
+  <section class="slide" data-part="Partie 3 · Après le hackathon">
+    <div class="part">Partie 3 · Après le hackathon</div>
+    <h2>Merci. Questions ?</h2>
+    <p class="lead">Démo en direct, vidéo de secours, et tout le détail dans le dépôt.</p>
+    <div class="card">
+      <p><strong>Pour le jury</strong> : README (frontière agent/humain, adresses, limites), DISCLOSURE.md, DX_FEEDBACK.md.</p>
+    </div>
+    <div class="notes"><strong>Notes.</strong> Deux présentateurs présents à Paris. Celui qui pitche répond aux questions techniques.</div>
+  </section>
+
+</main>
+
+<nav class="controls" aria-label="Navigation">
+  <button id="prev" type="button">← Précédent</button>
+  <div class="progress" aria-hidden="true"><div id="bar"></div></div>
+  <div class="counter" id="counter"></div>
+  <button id="next" type="button">Suivant →</button>
+</nav>
+
+<script>
+  (function () {
+    var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+    var index = 0;
+    var prev = document.getElementById('prev');
+    var next = document.getElementById('next');
+    var bar = document.getElementById('bar');
+    var counter = document.getElementById('counter');
+    var deck = document.getElementById('deck');
+
+    function show(i) {
+      if (i < 0 || i >= slides.length) return;
+      slides[index].classList.remove('active');
+      index = i;
+      slides[index].classList.add('active');
+      deck.scrollTop = 0;
+      prev.disabled = index === 0;
+      next.disabled = index === slides.length - 1;
+      bar.style.width = ((index + 1) / slides.length * 100) + '%';
+      counter.textContent = (index + 1) + ' / ' + slides.length + ' · ' + slides[index].dataset.part;
+      try { history.replaceState(null, '', '#' + (index + 1)); } catch (e) {}
+    }
+
+    prev.addEventListener('click', function () { show(index - 1); });
+    next.addEventListener('click', function () { show(index + 1); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); show(index + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); show(index - 1); }
+    });
+
+    var start = parseInt((location.hash || '').slice(1), 10);
+    show(start >= 1 && start <= slides.length ? start - 1 : 0);
+    slides[index].classList.add('active');
+  })();
+</script>
+</body>
+</html>
