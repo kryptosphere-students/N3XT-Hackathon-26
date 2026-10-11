@@ -1,0 +1,18 @@
+{
+  "name": "@chw3/protocol",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@chw3/engine": "^0.1.0",
+    "viem": "^2.57.4"
+  },
+  "devDependencies": {
+    "vitest": "^5.0.3"
+  }
+}
