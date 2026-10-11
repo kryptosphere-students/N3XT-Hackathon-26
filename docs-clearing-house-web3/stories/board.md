@@ -15,6 +15,15 @@ Vue condensée des 8 epics et des 44 stories. Détail dans chaque fichier.
 | [E-007](E-007-tableau-de-bord.md) | Tableau de bord | S-030 à S-034 | Must | backlog |
 | [E-008](E-008-demo-soumission.md) | Démo, soumission et pitch | S-035 à S-040 | Must | backlog |
 
+## Répartition (D12)
+
+| Qui | Stories |
+|---|---|
+| Mark | Contrats (S-009 à S-014, S-042), signatures (S-007, S-019 à S-022), plomberie de l'agent (S-029, S-027, S-044), interface (S-030 à S-034) |
+| Louis | Moteur (S-015 à S-018), S-026 checkInstruction, contenu de l'agent (prompt système, trois emails de démo), S-024 et S-041 |
+| Coupées | S-025 (vérification de la NAV par le code), S-033 (lien vers l'explorateur) |
+| Bonus | S-023 Key Ring, seulement s'il reste du temps |
+
 ## Stories
 
 | ID | Story | Epic | Priorité | Taille | Statut | Dépend de |
@@ -44,9 +53,9 @@ Vue condensée des 8 epics et des 44 stories. Détail dans chaque fichier.
 | S-020 | Signature EIP-191 des instructions | E-005 | must | M | ready | S-006 |
 | S-021 | Approbation du lot en EIP-191, règlement envoyé par le moteur | E-005 | must | L | backlog | S-007, S-011, S-014, S-020 |
 | S-022 | Refus des instructions et règles non signées | E-005 | must | S | backlog | S-019, S-020 |
-| S-023 | Configuration et clés agents dans Key Ring | E-005 | should | M | backlog | S-008 |
+| S-023 | Configuration et clés agents dans Key Ring | E-005 | bonus | M | backlog | S-008 |
 | S-024 | Mock serveur NAV | E-006 | must | S | backlog | — |
-| S-025 | Agent de rapprochement NAV | E-006 | must | M | backlog | S-024 |
+| S-025 | Agent de rapprochement NAV | E-006 | cut | M | cut | S-024 |
 | S-026 | Contrôle des instructions contre le mandat | E-006 | must | M | backlog | S-020, S-044 |
 | S-027 | Outils LLM en liste blanche | E-006 | must | M | backlog | S-025, S-026, S-029 |
 | S-028 | Scénario d'injection bloqué (email piégé) | E-006 | must | S | backlog | S-027, S-044 |
@@ -55,7 +64,7 @@ Vue condensée des 8 epics et des 44 stories. Détail dans chaque fichier.
 | S-030 | Squelette Vite, React et viem | E-007 | must | XS | backlog | — |
 | S-031 | Vue instructions et statut de signature | E-007 | must | M | backlog | S-020, S-030 |
 | S-032 | Vue gross contre net | E-007 | must | S | backlog | S-015, S-030 |
-| S-033 | Vue statut de règlement et liens explorateur | E-007 | should | S | backlog | S-021 |
+| S-033 | Vue statut de règlement et liens explorateur | E-007 | cut | S | cut | S-021 |
 | S-034 | Bouton scénario d'attaque | E-007 | must | XS | backlog | S-028, S-031 |
 | S-035 | Script de démo de 3 minutes | E-008 | must | XS | backlog | S-021, S-028, S-034 |
 | S-036 | Vidéo de secours | E-008 | must | S | backlog | S-035 |
@@ -66,5 +75,5 @@ Vue condensée des 8 epics et des 44 stories. Détail dans chaque fichier.
 
 ## Compteurs
 
-- Priorité : 41 `must`, 3 `should` (S-008, S-023, S-033). Total 44.
-- Statut : 3 `done` (S-005, S-006, S-043), 3 `ready` (S-004, S-007, S-020), 4 `in-progress` (S-001 à S-003, S-038), 34 `backlog`. Total 44.
+- Priorité : 40 `must`, 1 `should` (S-008), 1 `bonus` (S-023), 2 `cut` (S-025, S-033). Total 44.
+- Statut : 3 `done` (S-005, S-006, S-043), 3 `ready` (S-004, S-007, S-020), 4 `in-progress` (S-001 à S-003, S-038), 2 `cut`, 32 `backlog`. Total 44.

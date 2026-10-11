@@ -50,7 +50,14 @@ The Claude Code configuration (`.claude/`) and our copy of the hackathon brief s
 
 A lot is a list of net positions, one per participant, for one fund. The fund itself is a participant. Each position has a share amount and a cash amount with a sign: positive means the participant receives, negative means it pays or delivers. Shares and cash both use 6 decimals. `navPerUnit` is the cash paid for one share. Cash is rounded down per order, and the fund's line takes the opposite of the sum of the other lines, so every lot sums to zero. The escrow holds prefunded internal balances per participant and settles a lot by moving those balances. Types live in `packages/engine/src/types.ts`.
 
+### D12. Who does what, what is cut, which LLM (12 Oct)
+
+Mark: contracts, signatures, agent plumbing (S-029, S-027, S-044), web interface. Louis: engine (S-015 to S-018), mandate check S-026, agent content (system prompt, three demo emails), NAV mock and hashes (S-024, S-041).
+
+Cut: S-025 (the NAV check is done by code, not by an agent) and S-033 (a link to the block explorer is enough). S-023 Key Ring is a bonus, only if time is left.
+
+The LLM goes through OpenRouter (OpenAI compatible API), not through the Anthropic SDK. Model and fallback model come from `.env`.
+
 ## Proposed, waiting for team validation
 
 - **Device**: one Ledger Flex with three derived accounts (`44'/60'/n'/0/0`).
-- **LLM**: Anthropic API with a spending cap. A smaller model than `claude-opus-5-5` may be enough for tool calls and would answer faster during the demo.
