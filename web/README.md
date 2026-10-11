@@ -1,75 +1,22 @@
-# React + TypeScript + Vite
+# web: Ledger Flex test page
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Test page used to check what a Ledger Flex shows before we build the real interface. Vite + React + DMK over WebHID, Chrome only.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+Close Ledger Wallet first, otherwise Chrome can't see the device.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Results (11 Oct 2026, Ledger Flex, Ethereum app)
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| Test | Result |
+|---|---|
+| Read the address (`getAddress`) | Works. Address shown on the page and checked on the device. |
+| Sign plain text (EIP-191, `signMessage`) | Works. The text is readable on the Flex, line breaks included. |
+| Sign typed data (EIP-712, `signTypedData`) with no descriptor registered | First an opt-in screen for Transaction Check. Then "This transaction cannot be clear-signed, enable blind signing in the settings". We rejected. The app returned `6a80 Invalid data`. |
 
-```
+What we take from it: anything the user must read on the Flex goes through EIP-191 text, or through contracts that already have an ERC-7730 descriptor in the Clear Signing registry. Our own EIP-712 types or our own contracts would need blind signing, which we don't want.
+
+Versions: device-management-kit 1.11.0, device-transport-kit-web-hid 1.2.4, device-signer-kit-ethereum 1.18.1.
