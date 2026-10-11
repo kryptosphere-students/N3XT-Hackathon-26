@@ -26,3 +26,8 @@ __pycache__/
 .vscode/*
 !.vscode/extensions.json
 *.log
+
+# claude skills
+
+.claude/
+ledger-hackathon-docs/

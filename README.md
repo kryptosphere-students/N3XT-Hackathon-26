@@ -1,53 +1,48 @@
-# Project name (TBD)
+# Clearing House web3 · Ledger N3XT Hackathon 2026
 
-One-line pitch to come.
-
-Kryptosphere's project for the Ledger N3XT Hackathon at Ledger OP3N 2026. #LedgerN3XTCollab
-
-## Problem
+A settlement engine for fund units, with Ledger signatures and AI agents. Built by the Kryptosphere team for the Ledger N3XT hackathon (OP3N 2026).
 
 ## What it does
 
-## Demo
+Fund managers sign subscription and redemption orders on a Ledger device. A deterministic engine checks each order against a mandate the manager signed, verifies the NAV, and settles fund units against cash on Base Sepolia, delivery versus payment:
 
-Video: link to come. To run it yourself, see "Run it locally" below.
+- **instant mode**: each order is settled as soon as it is executed;
+- **netting mode**: the orders of a cycle are netted, and only net balances are settled.
 
-## What the agent does and what the human approves
+Orders often arrive by email. An AI agent reads them, drafts the instruction and explains it; our code checks it against the signed mandate, and the manager signs it on the Ledger. Another agent checks the NAV. Agents never sign and never compute an amount.
 
-| Step | Who | Ledger part |
+## Who signs what
+
+| Action | Done by | Approved by |
 |---|---|---|
-| Watch the position | Agent, read-only | |
-| Prepare a transaction | Agent | |
-| Check it against the user's rules | Our code | Key Ring, signed rules |
-| Approve and sign | The user, on the Ledger | Clear Signing |
+| Mandate rules (cap per cycle, allowed funds) | Fund manager | Ledger device, EIP-191 |
+| Draft order from an email | Agent | None, it's only a draft |
+| Subscription or redemption order | Fund manager | Ledger device, EIP-191 text |
+| NAV check and explanation | Agent | None, read only |
+| Netting and coverage check | Deterministic code | None, reproducible |
+| Approval of a lot (what I receive, what I pay) | Each participant | Ledger device, EIP-191 text |
+| DvP settlement transaction | Engine, only once every approval is valid | Signatures published on-chain |
+| Order from a trapped email | Agent drafts it | Refused by the signed mandate, never reaches the device |
 
-## Ledger tools used
+## Status
 
-To fill in with links to the files where each one is used.
+Documentation and backlog are ready. Flex connection and signing tested on 11 Oct (`web/README.md`). The code starts in `clearing-house-web3/`.
 
-## Architecture
+## Repository layout
 
-## Run it locally
+| Path | Content |
+|---|---|
+| `clearing-house-web3/` | POC code: contracts, engine, server, web |
+| `docs-clearing-house-web3/` | Product docs (French): framing, POC spec, technical diagram, backlog, open questions, pitch outline, developer guide |
+| `DISCLOSURE.md` | What existed before the hackathon |
+| `DECISIONS.md` | Decision log |
+| `DX_FEEDBACK.md` | Developer experience log on the Ledger stack |
 
-```bash
-# to come
-```
+## Start here
 
-## Limits and next steps
-
-## Developer experience feedback
-
-See [DX_FEEDBACK.md](./DX_FEEDBACK.md).
-
-## Disclosure
-
-See [DISCLOSURE.md](./DISCLOSURE.md).
-
-## Team
-
-- Name, engineering, Kryptosphere
-- Name, business and product, Kryptosphere
+- Developers: `docs-clearing-house-web3/dev/README.md`
+- Jury: this file, then `DISCLOSURE.md` and `DX_FEEDBACK.md`
 
 ## License
 
-MIT, see [LICENSE](./LICENSE).
+MIT, see `LICENSE`.

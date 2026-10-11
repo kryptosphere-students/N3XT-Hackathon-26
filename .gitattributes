@@ -1,5 +1,0 @@
-# Same line endings for everyone (Windows and Mac)
-* text=auto eol=lf
-*.png binary
-*.jpg binary
-*.mp4 binary
