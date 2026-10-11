@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@chw3/engine": "^0.1.0",
     "@ledgerhq/context-module": "^2.6.0",
     "@ledgerhq/device-management-kit": "^1.11.0",
     "@ledgerhq/device-signer-kit-ethereum": "^1.18.1",
