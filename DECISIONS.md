@@ -46,6 +46,10 @@ Decided by Mark and Louis. The BTC copilot docs stay in the git history.
 
 The Claude Code configuration (`.claude/`) and our copy of the hackathon brief stay on our machines. They are not our product and the brief is Ledger's document.
 
+### D11. Lot format: net balances per participant (11 Oct)
+
+A lot is a list of net positions, one per participant, for one fund. The fund itself is a participant. Each position has a share amount and a cash amount with a sign: positive means the participant receives, negative means it pays or delivers. Shares and cash both use 6 decimals. `navPerUnit` is the cash paid for one share. Cash is rounded down per order, and the fund's line takes the opposite of the sum of the other lines, so every lot sums to zero. The escrow holds prefunded internal balances per participant and settles a lot by moving those balances. Types live in `packages/engine/src/types.ts`.
+
 ## Proposed, waiting for team validation
 
 - **Device**: one Ledger Flex with three derived accounts (`44'/60'/n'/0/0`).
