@@ -1,7 +1,7 @@
 ---
 id: S-026
 epic: E-006
-title: Agent de contrôle des instructions
+title: Contrôle des instructions contre le mandat
 status: backlog
 priority: must
 estimate: M
@@ -22,8 +22,9 @@ En tant que **gestionnaire du fonds**, je veux **que chaque instruction soit con
 - [ ] Faire expliquer le rejet par le LLM, sans nouveau chiffre.
 
 ## Dépendances
-- Bloque : S-027
-- Bloqué par : S-020
+- Bloque : S-027, S-028
+- Bloqué par : S-020, S-044
 
 ## Notes
-- Le contrôle est code, pas LLM. Le LLM ne fait que l'explication.
+- Le contrôle est du code, pas du LLM. Le LLM ne fait que l'explication.
+- Il s'applique aux brouillons de l'agent de prise d'ordres (S-044) comme aux instructions saisies à la main.
