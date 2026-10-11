@@ -5,13 +5,15 @@ import type { Store } from "./store.ts";
 import { registerMandateRoutes } from "./routes/mandates.ts";
 import { registerInstructionRoutes } from "./routes/instructions.ts";
 import { registerNonceRoutes } from "./routes/nonces.ts";
+import { registerConfigRoutes, type ServerConfig } from "./routes/config.ts";
 
-export function buildServer(store: Store) {
+export function buildServer(store: Store, config: ServerConfig) {
   const app = Fastify();
   app.register(cors, { origin: true });
   app.get("/health", async () => ({ ok: true, engine: ENGINE_VERSION }));
   registerMandateRoutes(app, store);
   registerInstructionRoutes(app, store);
   registerNonceRoutes(app, store);
+  registerConfigRoutes(app, config);
   return app;
 }
