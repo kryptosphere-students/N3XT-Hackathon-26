@@ -29,3 +29,5 @@ __pycache__/
 
 # claude skills
 
+.claude/
+ledger-hackathon-docs/
