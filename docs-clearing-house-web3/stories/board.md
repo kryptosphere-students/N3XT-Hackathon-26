@@ -8,7 +8,7 @@ Vue condensée des 8 epics et des 44 stories. Détail dans chaque fichier.
 |---|---|---|---|---|
 | [E-001](E-001-gouvernance-conformite.md) | Gouvernance et conformité | S-001 à S-004, S-043 | Must | in-progress |
 | [E-002](E-002-validation-ledger.md) | Validation Ledger en amont | S-005 à S-008 | Must | in-progress |
-| [E-003](E-003-contrats-testnet.md) | Contrats sur testnet | S-009 à S-014, S-042 | Must | backlog |
+| [E-003](E-003-contrats-testnet.md) | Contrats sur testnet | S-009 à S-014, S-042 | Must | in-progress |
 | [E-004](E-004-moteur-netting.md) | Moteur de netting et NAV | S-015 à S-018, S-041 | Must | backlog |
 | [E-005](E-005-signatures-ledger.md) | Signatures Ledger et garde-fous | S-019 à S-023 | Must | backlog |
 | [E-006](E-006-agents-nav-llm.md) | Agents, NAV et LLM | S-024 à S-029, S-044 | Must | backlog |
@@ -37,13 +37,13 @@ Vue condensée des 8 epics et des 44 stories. Détail dans chaque fichier.
 | S-006 | Test Clear Signing EIP-712 sur Flex (EIP-191 retenu) | E-002 | must | S | done | S-005 |
 | S-007 | Trois comptes dérivés sur le Flex | E-002 | must | XS | ready | S-005 |
 | S-008 | wallet-cli et ring init | E-002 | should | M | backlog | S-005, Q-08 |
-| S-009 | Token de parts à liste blanche | E-003 | must | M | backlog | — |
-| S-010 | Mock cash | E-003 | must | XS | backlog | — |
-| S-011 | Escrow DvP avec préfinancement | E-003 | must | L | backlog | S-009, S-010 |
-| S-012 | Événement LotSettled (hash du lot, hash NAV, signatures) | E-003 | must | S | backlog | S-011 |
-| S-013 | Tests Foundry unitaires et de propriétés | E-003 | must | M | backlog | S-009 à S-012 |
-| S-014 | Déploiement Base Sepolia et vérification | E-003 | must | S | backlog | S-013 |
-| S-042 | Mode instantané et mode netting dans le même moteur | E-003 | must | M | backlog | S-011, S-016 |
+| S-009 | Token de parts à liste blanche | E-003 | must | M | done | — |
+| S-010 | Mock cash | E-003 | must | XS | done | — |
+| S-011 | Escrow DvP avec préfinancement | E-003 | must | L | done | S-009, S-010 |
+| S-012 | Événement LotSettled (hash du lot, hash NAV, signatures) | E-003 | must | S | done | S-011 |
+| S-013 | Tests Foundry unitaires et de propriétés | E-003 | must | M | done | S-009 à S-012 |
+| S-014 | Déploiement Base Sepolia et vérification | E-003 | must | S | in-progress | S-013 |
+| S-042 | Mode instantané et mode netting dans le même moteur | E-003 | must | M | in-progress | S-011, S-016 |
 | S-015 | Soldes nets en bigint | E-004 | must | M | backlog | — |
 | S-016 | Vérification de couverture | E-004 | must | S | backlog | S-015 |
 | S-017 | Hash du lot côté TypeScript | E-004 | must | S | backlog | S-012, S-015 |
@@ -76,4 +76,4 @@ Vue condensée des 8 epics et des 44 stories. Détail dans chaque fichier.
 ## Compteurs
 
 - Priorité : 40 `must`, 1 `should` (S-008), 1 `bonus` (S-023), 2 `cut` (S-025, S-033). Total 44.
-- Statut : 3 `done` (S-005, S-006, S-043), 3 `ready` (S-004, S-007, S-020), 4 `in-progress` (S-001 à S-003, S-038), 2 `cut`, 32 `backlog`. Total 44.
+- Statut : 8 `done` (S-005, S-006, S-009 à S-013, S-043), 3 `ready` (S-004, S-007, S-020), 6 `in-progress` (S-001 à S-003, S-014, S-038, S-042), 2 `cut`, 25 `backlog`. Total 44.
