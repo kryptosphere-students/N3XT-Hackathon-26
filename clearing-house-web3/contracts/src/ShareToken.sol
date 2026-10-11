@@ -19,6 +19,7 @@ contract ShareToken is ERC20, Ownable {
 
     error NotWhitelisted(address participant);
     error NotMinter(address caller);
+    error ZeroAddress();
 
     constructor(string memory name_, string memory symbol_) ERC20(name_, symbol_) Ownable(msg.sender) {}
 
@@ -32,6 +33,7 @@ contract ShareToken is ERC20, Ownable {
     }
 
     function setMinter(address newMinter) external onlyOwner {
+        if (newMinter == address(0)) revert ZeroAddress();
         minter = newMinter;
         emit MinterUpdated(newMinter);
     }
