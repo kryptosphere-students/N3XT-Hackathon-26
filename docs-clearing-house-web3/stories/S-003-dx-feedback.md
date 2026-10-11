@@ -2,7 +2,7 @@
 id: S-003
 epic: E-001
 title: Créer DX_FEEDBACK.md
-status: ready
+status: in-progress
 priority: must
 estimate: XS
 owner: équipe

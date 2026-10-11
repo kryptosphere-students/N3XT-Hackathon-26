@@ -2,7 +2,7 @@
 id: S-002
 epic: E-001
 title: Créer DECISIONS.md et consigner le périmètre
-status: ready
+status: in-progress
 priority: must
 estimate: XS
 owner: équipe

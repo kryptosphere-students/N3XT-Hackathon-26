@@ -10,12 +10,11 @@ Dernière mise à jour : 11 octobre 2026, horizon 48 h. Chaque question porte un
 | Q-02 | Accès Ledger et `originToken` | partiel | Équipe, auprès de Ledger |
 | Q-03 | Clear Signing EIP-712 sur Flex | ouvert | Test S-006 |
 | Q-04 | Soumission : POC seul | ouvert | Équipe |
-| Q-05 | Code pré-existant au 7 octobre | ouvert | Équipe |
+| Q-05 | Code pré-existant au 7 octobre | partiel | Équipe |
 | Q-06 | Un Flex ou deux | partiel | Équipe |
 | Q-07 | Qui soumet et qui approuve le règlement DvP | partiel | Équipe |
 | Q-11 | Conditions d'utilisation de wallet-cli | partiel | Équipe |
 | Q-13 | Repo public et accès du jury | ouvert | Équipe |
-| Q-14 | Emplacement du code | ouvert | Équipe |
 | Q-15 | Taille de l'équipe | ouvert | Équipe |
 | Q-17 | Délai actuel de règlement et qui le fixe | ouvert | Équipe, avec deux interlocuteurs |
 | Q-18 | Qualification de BP2S et SGSS | ouvert | Équipe |
@@ -68,9 +67,9 @@ Le Clear Signing du signer ETH passe par un `originToken` du programme partenair
 
 ## Q-05 — Code pré-existant au 7 octobre
 
-**Statut : ouvert.** Le brief dit qu'un code pré-existant non déclaré entraîne une disqualification. Le POC est né le 10 octobre, après le kickoff : c'est accepté, tant que tout code pré-existant est déclaré. Le copilote BTC n'a pas encore été daté.
+**Statut : partiel.** Le premier commit du dépôt date du 8 octobre 2026 à 09:23, après le kickoff du 7 octobre à 15:00. Les fichiers du copilote BTC (dossier `archive/`, retiré le 11 octobre) sont de la documentation, sans code. Avant le hackathon, seule une note de concept en texte existait, hors du dépôt.
 
-**Action** : dater le premier commit du copilote BTC et le déclarer dans `DISCLOSURE.md` s'il est antérieur au 7 octobre (S-001).
+**Action** : faire valider le brouillon de `DISCLOSURE.md` par l'équipe (S-001).
 
 ---
 
@@ -100,11 +99,6 @@ Le Clear Signing du signer ETH passe par un `originToken` du programme partenair
 
 ---
 
-## Q-14 — Emplacement du code
-
-**Statut : ouvert.** Recommandation : code dans `clearing-house-web3/`, à côté de ce dossier de documentation.
-
----
 
 ## Q-15 — Taille de l'équipe
 
@@ -138,5 +132,6 @@ Le Clear Signing du signer ETH passe par un `originToken` du programme partenair
 | Q-09 | Agent Intent dans le POC | Hors POC, en roadmap. Son envoi ne gère que l'Ethereum mainnet. |
 | Q-10 | Faucet Base Sepolia | Faucet Alchemy : 0,1 ETH par 24 h et par adresse, solde minimal de 0,001 ETH sur Ethereum mainnet. Blast API à éviter. Conditions à revérifier sur https://www.alchemy.com/faucets/base-sepolia au moment du besoin. |
 | Q-12 | Chiffres 100 M€ et 10 M€ | Présentés comme illustratifs dans la spec, la présentation et le tableau de bord (S-032). |
+| Q-14 | Emplacement du code | `clearing-house-web3/`, à côté de la documentation (D5 dans `DECISIONS.md`). |
 | Q-16 | Règles sur les nouveaux projets | Un projet né après le kickoff est accepté. Seule contrainte : déclarer le code pré-existant (Q-05). |
 | — | Cible client | Dépositaires et administrateurs de fonds, CACEIS comme référence. Dépositaires centraux en cible secondaire. Reste la qualification de BP2S et SGSS (Q-18). |

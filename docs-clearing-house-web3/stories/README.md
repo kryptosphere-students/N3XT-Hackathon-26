@@ -19,7 +19,7 @@ Objectif du POC : cycle complet de souscriptions et rachats de parts d'un fonds 
 
 ## Ordre d'exécution
 
-1. **Débloquer** : `S-001` à `S-007` (gouvernance, Flex, Clear Signing). Le test Clear Signing décide du format des instructions.
+1. **Débloquer** : `S-043` (monorepo), puis `S-001` à `S-007` (gouvernance, Flex, Clear Signing). Le test Clear Signing décide du format des instructions.
 2. **En parallèle** : contrats (`S-009` à `S-014`, `S-042`) et netting et NAV (`S-015` à `S-018`, `S-041`).
 3. **Signatures** : `S-019` à `S-022`, puis approbations et règlement `S-021`.
 4. **Agents** : `S-024` à `S-029`.
@@ -60,7 +60,7 @@ Ne jamais couper : `S-006` (la décision EIP-712 ou EIP-191 conditionne tout le 
 ## Hypothèses à confirmer
 
 - Équipe de 2 personnes, à confirmer (`../QUESTIONS.md`, Q-15). Le découpage ci-dessus suppose deux flux parallèles.
-- Code dans `clearing-house-web3/` à côté de ce dossier, conforme au diagramme technique (Q-14).
+- Code dans `clearing-house-web3/` à côté de ce dossier (D5 dans `DECISIONS.md`). Guide développeur : `../dev/README.md`.
 
 ## Index
 

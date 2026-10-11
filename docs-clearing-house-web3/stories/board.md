@@ -1,12 +1,12 @@
 # Tableau de suivi
 
-Vue condensée des 8 epics et des 42 stories. Détail dans chaque fichier.
+Vue condensée des 8 epics et des 43 stories. Détail dans chaque fichier.
 
 ## Epics
 
 | Epic | Titre | Stories | Priorité | Statut |
 |---|---|---|---|---|
-| [E-001](E-001-gouvernance-conformite.md) | Gouvernance et conformité | S-001 à S-004 | Must | ready |
+| [E-001](E-001-gouvernance-conformite.md) | Gouvernance et conformité | S-001 à S-004, S-043 | Must | in-progress |
 | [E-002](E-002-validation-ledger.md) | Validation Ledger en amont | S-005 à S-008 | Must | ready |
 | [E-003](E-003-contrats-testnet.md) | Contrats sur testnet | S-009 à S-014, S-042 | Must | backlog |
 | [E-004](E-004-moteur-netting.md) | Moteur de netting et NAV | S-015 à S-018, S-041 | Must | backlog |
@@ -19,10 +19,11 @@ Vue condensée des 8 epics et des 42 stories. Détail dans chaque fichier.
 
 | ID | Story | Epic | Priorité | Taille | Statut | Dépend de |
 |---|---|---|---|---|---|---|
-| S-001 | DISCLOSURE.md | E-001 | must | XS | ready | — |
-| S-002 | DECISIONS.md, décision de périmètre | E-001 | must | XS | ready | Q-04 |
-| S-003 | DX_FEEDBACK.md | E-001 | must | XS | ready | — |
+| S-001 | DISCLOSURE.md | E-001 | must | XS | in-progress | — |
+| S-002 | DECISIONS.md, décision de périmètre | E-001 | must | XS | in-progress | Q-04 |
+| S-003 | DX_FEEDBACK.md | E-001 | must | XS | in-progress | — |
 | S-004 | Hygiène des secrets | E-001 | must | S | ready | — |
+| S-043 | Initialiser le monorepo | E-001 | must | S | ready | — |
 | S-005 | Connexion WebHID au Flex | E-002 | must | S | ready | — |
 | S-006 | Test Clear Signing EIP-712 sur Flex | E-002 | must | S | ready | S-005 |
 | S-007 | Trois comptes dérivés sur le Flex | E-002 | must | XS | ready | S-005 |
@@ -64,5 +65,5 @@ Vue condensée des 8 epics et des 42 stories. Détail dans chaque fichier.
 
 ## Compteurs
 
-- Priorité : 39 `must`, 3 `should` (S-008, S-023, S-033). Total 42.
-- Statut : 7 `ready` (S-001 à S-007), 1 `in-progress` (S-038), 34 `backlog`. Total 42.
+- Priorité : 40 `must`, 3 `should` (S-008, S-023, S-033). Total 43.
+- Statut : 5 `ready` (S-004 à S-007, S-043), 4 `in-progress` (S-001 à S-003, S-038), 34 `backlog`. Total 43.

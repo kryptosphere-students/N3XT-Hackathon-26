@@ -2,7 +2,7 @@
 id: S-001
 epic: E-001
 title: Créer DISCLOSURE.md
-status: ready
+status: in-progress
 priority: must
 estimate: XS
 owner: équipe

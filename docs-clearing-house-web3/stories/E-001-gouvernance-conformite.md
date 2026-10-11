@@ -1,7 +1,7 @@
 ---
 id: E-001
 title: Gouvernance et conformité
-status: ready
+status: in-progress
 priority: must
 ---
 
@@ -13,6 +13,7 @@ Le dépôt est conforme aux règles du hackathon avant la première ligne de cod
 - [ ] S-002 — DECISIONS.md, décision de périmètre
 - [ ] S-003 — DX_FEEDBACK.md
 - [ ] S-004 — Hygiène des secrets
+- [ ] S-043 — Initialiser le monorepo
 
 ## Critères de complétion
 - Les quatre fichiers de gouvernance existent et sont liés depuis le README.
