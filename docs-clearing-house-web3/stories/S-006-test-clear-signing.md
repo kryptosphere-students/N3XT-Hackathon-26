@@ -19,7 +19,7 @@ En tant que **gérant**, je veux **voir sur mon Flex les champs d'une instructio
 - **EIP-191** (`signMessage`, texte de 4 lignes) : lisible sur le Flex, retours à la ligne compris.
 - **EIP-712** (`signTypedData`, nos propres types, sans descripteur) : d'abord un écran d'activation de Transaction Check, puis « This transaction cannot be clear-signed, enable blind signing ». Refusé. Erreur renvoyée : `6a80 Invalid data`.
 - Conséquence : toute signature humaine passe en EIP-191. Pas d'appel à nos propres contrats depuis le Flex, ils seraient aussi en blind signing (D6 dans `DECISIONS.md`).
-- Détails et versions : `web/README.md`. Friction consignée dans `DX_FEEDBACK.md`.
+- Détails et versions : `clearing-house-web3/apps/web/README.md`. Friction consignée dans `DX_FEEDBACK.md`.
 
 ## Dépendances
 - Bloque : S-020, S-021
