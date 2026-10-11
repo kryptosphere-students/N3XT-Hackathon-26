@@ -2,7 +2,7 @@
 id: S-019
 epic: E-005
 title: Signature EIP-191 des règles de mandat
-status: backlog
+status: in-progress
 priority: must
 estimate: M
 owner: équipe

@@ -2,7 +2,7 @@
 id: S-007
 epic: E-002
 title: Trois comptes dérivés sur le Flex
-status: ready
+status: in-progress
 priority: must
 estimate: XS
 owner: équipe
