@@ -25,4 +25,4 @@ Code adapted from documentation or examples has a comment with a link to the sou
 
 ## AI tools
 
-We used Claude as a tool: to question our choices, to explain documentation, to write and review documentation, and to suggest code that we then read, tested and changed. The product choices, the architecture, the financial logic and the integration are ours.
+We used Claude and Claude Code as tools: to question our choices, to explain documentation, to write and review documentation, and to suggest code that we then read, tested and changed. Our Claude Code configuration stays on our machines and is not part of the submission. The product choices, the architecture, the financial logic and the integration are ours.

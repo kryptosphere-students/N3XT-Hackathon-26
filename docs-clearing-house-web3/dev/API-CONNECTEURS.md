@@ -34,7 +34,7 @@ Chaque appel renvoie `{ observable, cancel }`. Gérer les états `Pending` (inte
 
 Contraintes : Chromium uniquement, HTTPS ou localhost, une seule commande sur le Flex à la fois. Les signatures exactes sont à vérifier dans les types npm : les versions installées (DMK 1.11.0, signer 1.18.1) sont plus récentes que celles documentées dans les skills Ledger.
 
-Référence détaillée : skill `ledger-dmk-signer` (`ledger-hackathon-docs/skills/`).
+Référence détaillée : skill locale `ledger-dmk-signer` (hors dépôt, voir `dev/README.md`).
 
 ### wallet-cli (Key Ring)
 

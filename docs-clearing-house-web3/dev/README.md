@@ -33,8 +33,8 @@ Point d'entrée pour coder le POC. Le produit est décrit dans `../spec-poc.md`,
 - **Conventional Commits**, une branche par story (`feat/S-011-escrow`), lint sans warning.
 - Claude Code ne commite pas et ne pousse pas : c'est l'équipe qui le fait.
 
-Règles complètes : `ledger-hackathon-docs/rules/` (sécurité Ledger, frontière agent/humain, brief).
+Règles complètes : dans la configuration Claude Code locale (hors dépôt).
 
 ## Utiliser les skills Claude Code du projet
 
-Le dossier `.claude/` est exclu du dépôt (`.gitignore`). Les skills Ledger (`ledger-dmk-signer`, `ledger-key-ring`, `ledger-architecture-advisor`…) sont versionnées dans `ledger-hackathon-docs/skills/`. Pour les utiliser, copier ces dossiers dans `.claude/skills/` de votre copie locale, ou dans `~/.claude/skills/`.
+Les dossiers `.claude/` et `ledger-hackathon-docs/` (brief, règles, skills Ledger) restent en local et sont exclus du dépôt (`.gitignore`). Demander une copie à l'équipe.

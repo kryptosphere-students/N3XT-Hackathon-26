@@ -13,10 +13,9 @@ N3XT-Hackathon-26/
 ├── clearing-house-web3/         Code du POC (ci-dessous)
 ├── docs-clearing-house-web3/    Documentation produit, backlog, présentation, guide dev
 │   ├── cadrage.md  spec-poc.md  diagramme-technique.md  QUESTIONS.md
-│   ├── stories/                 8 epics, 43 stories
+│   ├── stories/                 8 epics, 44 stories
 │   ├── presentation/            Plan de présentation HTML
 │   └── dev/                     Ce guide
-└── ledger-hackathon-docs/       Brief du hackathon, règles et skills Ledger
 ```
 
 ## Code du POC (cible après S-043)
