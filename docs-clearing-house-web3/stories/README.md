@@ -1,4 +1,4 @@
-# Suivi Agile — POC netting pré-financé (hackathon Ledger N3XT)
+# Suivi agile : POC netting pré-financé (hackathon Ledger N3XT)
 
 Source de vérité du backlog : ce dossier `stories/`. Pas de GitHub Issues en parallèle.
 
@@ -22,13 +22,13 @@ Objectif du POC : cycle complet de souscriptions et rachats de parts d'un fonds 
 1. **Débloquer** : `S-043` (monorepo), puis `S-001` à `S-007` (gouvernance, Flex, Clear Signing). Le test Clear Signing décide du format des instructions.
 2. **En parallèle** : contrats (`S-009` à `S-014`, `S-042`) et netting et NAV (`S-015` à `S-018`, `S-041`).
 3. **Signatures** : `S-019` à `S-022`, puis approbations et règlement `S-021`.
-4. **Agents** : `S-024` à `S-029`.
+4. **Agents** : `S-024` à `S-029`, et `S-044` (prise d'ordres par email).
 5. **Interface** : `S-030` à `S-034`.
 6. **Démo et soumission** : `S-035` à `S-040`.
 
 ## Chemin critique
 
-`S-005` (WebHID) → `S-006` (Clear Signing) → `S-020` (signature instructions) → `S-021` (approbations DvP). En parallèle, `S-011` (escrow) doit être prêt avant `S-021`.
+`S-005` et `S-006` sont faits (11 oct, EIP-191 retenu). Reste : `S-020` (signature des instructions) puis `S-021` (approbation du lot et règlement). En parallèle, `S-011` (escrow) doit être prêt avant `S-021`.
 
 ## Workflow
 
@@ -55,7 +55,9 @@ Ordre de coupe, du premier au dernier :
 3. `S-008` wallet-cli (repli : Key Ring coupé, noté dans les limites).
 4. `S-029` plafond LLM réduit au minimum, si le budget est déjà borné au niveau de la console.
 
-Ne jamais couper : `S-006` (la décision EIP-712 ou EIP-191 conditionne tout le reste), `S-022` (refus des signatures invalides), `S-028` (la scène d'attaque), `S-036` (vidéo de secours), `S-039` (soumission).
+Déjà réduit le 11 oct (D8) : un seul événement `LotSettled` au lieu d'une racine de Merkle et d'un événement NAV séparé, stockage en fichiers JSON.
+
+Ne jamais couper : `S-044` (c'est ce qui met l'IA au centre), `S-022` (refus des signatures invalides), `S-028` (la scène d'attaque), `S-036` (vidéo de secours), `S-039` (soumission).
 
 ## Hypothèses à confirmer
 

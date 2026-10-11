@@ -20,7 +20,7 @@ En tant que **auditeur**, je veux **vérifier que la NAV utilisée pour un cycle
 - [ ] Définir le format canonique des entrées (avoirs, prix, date) et du résultat.
 - [ ] Écrire le calcul de NAV déterministe en bigint, sans flottant.
 - [ ] Calculer les deux hashes (keccak256 sur encodage ABI).
-- [ ] Émettre l'événement de publication, à côté de `SettlementRoot` (S-012).
+- [ ] Passer le hash NAV à `settle(lot)`, qui le publie dans `LotSettled` (S-012). Pas d'événement séparé (D8).
 - [ ] Tester le recalcul sur deux jeux d'entrées, dont un modifié.
 
 ## Dépendances
