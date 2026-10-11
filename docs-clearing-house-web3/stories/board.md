@@ -23,7 +23,7 @@ Vue condensée des 8 epics et des 44 stories. Détail dans chaque fichier.
 | S-002 | DECISIONS.md, décision de périmètre | E-001 | must | XS | in-progress | Q-04 |
 | S-003 | DX_FEEDBACK.md | E-001 | must | XS | in-progress | — |
 | S-004 | Hygiène des secrets | E-001 | must | S | ready | — |
-| S-043 | Initialiser le monorepo | E-001 | must | S | ready | — |
+| S-043 | Initialiser le monorepo | E-001 | must | S | done | — |
 | S-005 | Connexion WebHID au Flex | E-002 | must | S | done | — |
 | S-006 | Test Clear Signing EIP-712 sur Flex (EIP-191 retenu) | E-002 | must | S | done | S-005 |
 | S-007 | Trois comptes dérivés sur le Flex | E-002 | must | XS | ready | S-005 |
@@ -67,4 +67,4 @@ Vue condensée des 8 epics et des 44 stories. Détail dans chaque fichier.
 ## Compteurs
 
 - Priorité : 41 `must`, 3 `should` (S-008, S-023, S-033). Total 44.
-- Statut : 2 `done` (S-005, S-006), 4 `ready` (S-004, S-007, S-020, S-043), 4 `in-progress` (S-001 à S-003, S-038), 34 `backlog`. Total 44.
+- Statut : 3 `done` (S-005, S-006, S-043), 3 `ready` (S-004, S-007, S-020), 4 `in-progress` (S-001 à S-003, S-038), 34 `backlog`. Total 44.

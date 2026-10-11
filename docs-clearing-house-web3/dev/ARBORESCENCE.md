@@ -23,6 +23,7 @@ N3XT-Hackathon-26/
 ```
 clearing-house-web3/
 ├── package.json                 Workspaces npm : contracts, packages/*, apps/*
+├── package-lock.json            Un seul lock pour tout le monorepo
 ├── eslint.config.js
 ├── .env.example                 Placeholders (voir PLACEHOLDERS.md)
 ├── contracts/                   Foundry
@@ -40,14 +41,15 @@ clearing-house-web3/
 │       │   ├── types.ts         Instruction, Mandate, NetPosition, Lot, NavInputs
 │       │   ├── netting.ts       S-015  Soldes nets en bigint
 │       │   ├── coverage.ts      S-016  Vérification de couverture
-│       │   ├── merkle.ts        S-017  Racine compatible OpenZeppelin
+│       │   ├── lot-hash.ts      S-017  Hash keccak256 du lot, parité avec le contrat (D8)
 │       │   ├── nav.ts           S-041  Calcul de NAV et empreintes
 │       │   └── index.ts
 │       └── test/                S-018  Tests unitaires et de propriétés
 ├── apps/
 │   ├── server/                  Fastify, agents, mock NAV
 │   │   ├── src/
-│   │   │   ├── index.ts         Démarrage du serveur
+│   │   │   ├── index.ts         Démarrage du serveur (listen)
+│   │   │   ├── app.ts           buildServer, instance Fastify testée avec inject
 │   │   │   ├── store.ts         Stockage JSON dans data/store/
 │   │   │   ├── signatures.ts    S-019, S-020, S-022  Vérification EIP-191 et EIP-712
 │   │   │   ├── routes/
@@ -93,8 +95,8 @@ apps/web ──(WebHID)──► Flex
 apps/server, apps/web ──(RPC)──► Base Sepolia ou anvil
 ```
 
-Le moteur ne dépend de rien d'autre que `viem` et `@openzeppelin/merkle-tree`. Il peut être développé et testé seul, dès le début.
+Le moteur ne dépend de rien d'autre que `viem`. Il peut être développé et testé seul, dès le début.
 
-## À ajouter au `.gitignore` lors de S-043
+## Exclus du dépôt
 
-`clearing-house-web3/data/store/` et `clearing-house-web3/contracts/broadcast/`. `out/` et `cache/` sont déjà exclus.
+`node_modules/`, `out/`, `cache/`, `clearing-house-web3/data/store/` et `clearing-house-web3/contracts/broadcast/` (`.gitignore` à la racine, complété par S-043).

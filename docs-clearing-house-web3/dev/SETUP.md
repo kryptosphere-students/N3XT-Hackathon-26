@@ -1,17 +1,17 @@
 # Installation et initialisation
 
-Versions vérifiées sur le registre npm le 11 octobre 2026. Les commandes de la section 3 n'ont pas encore été exécutées : la première personne qui les lance (S-043) corrige ce fichier et note les écarts dans `DX_FEEDBACK.md`.
+Versions vérifiées sur le registre npm le 11 octobre 2026. La section 3 décrit ce qui a été fait pendant S-043 (11 octobre, Windows 11). Le monorepo existe : un nouveau clone n'a besoin que de la section 1 puis de `npm install` et `npm test` dans `clearing-house-web3/`.
 
 ## 1. Outils à installer sur la machine
 
 | Outil | Version | Pourquoi | Installation | Vérification |
 |---|---|---|---|---|
-| macOS ou Linux | — | Poste de développement | — | — |
+| macOS, Linux ou Windows | | Poste de développement. Sous Windows : Git Bash pour `foundryup`, puis `forge` est dans `%USERPROFILE%\.foundry\bin` (ajouté au PATH utilisateur, rouvrir le terminal) | selon l'OS | aucune |
 | Node.js | 22 LTS | Serveur, moteur, web | nvm, fnm ou installeur officiel | `node --version` |
 | npm | 10 | Workspaces du monorepo | Fourni avec Node | `npm --version` |
 | Foundry | dernière stable | Contrats : `forge`, `cast`, `anvil` | `curl -L https://foundry.paradigm.xyz \| bash` puis `foundryup` | `forge --version` |
-| Navigateur Chromium | Chrome, Edge ou Brave | WebHID n'existe que sur Chromium | — | — |
-| Ledger Wallet (ex-Ledger Live) | à jour | Firmware et apps du Flex | Site Ledger | — |
+| Navigateur Chromium | Chrome, Edge ou Brave | WebHID n'existe que sur Chromium | site du navigateur | aucune |
+| Ledger Wallet (ex-Ledger Live) | à jour | Firmware et apps du Flex | Site Ledger | aucune |
 | wallet-cli | 2.9.0 | Key Ring (`ring`) uniquement | `npm i -g @ledgerhq/wallet-cli@2.9.0` | `wallet-cli --version` |
 | Git, GitHub CLI | récents | Dépôt, PR | Homebrew ou paquets système | `git --version`, `gh --version` |
 | Python 3 et Slither | optionnel | Analyse statique des contrats | `pip install slither-analyzer` | `slither --version` |
@@ -29,11 +29,11 @@ Le Flex doit avoir l'app **Ethereum** et, pour Key Ring, l'app **Ledger Sync** (
 | `@ledgerhq/device-signer-kit-ethereum` | 1.18.1 | web | Exige `@ledgerhq/context-module` ^2.6.0 et le DMK ^1.9.1 |
 | `@ledgerhq/context-module` | 2.6.0 | web | Obligatoire avec le signer Ethereum |
 | `rxjs` | 7.8.2 | web | Version exacte exigée par le DMK |
-| `viem` | 2.57.4 | web, serveur, moteur | Encodage, signatures, RPC |
+| `viem` | 2.57.4 | web, serveur, moteur | Encodage, signatures, RPC. Le hash du lot (D8) se fait avec `keccak256` de viem, pas de bibliothèque Merkle |
 | `react` | 19.3.0 | web | Installé par le template Vite |
 | `vite` | 8.3.4 | web | Template via `create-vite` 9.2.1 |
-| `@openzeppelin/merkle-tree` | 1.0.8 | moteur | Même format de feuilles que `MerkleProof` d'OpenZeppelin |
 | `@openzeppelin/contracts` | 5.6.1 | contrats | Installé par npm, pas en sous-module git |
+| `forge-std` | 1.17.0 | contrats | devDependency npm `github:foundry-rs/forge-std#v1.17.0`, pas de `contracts/lib` |
 | `fastify` | 5.12.5 | serveur | API HTTP |
 | `zod` | 4.6.5 | serveur | Validation des entrées externes |
 | `@anthropic-ai/sdk` | 0.133.0 | serveur | Modèle `claude-opus-5-5` |
@@ -46,118 +46,59 @@ Le Flex doit avoir l'app **Ethereum** et, pour Key Ring, l'app **Ledger Sync** (
 
 Choix faits : **npm workspaces** plutôt que pnpm (npm est déjà installé, une dépendance de moins). **Fichiers JSON** plutôt que SQLite pour le stockage (pas de module natif à compiler, comme le permet la spec).
 
-## 3. Initialiser le monorepo (S-043, une seule fois)
+## 3. Comment le monorepo a été initialisé (S-043, fait le 11 octobre)
 
-À lancer depuis `clearing-house-web3/`. Ne pas commiter avant d'avoir vérifié `git status`.
+Tout se passe dans `clearing-house-web3/`. Les commandes prévues au départ sont gardées ici avec ce qui a changé en pratique.
 
 **Racine et workspaces**
 
-```bash
-npm init -y
-```
-
-```bash
-npm pkg set private=true name=clearing-house-web3 'workspaces[0]=contracts' 'workspaces[1]=packages/*' 'workspaces[2]=apps/*'
-```
-
-**Contrats (Foundry)**
-
-```bash
-forge init contracts --no-git
-```
-
-Si `contracts/lib/forge-std` est absent après cette commande :
-
-```bash
-forge install foundry-rs/forge-std --root contracts --no-git
-```
-
-```bash
-cd contracts && npm init -y && npm pkg set name=@chw3/contracts private=true scripts.test="forge test" scripts.build="forge build" && cd ..
-```
-
-```bash
-npm install -w contracts @openzeppelin/contracts@5.6.1
-```
-
-Créer `contracts/remappings.txt` :
-
-```
-@openzeppelin/contracts/=../node_modules/@openzeppelin/contracts/
-forge-std/=lib/forge-std/src/
-```
-
-**Moteur (TypeScript pur, sans I/O)**
-
-```bash
-mkdir -p packages/engine/src packages/engine/test && cd packages/engine && npm init -y && npm pkg set name=@chw3/engine type=module private=true main=src/index.ts scripts.test="vitest run" scripts.typecheck="tsc --noEmit" && cd ../..
-```
-
-```bash
-npm install -w packages/engine viem@2.57.4 @openzeppelin/merkle-tree@1.0.8
-```
-
-```bash
-npm install -w packages/engine -D vitest@5.0.3 fast-check@4.10.2
-```
-
-**Serveur (API, agents, mock NAV)**
-
-```bash
-mkdir -p apps/server/src apps/server/test && cd apps/server && npm init -y && npm pkg set name=@chw3/server type=module private=true scripts.dev="tsx watch src/index.ts" scripts.test="vitest run" scripts.typecheck="tsc --noEmit" && cd ../..
-```
-
-```bash
-npm install -w apps/server fastify@5.12.5 zod@4.6.5 viem@2.57.4 @anthropic-ai/sdk@0.133.0 @chw3/engine
-```
-
-```bash
-npm install -w apps/server -D tsx@4.23.15 vitest@5.0.3
-```
-
-**Web (Vite, React, DMK)**
-
-```bash
-npm create vite@9.2.1 apps/web -- --template react-ts
-```
-
-```bash
-npm install -w apps/web @ledgerhq/device-management-kit@1.11.0 @ledgerhq/device-transport-kit-web-hid@1.2.4 @ledgerhq/device-signer-kit-ethereum@1.18.1 @ledgerhq/context-module@2.6.0 rxjs@7.8.2 viem@2.57.4 @chw3/engine
-```
-
-Le template Vite apporte sa propre configuration ESLint : la supprimer pour garder une seule configuration à la racine.
-
-**Outils communs à la racine**
+`npm init -y` puis `npm pkg set ...` produisent `"private": "true"` (chaîne, pas booléen), `"type": "commonjs"` et une licence ISC. Le `package.json` racine a donc été écrit à la main : `private: true`, `type: module` (sinon `eslint.config.js` en `import` ne charge pas), licence MIT, workspaces `contracts`, `packages/*`, `apps/*`, scripts `test`, `lint`, `typecheck`.
 
 ```bash
 npm install -D typescript@6.0.3 eslint@10.12.0 typescript-eslint@8.71.1 @types/node
 ```
 
+`eslint.config.js` à la racine, avec `defineConfig` de `eslint/config` et `tseslint.configs.recommended` : fonctionne tel quel avec ESLint 10.
+
+**Nouveau workspace : écrire le `package.json` à la main**
+
+`npm install -w <workspace> <paquet>` sur un workspace qui vient d'être créé n'écrit pas la dépendance dans son `package.json` quand le paquet est déjà présent à la racine (vu avec `viem` et `@openzeppelin/contracts`). Pour chaque workspace, le `package.json` a été écrit directement (nom `@chw3/...`, `private`, scripts, dépendances aux versions ci-dessus), puis un seul `npm install` à la racine.
+
+**Web**
+
+La page de test Flex existait déjà (`web/`, S-005 et S-006, créée avec `create-vite` 9.2.1). Elle a été déplacée avec `git mv` fichier par fichier dans `apps/web` (le `git mv` du dossier échoue sous Windows tant que `node_modules` existe). Supprimés : `eslint.config.js`, `.gitignore` et `package-lock.json` de l'app, et ses devDependencies ESLint. Renommée `@chw3/web`, avec `@ledgerhq/context-module`, `viem` et `@chw3/engine` en plus.
+
+**Moteur** : `packages/engine`, `@chw3/engine`, `viem` seulement. Tests `vitest run`, typecheck `tsc --noEmit`. Le `tsconfig.json` a `allowImportingTsExtensions` pour importer `../src/index.ts` depuis les tests.
+
+**Serveur** : `apps/server`, `@chw3/server`. `src/app.ts` construit l'instance Fastify (`buildServer`), `src/index.ts` l'écoute sur `SERVER_PORT` (8787 par défaut). Les tests importent `app.ts` et utilisent `app.inject`, sans ouvrir de port.
+
+**Contrats**
+
 ```bash
-npm pkg set scripts.test="npm run test --workspaces --if-present" scripts.lint="eslint . --max-warnings 0" scripts.typecheck="npm run typecheck --workspaces --if-present"
+forge init contracts --no-git
 ```
 
-Créer `eslint.config.js` à la racine (syntaxe à vérifier avec ESLint 10) :
+`forge init` copie `forge-std` dans `contracts/lib/forge-std`. Ce dossier a été supprimé : `forge-std` est une devDependency npm (`github:foundry-rs/forge-std#v1.17.0`, dernier tag stable), installée dans `node_modules` avec le reste. Pas de `forge install`, pas de `lib/`. Les exemples `Counter.*` et le README de Foundry ont aussi été supprimés.
 
-```js
-import { defineConfig } from "eslint/config";
-import tseslint from "typescript-eslint";
+`contracts/remappings.txt` :
 
-export default defineConfig(
-  { ignores: ["**/node_modules/**", "**/dist/**", "contracts/**", "data/**"] },
-  tseslint.configs.recommended,
-);
+```
+@openzeppelin/contracts/=../node_modules/@openzeppelin/contracts/
+forge-std/=../node_modules/forge-std/src/
 ```
 
-**Vérification finale**
+Solc refuse par défaut les fichiers hors de `contracts/` (`File outside of allowed directories`). `foundry.toml` a donc `libs = ["../node_modules"]` et fixe `solc_version = "0.8.30"`. `test/Setup.t.sol` vérifie que les deux remappings se résolvent.
+
+**Vérification**
 
 ```bash
 npm install
+npm test
+npm run lint
+npm run typecheck
 ```
 
-```bash
-npm test
-```
+`npm test` enchaîne `forge test`, puis vitest sur le moteur et le serveur. Aucun commit automatique : `forge init --no-git` n'en crée pas.
 
 ## 4. Commandes de développement
 
