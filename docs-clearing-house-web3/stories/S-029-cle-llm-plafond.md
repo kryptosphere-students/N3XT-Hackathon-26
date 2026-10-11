@@ -2,7 +2,7 @@
 id: S-029
 epic: E-006
 title: Clé LLM de test et plafond de dépense
-status: backlog
+status: done
 priority: must
 estimate: XS
 owner: équipe
@@ -27,3 +27,4 @@ En tant que **responsable budget**, je veux **un plafond de dépense sur la clé
 ## Notes
 - Tarifs vérifiés le 11 oct. 2026 : `claude-opus-5-5` à 4 $ / 20 $ par MTok, lecture de cache à 0,20 $. Estimation : environ 0,02 $ par appel.
 - Si l'équipe choisit `claude-haiku-5-5` (environ 25 fois moins cher), le plafond peut baisser. Décision de l'équipe.
+- Fait le 12 octobre (D12) : clé OpenRouter dans `.env` (`OPENROUTER_API_KEY`), plafond de dépense à poser sur le compte OpenRouter, plafond de 500 tokens par appel dans `apps/server/src/agents/config.ts`.

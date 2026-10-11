@@ -11,7 +11,7 @@ Vue condensée des 8 epics et des 44 stories. Détail dans chaque fichier.
 | [E-003](E-003-contrats-testnet.md) | Contrats sur testnet | S-009 à S-014, S-042 | Must | in-progress |
 | [E-004](E-004-moteur-netting.md) | Moteur de netting et NAV | S-015 à S-018, S-041 | Must | backlog |
 | [E-005](E-005-signatures-ledger.md) | Signatures Ledger et garde-fous | S-019 à S-023 | Must | in-progress |
-| [E-006](E-006-agents-nav-llm.md) | Agents, NAV et LLM | S-024 à S-029, S-044 | Must | backlog |
+| [E-006](E-006-agents-nav-llm.md) | Agents, NAV et LLM | S-024 à S-029, S-044 | Must | in-progress |
 | [E-007](E-007-tableau-de-bord.md) | Tableau de bord | S-030 à S-034 | Must | backlog |
 | [E-008](E-008-demo-soumission.md) | Démo, soumission et pitch | S-035 à S-040 | Must | backlog |
 
@@ -57,10 +57,10 @@ Vue condensée des 8 epics et des 44 stories. Détail dans chaque fichier.
 | S-024 | Mock serveur NAV | E-006 | must | S | backlog | — |
 | S-025 | Agent de rapprochement NAV | E-006 | cut | M | cut | S-024 |
 | S-026 | Contrôle des instructions contre le mandat | E-006 | must | M | backlog | S-020, S-044 |
-| S-027 | Outils LLM en liste blanche | E-006 | must | M | backlog | S-025, S-026, S-029 |
+| S-027 | Outils LLM en liste blanche | E-006 | must | M | done | S-029 |
 | S-028 | Scénario d'injection bloqué (email piégé) | E-006 | must | S | backlog | S-027, S-044 |
-| S-029 | Clé LLM de test et plafond de dépense | E-006 | must | XS | backlog | Q-01 |
-| S-044 | Agent de prise d'ordres (email vers brouillon) | E-006 | must | M | backlog | S-027, S-029 |
+| S-029 | Clé LLM de test et plafond de dépense | E-006 | must | XS | done | Q-01 |
+| S-044 | Agent de prise d'ordres (email vers brouillon) | E-006 | must | M | done | S-027, S-029 |
 | S-030 | Squelette Vite, React et viem | E-007 | must | XS | backlog | — |
 | S-031 | Vue instructions et statut de signature | E-007 | must | M | backlog | S-020, S-030 |
 | S-032 | Vue gross contre net | E-007 | must | S | backlog | S-015, S-030 |
@@ -76,4 +76,4 @@ Vue condensée des 8 epics et des 44 stories. Détail dans chaque fichier.
 ## Compteurs
 
 - Priorité : 40 `must`, 1 `should` (S-008), 1 `bonus` (S-023), 2 `cut` (S-025, S-033). Total 44.
-- Statut : 9 `done` (S-005, S-006, S-009 à S-013, S-022, S-043), 1 `ready` (S-004), 9 `in-progress` (S-001 à S-003, S-007, S-014, S-019, S-020, S-038, S-042), 2 `cut`, 23 `backlog`. Total 44.
+- Statut : 12 `done` (S-005, S-006, S-009 à S-013, S-022, S-027, S-029, S-043, S-044), 1 `ready` (S-004), 9 `in-progress` (S-001 à S-003, S-007, S-014, S-019, S-020, S-038, S-042), 2 `cut`, 20 `backlog`. Total 44.

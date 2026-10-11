@@ -2,7 +2,7 @@
 id: S-044
 epic: E-006
 title: Agent de prise d'ordres (email vers instruction en brouillon)
-status: backlog
+status: done
 priority: must
 estimate: M
 owner: Louis
