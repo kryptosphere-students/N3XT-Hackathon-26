@@ -2,10 +2,10 @@
 id: S-005
 epic: E-002
 title: Connexion WebHID au Flex
-status: ready
+status: done
 priority: must
 estimate: S
-owner: équipe
+owner: Mark
 ---
 
 ## User story
@@ -17,15 +17,17 @@ En tant que **signataire**, je veux **connecter mon Flex depuis le navigateur**,
 - **Étant donné** un clic absent (appel au chargement de la page), **Quand** la page se charge, **Alors** aucune fenêtre n'apparaît : l'appel doit venir d'un geste utilisateur.
 
 ## Subtasks
-- [ ] Mettre le Flex à jour via Ledger Live, puis installer l'app Ethereum.
-- [ ] Créer une page minimale avec `DeviceManagementKitBuilder` et `webHidTransportFactory`.
-- [ ] Appeler `startDiscovering` et `connect` depuis un clic.
-- [ ] Vérifier l'adresse affichée contre celle de Ledger Live.
+- [x] Mettre le Flex à jour via Ledger Wallet, puis installer l'app Ethereum.
+- [x] Créer une page minimale avec `DeviceManagementKitBuilder` et `webHidTransportFactory`.
+- [x] Appeler `startDiscovering` et `connect` depuis un clic.
+- [x] Vérifier l'adresse affichée contre celle de l'écran du Flex.
+
+## Résultat (11 oct)
+Fonctionne du premier coup dans Chrome sous Windows, Ledger Wallet fermé. Page de test dans `web/` (à déplacer dans `clearing-house-web3/apps/web` avec S-043). Versions : DMK 1.11.0, transport WebHID 1.2.4, signer ETH 1.18.1.
 
 ## Dépendances
 - Bloque : S-006, S-007, S-019
 - Bloqué par : aucune
 
 ## Notes
-- Le Flex est le seul appareil prévu (Q-06). Le DMK escalade s'il en détecte plusieurs.
-- Consigner toute friction dans `DX_FEEDBACK.md` (S-003).
+- Ledger Wallet doit être fermé, sinon Chrome ne voit pas le Flex.
