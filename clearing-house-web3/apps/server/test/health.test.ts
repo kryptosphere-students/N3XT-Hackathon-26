@@ -6,7 +6,7 @@ describe("GET /health", () => {
     const app = testServer();
     const res = await app.inject({ method: "GET", url: "/health" });
     expect(res.statusCode).toBe(200);
-    expect(res.json()).toEqual({ ok: true, engine: "0.1.0" });
+    expect(res.json()).toEqual({ ok: true, engine: "0.1.0", chain: null });
     await app.close();
   });
 });

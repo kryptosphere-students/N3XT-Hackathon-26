@@ -17,6 +17,14 @@ export function listMandates(store: Store): StoredMandate[] {
   return store.read<StoredMandate>(COLLECTION);
 }
 
+// The mandate in force for a participant: the last one it signed (highest nonce).
+export function latestMandate(store: Store, participant: string): Mandate | null {
+  const stored = listMandates(store)
+    .filter((m) => m.participant.toLowerCase() === participant.toLowerCase())
+    .sort((x, y) => y.nonce - x.nonce)[0];
+  return stored ? { ...stored, maxCashPerCycle: BigInt(stored.maxCashPerCycle) } : null;
+}
+
 // S-019: a mandate is stored only if the Flex signature matches its text.
 // S-022: no signature or a signature from another key gives 401, a reused nonce 409.
 export function registerMandateRoutes(app: FastifyInstance, store: Store) {

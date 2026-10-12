@@ -4,6 +4,13 @@ import type { Instruction } from "@chw3/engine";
 import { instructionBodySchema } from "../schemas.ts";
 import { verifyEip191 } from "../signatures.ts";
 import type { Store } from "../store.ts";
+import { checkInstruction, cashOf } from "../engine-adapter.ts";
+import { latestMandate } from "./mandates.ts";
+import type { ServerConfig } from "./config.ts";
+
+// signed: Flex signature valid and inside the mandate. rejected: valid signature but
+// outside the mandate (S-026), kept for the audit trail. in_lot and settled: S-021.
+export type InstructionStatus = "signed" | "rejected" | "in_lot" | "settled";
 
 export type StoredInstruction = Omit<Instruction, "shares"> & {
   shares: string;
@@ -12,7 +19,9 @@ export type StoredInstruction = Omit<Instruction, "shares"> & {
   nonce: number;
   signature: `0x${string}`;
   text: string;
-  status: "signed";
+  status: InstructionStatus;
+  reasons: string[];
+  lotId?: string;
   receivedAt: string;
 };
 
@@ -22,11 +31,21 @@ export function listInstructions(store: Store): StoredInstruction[] {
   return store.read<StoredInstruction>(COLLECTION);
 }
 
+export function writeInstructions(store: Store, items: StoredInstruction[]) {
+  store.write(COLLECTION, items);
+}
+
+// Cash already committed by a participant in a cycle: its signed BUY orders (D11, floored).
+export function cashCommittedInCycle(store: Store, participant: string, cycleId: string, navPerUnit: bigint): bigint {
+  return listInstructions(store)
+    .filter((i) => i.participant.toLowerCase() === participant.toLowerCase() && i.cycleId === cycleId && i.status !== "rejected" && i.side === "BUY")
+    .reduce((sum, i) => sum + cashOf(BigInt(i.shares), navPerUnit), 0n);
+}
+
 // S-020: an instruction enters the store only with a valid Flex signature on its text.
 // S-022: 401 without a valid signature, 409 when the nonce was already used.
-// TODO(S-026, Louis): call checkInstruction(instruction, mandate) from @chw3/engine here,
-// after the signature check, and store the result with its reason.
-export function registerInstructionRoutes(app: FastifyInstance, store: Store) {
+// S-026: then the mandate check, by code. A rejected order is stored with its reasons.
+export function registerInstructionRoutes(app: FastifyInstance, store: Store, config: ServerConfig) {
   app.get("/instructions", async () => listInstructions(store));
 
   app.post("/instructions", async (request, reply) => {
@@ -43,6 +62,12 @@ export function registerInstructionRoutes(app: FastifyInstance, store: Store) {
     );
     if (replayed) return reply.code(409).send({ error: "nonce already used" });
 
+    const check = checkInstruction(instruction, latestMandate(store, instruction.participant), {
+      navPerUnit: config.navPerUnit,
+      cashCommittedInCycle: cashCommittedInCycle(store, instruction.participant, instruction.cycleId, config.navPerUnit),
+      fundName,
+    });
+
     const stored: StoredInstruction = {
       ...instruction,
       shares: instruction.shares.toString(),
@@ -51,7 +76,8 @@ export function registerInstructionRoutes(app: FastifyInstance, store: Store) {
       nonce,
       signature,
       text,
-      status: "signed",
+      status: check.ok ? "signed" : "rejected",
+      reasons: check.reasons,
       receivedAt: new Date().toISOString(),
     };
     store.append(COLLECTION, stored);

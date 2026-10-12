@@ -2,11 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { runIntakeAgent } from "../src/agents/intake.ts";
 import type { ChatMessage, ChatResult, LlmClient, ToolCall } from "../src/agents/llm.ts";
-import { buildServer } from "../src/app.ts";
-import { createStore } from "../src/store.ts";
-import { mkdtempSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { testServer } from "./helpers.ts";
 
 const fixture = (name: string) => readFileSync(new URL(`./fixtures/${name}`, import.meta.url), "utf8");
 
@@ -87,14 +83,12 @@ describe("intake agent (S-027, S-044)", () => {
 });
 
 describe("POST /intake", () => {
-  const config = { funds: [{ name: "Fund F", address: "0x3333333333333333333333333333333333333333" as const }] };
-
   it("returns the draft with shares as a string", async () => {
     const client = fakeClient([
       { content: null, toolCalls: [toolCall("draft_instruction", { fund: "Fund F", side: "SELL", units: "12.5", participant: "Manager B" })], model: "" },
       { content: "Manager B redeems 12.5 units of Fund F.", toolCalls: [], model: "" },
     ]);
-    const app = buildServer(createStore(mkdtempSync(join(tmpdir(), "chw3-"))), config, { client, options: OPTIONS });
+    const app = testServer({ intake: { client, options: OPTIONS } });
     const res = await app.inject({ method: "POST", url: "/intake", payload: { emailText: "Redeem 12.5 units of Fund F, Manager B" } });
     expect(res.statusCode).toBe(200);
     expect(res.json().draft).toEqual({ fundName: "Fund F", participantName: "Manager B", side: "SELL", shares: "12500000" });
@@ -102,7 +96,7 @@ describe("POST /intake", () => {
   });
 
   it("answers 503 when no LLM is configured", async () => {
-    const app = buildServer(createStore(mkdtempSync(join(tmpdir(), "chw3-"))), config, null);
+    const app = testServer({ intake: null });
     const res = await app.inject({ method: "POST", url: "/intake", payload: { emailText: "hello" } });
     expect(res.statusCode).toBe(503);
     await app.close();

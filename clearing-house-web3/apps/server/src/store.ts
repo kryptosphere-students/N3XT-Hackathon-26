@@ -6,6 +6,7 @@ import { join } from "node:path";
 export type Store = {
   read<T>(collection: string): T[];
   append<T>(collection: string, item: T): void;
+  write<T>(collection: string, items: T[]): void;
 };
 
 export function createStore(dir: string): Store {
@@ -17,8 +18,9 @@ export function createStore(dir: string): Store {
       return JSON.parse(readFileSync(file(collection), "utf8")) as T[];
     },
     append<T>(collection: string, item: T) {
-      const items = this.read<T>(collection);
-      items.push(item);
+      this.write(collection, [...this.read<T>(collection), item]);
+    },
+    write<T>(collection: string, items: T[]) {
       writeFileSync(file(collection), JSON.stringify(items, null, 2));
     },
   };
