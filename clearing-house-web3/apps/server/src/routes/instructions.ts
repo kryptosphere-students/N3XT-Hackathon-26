@@ -21,6 +21,7 @@ export type StoredInstruction = Omit<Instruction, "shares"> & {
   text: string;
   status: InstructionStatus;
   reasons: string[];
+  origin: "agent" | "manual";
   lotId?: string;
   receivedAt: string;
 };
@@ -51,7 +52,7 @@ export function registerInstructionRoutes(app: FastifyInstance, store: Store, co
   app.post("/instructions", async (request, reply) => {
     const parsed = instructionBodySchema.safeParse(request.body);
     if (!parsed.success) return reply.code(400).send({ error: "invalid body", issues: parsed.error.issues });
-    const { instruction, fundName, participantName, nonce, signature } = parsed.data;
+    const { instruction, fundName, participantName, nonce, signature, origin } = parsed.data;
 
     const text = instructionToText({ instruction, fundName, participantName, nonce });
     if (!(await verifyEip191(instruction.participant, text, signature))) {
@@ -78,6 +79,7 @@ export function registerInstructionRoutes(app: FastifyInstance, store: Store, co
       text,
       status: check.ok ? "signed" : "rejected",
       reasons: check.reasons,
+      origin,
       receivedAt: new Date().toISOString(),
     };
     store.append(COLLECTION, stored);
