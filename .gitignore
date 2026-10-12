@@ -35,4 +35,5 @@ CLAUDE.local.md
 
 # POC runtime data and Foundry broadcast logs
 clearing-house-web3/data/store/
+clearing-house-web3/data/store-local/
 clearing-house-web3/contracts/broadcast/

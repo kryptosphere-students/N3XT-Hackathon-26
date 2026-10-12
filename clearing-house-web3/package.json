@@ -12,7 +12,8 @@
   "scripts": {
     "test": "npm run test --workspaces --if-present",
     "lint": "eslint . --max-warnings 0",
-    "typecheck": "npm run typecheck --workspaces --if-present"
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "demo:local": "node scripts/demo-local.mjs"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",
