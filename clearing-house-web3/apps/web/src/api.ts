@@ -47,6 +47,7 @@ export type StoredInstruction = {
   nonce: number;
   status: InstructionStatus;
   reasons: string[];
+  origin: "agent" | "manual";
   lotId?: string;
   receivedAt: string;
 };
@@ -67,8 +68,11 @@ export type LotView = {
   approvals: { participant: Address; receivedAt: string }[];
   missing: Address[];
   texts: Record<Address, string>;
+  // lower-cased address to display name, from the server config
+  names: Record<string, string>;
   gross: { shares: string; cash: string };
   net: { shares: string; cash: string };
+  delays: { fromFirstOrder: number; fromLotCreation: number } | null;
   status: LotStatus;
   txHash?: Hex;
   explorerUrl?: string | null;
@@ -97,9 +101,9 @@ export function postMandate(mandate: Mandate, signature: Hex) {
   return call<StoredMandate>("/mandates", post({ mandate: { ...mandate, maxCashPerCycle: mandate.maxCashPerCycle.toString() }, signature }));
 }
 
-export function postInstruction(payload: InstructionPayload, signature: Hex) {
+export function postInstruction(payload: InstructionPayload, signature: Hex, origin: "agent" | "manual" = "manual") {
   const { instruction } = payload;
-  return call<StoredInstruction>("/instructions", post({ ...payload, instruction: { ...instruction, shares: instruction.shares.toString() }, signature }));
+  return call<StoredInstruction>("/instructions", post({ ...payload, instruction: { ...instruction, shares: instruction.shares.toString() }, signature, origin }));
 }
 
 export function createLot(cycleId: string, mode: "netting" | "instant", instructionId?: string) {

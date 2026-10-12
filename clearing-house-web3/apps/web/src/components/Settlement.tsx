@@ -31,16 +31,16 @@ export function Settlement({ addresses, version, onChange }: Props) {
 
   return (
     <div>
-      <p>
+      <div className="actions">
         <button className="demo" onClick={() => build("netting")}>
-          Demo: settle cycle (netting)
-        </button>{" "}
-        <button className="demo" onClick={() => build("instant")}>
-          Demo: instant settle (last order)
+          Settle cycle (netting)
         </button>
-      </p>
-      {error && <p className="error">{error}</p>}
-      {lots.length === 0 && <p className="hint">No lot yet. Sign orders first, then build a lot.</p>}
+        <button className="demo" onClick={() => build("instant")}>
+          Instant settle (last order)
+        </button>
+      </div>
+      {error && <p className="notice bad">{error}</p>}
+      {lots.length === 0 && <p className="muted">No lot yet. Sign orders first, then build a lot.</p>}
       {[...lots].reverse().map((lot) => (
         <LotView key={lot.id} lot={lot} addresses={addresses} onChange={onChange} />
       ))}
