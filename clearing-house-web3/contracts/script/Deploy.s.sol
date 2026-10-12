@@ -28,10 +28,10 @@ contract Deploy is Script {
         uint256 deployerKey = vm.envOr("DEPLOYER_PRIVATE_KEY", uint256(0));
         address engine = vm.envAddress("AGENT_PUBLIC_KEY");
 
+        address deployer = deployerKey != 0 ? vm.addr(deployerKey) : msg.sender;
         if (deployerKey != 0) vm.startBroadcast(deployerKey);
         else vm.startBroadcast();
 
-        address deployer = msg.sender;
         address fund = vm.envOr("FUND_ADDRESS", deployer);
 
         ShareToken shares = new ShareToken("Fund F", "FNDF");

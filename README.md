@@ -26,7 +26,17 @@ Orders often arrive by email. An AI agent reads them, drafts the instruction and
 
 ## Status
 
-Documentation and backlog are ready. Flex connection and signing tested on 11 Oct (`clearing-house-web3/apps/web/README.md`). The code starts in `clearing-house-web3/`.
+Contracts deployed on Base Sepolia (12 Oct). Flex connection, three derived accounts, mandate and order signatures tested on the device (11 and 12 Oct, `clearing-house-web3/apps/web/README.md`). The code is in `clearing-house-web3/`.
+
+## Deployed contracts (Base Sepolia, chain id 84532)
+
+| Contract | Address | Explorer |
+|---|---|---|
+| ShareToken (Fund F units, 6 decimals, whitelist) | `0x599d84b195A79B3e8E90a4B0dF744057055b6ccc` | [sepolia.basescan.org](https://sepolia.basescan.org/address/0x599d84b195A79B3e8E90a4B0dF744057055b6ccc#code) |
+| MockCash (test cash, 6 decimals) | `0xdb1D8fb204785C533DB8F3426f8DEf5ba81686b1` | [sepolia.basescan.org](https://sepolia.basescan.org/address/0xdb1D8fb204785C533DB8F3426f8DEf5ba81686b1#code) |
+| SettlementEscrow (prefunded DvP, `settle(lot)`, `LotSettled`) | `0xeBc2456c49a5E29c69D68258A8865E3f8A694AcE` | [sepolia.basescan.org](https://sepolia.basescan.org/address/0xeBc2456c49a5E29c69D68258A8865E3f8A694AcE#code) |
+
+Deployed by `0xb9d8118635755abCf21DaA6dEd46f964702F8ffC`, which is also the fund's account. The engine role is `0x9970E02eD7D7Ec45749862fd000c093f66649F3A`. Managers A, B and C (three accounts of one Ledger Flex) are whitelisted and prefunded in the escrow. Source verified on Basescan with `forge verify-contract`.
 
 ## Repository layout
 
