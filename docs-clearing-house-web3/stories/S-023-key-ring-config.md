@@ -2,7 +2,7 @@
 id: S-023
 epic: E-005
 title: Configuration et clés agents dans Key Ring
-status: backlog
+status: done
 priority: should
 estimate: M
 owner: équipe

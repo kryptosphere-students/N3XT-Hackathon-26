@@ -62,6 +62,10 @@ The LLM goes through OpenRouter (OpenAI compatible API), not through the Anthrop
 
 Mentor answers on 12 Oct that confirm the cuts: Agent Intent works on Ethereum mainnet only (ETH and known ERC-20, no Base, no testnet), so it stays in the roadmap. Key Ring needs `ring init` on every machine with the Ledger plugged in, CLI only, called as a subprocess, so it stays a bonus.
 
+### D13. The engine was coded by Mark, Louis reviews it (12 Oct)
+
+The engine functions agreed on 12 Oct (`netPositions`, `checkCoverage`, `lotHash`, `checkInstruction`, `navHash`) were first written as a provisional adapter in the server, then moved to `packages/engine` on the evening of 12 Oct with their tests, so the submission has one engine. Louis reviews them, in particular the rounding of cash per order and the cap check per cycle. The `Mandate` type moved to `packages/engine/src/types.ts` for the same reason.
+
 ## Proposed, waiting for team validation
 
 - **Device**: one Ledger Flex with three derived accounts (`44'/60'/n'/0/0`).

@@ -2,7 +2,7 @@
 id: S-017
 epic: E-004
 title: Hash du lot côté TypeScript (parité avec le contrat)
-status: backlog
+status: done
 priority: must
 estimate: S
 owner: équipe

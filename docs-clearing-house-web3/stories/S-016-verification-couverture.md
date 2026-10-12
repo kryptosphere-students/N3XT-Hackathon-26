@@ -2,7 +2,7 @@
 id: S-016
 epic: E-004
 title: Vérification de couverture préfinancée
-status: backlog
+status: done
 priority: must
 estimate: S
 owner: équipe

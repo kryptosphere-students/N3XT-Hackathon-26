@@ -2,7 +2,7 @@
 id: S-026
 epic: E-006
 title: Contrôle des instructions contre le mandat
-status: backlog
+status: done
 priority: must
 estimate: M
 owner: équipe
