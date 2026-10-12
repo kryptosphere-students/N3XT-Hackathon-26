@@ -231,7 +231,11 @@ export function registerLotRoutes(app: FastifyInstance, store: Store, config: Se
       return;
     }
     try {
-      const txHash = await chain.settle(engineLot, lot.navHash, lot.approvals.map((a) => a.signature));
+      // The contract checks each signature against the text of its own line (branch mark/onchain-verify).
+      const aligned = lot.positions.map(
+        (p) => lot.approvals.find((a) => a.participant.toLowerCase() === p.participant.toLowerCase())?.signature ?? ("0x" as Hex),
+      );
+      const txHash = await chain.settle(engineLot, lot.navHash, aligned, lot.fundName);
       lot.status = "settled";
       lot.txHash = txHash;
       lot.explorerUrl = chain.explorerTxUrl(txHash);

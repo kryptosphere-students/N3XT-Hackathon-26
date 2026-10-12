@@ -107,7 +107,7 @@ describe("lots (S-021, S-042)", () => {
     const second = await approve(app, lot.id, b);
     expect(second.json().status).toBe("settled");
     expect(second.json().txHash).toBe("0xabc");
-    expect(chain.settled).toEqual([{ lotId: 1n, signatures: [first.json().approvals[0].signature, second.json().approvals[1].signature] }]);
+    expect(chain.settled).toEqual([{ lotId: 1n, signatures: [first.json().approvals[0].signature, second.json().approvals[1].signature, "0x"] }]);
 
     const orders = (await app.inject({ method: "GET", url: "/instructions" })).json();
     expect(orders.every((o: { status: string }) => o.status === "settled")).toBe(true);

@@ -19,7 +19,8 @@ export type ChainConfig = {
 export type Chain = {
   shareToken: Address;
   cashToken: Address;
-  settle(lot: Lot, navHash: Hex, signatures: Hex[]): Promise<Hex>;
+  // signatures: one per position, in the same order, empty (0x) for the fund's line
+  settle(lot: Lot, navHash: Hex, signatures: Hex[], fundName: string): Promise<Hex>;
   balances(participants: Address[]): Promise<Balances>;
   isSettled(lotId: bigint): Promise<boolean>;
   explorerTxUrl(txHash: Hex): string | null;
@@ -44,6 +45,7 @@ export const escrowAbi = [
       },
       { name: "navHash", type: "bytes32" },
       { name: "signatures", type: "bytes[]" },
+      { name: "fundName", type: "string" },
     ],
     outputs: [],
   },
@@ -98,12 +100,12 @@ export function createChain(config: ChainConfig): Chain {
     shareToken: config.shareToken,
     cashToken: config.cashToken,
 
-    async settle(lot, navHash, signatures) {
+    async settle(lot, navHash, signatures, fundName) {
       const hash = await walletClient.writeContract({
         address: config.escrow,
         abi: escrowAbi,
         functionName: "settle",
-        args: [lot.id, lot.navPerUnit, lot.positions, navHash, signatures],
+        args: [lot.id, lot.navPerUnit, lot.positions, navHash, signatures, fundName],
       });
       const receipt = await publicClient.waitForTransactionReceipt({ hash });
       if (receipt.status !== "success") throw new Error(`settle reverted, tx ${hash}`);

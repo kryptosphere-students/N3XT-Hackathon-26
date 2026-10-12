@@ -2,6 +2,7 @@
 pragma solidity ^0.8.20;
 
 import {Test, console2} from "forge-std/Test.sol";
+import {MessageHashUtils} from "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ShareToken} from "../src/ShareToken.sol";
 import {MockCash} from "../src/MockCash.sol";
@@ -25,14 +26,24 @@ contract SettlementEscrowTest is Test {
     address manager = makeAddr("manager");
     address engine = makeAddr("engine");
     address fund = makeAddr("fund");
-    address a = makeAddr("A");
-    address b = makeAddr("B");
-    address c = makeAddr("C");
-    address stranger = makeAddr("stranger");
+    address a;
+    address b;
+    address c;
+    address stranger;
+    mapping(address => uint256) keyOf;
 
-    bytes[] noSignatures;
+    string constant FUND_NAME = "Fund F";
 
     function setUp() public {
+        // Two steps: in a tuple assignment the mapping slot would be read before the address is set.
+        string[4] memory names = ["A", "B", "C", "stranger"];
+        address[4] memory made;
+        for (uint256 i = 0; i < names.length; i++) {
+            (address who, uint256 key) = makeAddrAndKey(names[i]);
+            made[i] = who;
+            keyOf[who] = key;
+        }
+        (a, b, c, stranger) = (made[0], made[1], made[2], made[3]);
         vm.startPrank(manager);
         shares = new ShareToken("Fund F", "FNDF");
         cash = new MockCash();
@@ -66,6 +77,25 @@ contract SettlementEscrowTest is Test {
         positions[1] = SettlementEscrow.Position(fund, -int256(10 * ONE_SHARE), int256(1_050 * ONE_CASH));
     }
 
+    // One EIP-191 approval per line, signed with the participant's key. The fund's line stays empty.
+    function signatures(uint256 lotId, SettlementEscrow.Position[] memory positions)
+        internal
+        view
+        returns (bytes[] memory sigs)
+    {
+        bytes32 lotHash = escrow.hashLot(lotId, NAV_105, positions);
+        sigs = new bytes[](positions.length);
+        for (uint256 i = 0; i < positions.length; i++) {
+            uint256 key = keyOf[positions[i].participant];
+            if (key == 0) continue;
+            bytes32 digest = MessageHashUtils.toEthSignedMessageHash(
+                bytes(escrow.approvalText(lotId, FUND_NAME, positions[i], lotHash))
+            );
+            (uint8 v, bytes32 r, bytes32 sv) = vm.sign(key, digest);
+            sigs[i] = abi.encodePacked(r, sv, v);
+        }
+    }
+
     function test_prefundCreditsBalanceAndMintsToEscrow() public view {
         assertEq(escrow.balances(a, address(cash)), PREFUND_CASH);
         assertEq(escrow.balances(a, address(shares)), PREFUND_SHARES);
@@ -86,8 +116,9 @@ contract SettlementEscrowTest is Test {
     }
 
     function test_settleNettedLotMovesSharesAndCash() public {
+        bytes[] memory sigs = signatures(LOT_1, nettedLot());
         vm.prank(engine);
-        escrow.settle(LOT_1, NAV_105, nettedLot(), NAV_HASH, noSignatures);
+        escrow.settle(LOT_1, NAV_105, nettedLot(), NAV_HASH, sigs, FUND_NAME);
 
         assertEq(escrow.balances(a, address(shares)), PREFUND_SHARES + 100 * ONE_SHARE);
         assertEq(escrow.balances(a, address(cash)), PREFUND_CASH - 10_500 * ONE_CASH);
@@ -99,53 +130,56 @@ contract SettlementEscrowTest is Test {
     }
 
     function test_settleInstantLotOfOneOrder() public {
+        bytes[] memory sigs = signatures(LOT_1, instantLot());
         vm.prank(engine);
-        escrow.settle(LOT_1, NAV_105, instantLot(), NAV_HASH, noSignatures);
+        escrow.settle(LOT_1, NAV_105, instantLot(), NAV_HASH, sigs, FUND_NAME);
         assertEq(escrow.balances(a, address(shares)), PREFUND_SHARES + 10 * ONE_SHARE);
         assertEq(escrow.balances(fund, address(cash)), PREFUND_CASH + 1_050 * ONE_CASH);
     }
 
     function test_settleEmitsLotSettledWithHashAndSignatures() public {
         SettlementEscrow.Position[] memory positions = nettedLot();
-        bytes[] memory signatures = new bytes[](2);
-        signatures[0] = hex"aa";
-        signatures[1] = hex"bb";
+        bytes[] memory sigs = signatures(LOT_1, positions);
         bytes32 expectedHash = escrow.hashLot(LOT_1, NAV_105, positions);
 
         vm.expectEmit(true, false, false, true);
-        emit SettlementEscrow.LotSettled(LOT_1, expectedHash, NAV_HASH, signatures);
+        emit SettlementEscrow.LotSettled(LOT_1, expectedHash, NAV_HASH, sigs);
         vm.prank(engine);
-        escrow.settle(LOT_1, NAV_105, positions, NAV_HASH, signatures);
+        escrow.settle(LOT_1, NAV_105, positions, NAV_HASH, sigs, FUND_NAME);
     }
 
     function test_settleOnlyEngine() public {
+        bytes[] memory sigs = new bytes[](3);
         vm.prank(manager);
         vm.expectRevert(abi.encodeWithSelector(SettlementEscrow.NotEngine.selector, manager));
-        escrow.settle(LOT_1, NAV_105, nettedLot(), NAV_HASH, noSignatures);
+        escrow.settle(LOT_1, NAV_105, nettedLot(), NAV_HASH, sigs, FUND_NAME);
     }
 
     function test_settleReplayReverts() public {
+        bytes[] memory sigs = signatures(LOT_1, nettedLot());
         vm.startPrank(engine);
-        escrow.settle(LOT_1, NAV_105, nettedLot(), NAV_HASH, noSignatures);
+        escrow.settle(LOT_1, NAV_105, nettedLot(), NAV_HASH, sigs, FUND_NAME);
         vm.expectRevert(abi.encodeWithSelector(SettlementEscrow.LotAlreadySettled.selector, LOT_1));
-        escrow.settle(LOT_1, NAV_105, nettedLot(), NAV_HASH, noSignatures);
+        escrow.settle(LOT_1, NAV_105, nettedLot(), NAV_HASH, sigs, FUND_NAME);
         vm.stopPrank();
     }
 
     function test_settleUnbalancedSharesReverts() public {
         SettlementEscrow.Position[] memory positions = nettedLot();
         positions[2].shares += 1;
+        bytes[] memory sigs = signatures(LOT_1, positions);
         vm.prank(engine);
         vm.expectRevert(abi.encodeWithSelector(SettlementEscrow.LotNotBalanced.selector, int256(1), int256(0)));
-        escrow.settle(LOT_1, NAV_105, positions, NAV_HASH, noSignatures);
+        escrow.settle(LOT_1, NAV_105, positions, NAV_HASH, sigs, FUND_NAME);
     }
 
     function test_settleUnbalancedCashReverts() public {
         SettlementEscrow.Position[] memory positions = nettedLot();
         positions[0].cash -= 1;
+        bytes[] memory sigs = signatures(LOT_1, positions);
         vm.prank(engine);
         vm.expectRevert(abi.encodeWithSelector(SettlementEscrow.LotNotBalanced.selector, int256(0), int256(-1)));
-        escrow.settle(LOT_1, NAV_105, positions, NAV_HASH, noSignatures);
+        escrow.settle(LOT_1, NAV_105, positions, NAV_HASH, sigs, FUND_NAME);
     }
 
     function test_settleInsufficientCoverageRevertsWithoutAnyChange() public {
@@ -157,13 +191,15 @@ contract SettlementEscrowTest is Test {
         positions[2] =
             SettlementEscrow.Position(fund, -int256(60 * ONE_SHARE), int256(PREFUND_CASH + 1 - 4_200 * ONE_CASH));
 
+        bytes[] memory sigs = signatures(LOT_1, positions);
+
         vm.prank(engine);
         vm.expectRevert(
             abi.encodeWithSelector(
                 SettlementEscrow.InsufficientBalance.selector, a, address(cash), PREFUND_CASH, PREFUND_CASH + 1
             )
         );
-        escrow.settle(LOT_1, NAV_105, positions, NAV_HASH, noSignatures);
+        escrow.settle(LOT_1, NAV_105, positions, NAV_HASH, sigs, FUND_NAME);
 
         assertEq(escrow.balances(b, address(shares)), PREFUND_SHARES);
         assertEq(escrow.balances(b, address(cash)), PREFUND_CASH);
@@ -174,9 +210,10 @@ contract SettlementEscrowTest is Test {
         SettlementEscrow.Position[] memory positions = new SettlementEscrow.Position[](2);
         positions[0] = SettlementEscrow.Position(stranger, int256(ONE_SHARE), 0);
         positions[1] = SettlementEscrow.Position(fund, -int256(ONE_SHARE), 0);
+        bytes[] memory sigs = signatures(LOT_1, positions);
         vm.prank(engine);
         vm.expectRevert(abi.encodeWithSelector(SettlementEscrow.NotWhitelisted.selector, stranger));
-        escrow.settle(LOT_1, NAV_105, positions, NAV_HASH, noSignatures);
+        escrow.settle(LOT_1, NAV_105, positions, NAV_HASH, sigs, FUND_NAME);
     }
 
     function test_withdrawTransfersTokens() public {
@@ -219,8 +256,10 @@ contract SettlementEscrowTest is Test {
         vm.assume(-(int256(sharesA) + sharesB) >= -limitShares);
         vm.assume(-(int256(cashA) + cashB) >= -limitCash);
 
+        bytes[] memory sigs = signatures(LOT_1, positions);
+
         vm.prank(engine);
-        escrow.settle(LOT_1, NAV_105, positions, NAV_HASH, noSignatures);
+        escrow.settle(LOT_1, NAV_105, positions, NAV_HASH, sigs, FUND_NAME);
 
         uint256 totalShares = escrow.balances(a, address(shares)) + escrow.balances(b, address(shares))
             + escrow.balances(c, address(shares)) + escrow.balances(fund, address(shares));
@@ -236,9 +275,10 @@ contract SettlementEscrowTest is Test {
         SettlementEscrow.Position[] memory positions = new SettlementEscrow.Position[](2);
         positions[0] = SettlementEscrow.Position(a, sharesA, 0);
         positions[1] = SettlementEscrow.Position(fund, -int256(sharesA) + delta, 0);
+        bytes[] memory sigs = signatures(LOT_1, positions);
         vm.prank(engine);
         vm.expectRevert(abi.encodeWithSelector(SettlementEscrow.LotNotBalanced.selector, int256(delta), int256(0)));
-        escrow.settle(LOT_1, NAV_105, positions, NAV_HASH, noSignatures);
+        escrow.settle(LOT_1, NAV_105, positions, NAV_HASH, sigs, FUND_NAME);
     }
 
     // Reference values for the TypeScript side (S-017). Deployed from a fresh
