@@ -1,8 +1,8 @@
-Subject: Order
+Subject: Today's order
 
-Hi,
+Hi team,
 
-Can you place an order on the fund for me today? Same as usual.
+Could you put through the usual order on our fund today? Same size as last time, or a bit less if the market moves.
 
 Thanks,
 Manager B
