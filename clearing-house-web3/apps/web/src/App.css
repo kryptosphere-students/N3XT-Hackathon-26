@@ -52,15 +52,10 @@
 }
 
 .card h2 .step {
-  display: inline-flex;
-  width: 26px;
-  height: 26px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: var(--accent);
-  color: #fff;
+  font-family: var(--mono);
   font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
 }
 
 .muted {
@@ -74,10 +69,10 @@
 /* Badges */
 .badge {
   display: inline-block;
-  padding: 2px 10px;
-  border-radius: 999px;
+  padding: 1px 8px;
+  border-radius: 4px;
   font-size: 13.5px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.6;
   white-space: nowrap;
   background: var(--code-bg);

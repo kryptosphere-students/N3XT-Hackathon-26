@@ -16,7 +16,7 @@ function Card({ step, title, wide, children }: { step: number; title: string; wi
   return (
     <section className={`card${wide ? " wide" : ""}`}>
       <h2>
-        <span className="step">{step}</span>
+        <span className="step">{step}.</span>
         {title}
       </h2>
       {children}
