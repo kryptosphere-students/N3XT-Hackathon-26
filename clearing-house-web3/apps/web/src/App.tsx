@@ -5,6 +5,7 @@ import { ConnectLedger } from "./components/ConnectLedger.tsx";
 import { Accounts, type Addresses } from "./components/Accounts.tsx";
 import { MandateForm } from "./components/MandateForm.tsx";
 import { InstructionForm } from "./components/InstructionForm.tsx";
+import { Settlement } from "./components/Settlement.tsx";
 
 export default function App() {
   const [addresses, setAddresses] = useState<Addresses>({});
@@ -17,6 +18,7 @@ export default function App() {
         <Accounts addresses={addresses} onAddresses={setAddresses} />
         <MandateForm addresses={addresses} />
         <InstructionForm addresses={addresses} />
+        <Settlement addresses={addresses} />
       </main>
     </DmkProvider>
   );
