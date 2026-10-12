@@ -25,7 +25,7 @@ export function buildServer({ store, config, intake = null, chain = null }: Serv
   registerInstructionRoutes(app, store, config);
   registerNonceRoutes(app, store);
   registerConfigRoutes(app, config);
-  registerIntakeRoutes(app, intake);
+  registerIntakeRoutes(app, store, config, intake);
   registerLotRoutes(app, store, config, chain);
   return app;
 }

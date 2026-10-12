@@ -2,7 +2,8 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { runIntakeAgent } from "../src/agents/intake.ts";
 import type { ChatMessage, ChatResult, LlmClient, ToolCall } from "../src/agents/llm.ts";
-import { testServer } from "./helpers.ts";
+import { mandateToText } from "@chw3/protocol";
+import { testAccount, testConfig, testServer } from "./helpers.ts";
 
 const fixture = (name: string) => readFileSync(new URL(`./fixtures/${name}`, import.meta.url), "utf8");
 
@@ -92,6 +93,48 @@ describe("POST /intake", () => {
     const res = await app.inject({ method: "POST", url: "/intake", payload: { emailText: "Redeem 12.5 units of Fund F, Manager B" } });
     expect(res.statusCode).toBe(200);
     expect(res.json().draft).toEqual({ fundName: "Fund F", participantName: "Manager B", side: "SELL", shares: "12500000" });
+    expect(res.json().check.reasons).toEqual(["unknown participant Manager B"]);
+    await app.close();
+  });
+
+  // S-028: the trapped email. The agent may draft what the email asks, the signed
+  // mandate refuses it, and nobody is asked to sign anything.
+  it("refuses a draft outside the mandate with the reason, before any signature", async () => {
+    const a = testAccount();
+    const client = fakeClient([
+      { content: null, toolCalls: [toolCall("draft_instruction", { fund: "Fund F", side: "SELL", units: "1000000", participant: "Manager A" })], model: "" },
+      { content: "Manager A redeems 1000000 units of Fund F.", toolCalls: [], model: "" },
+    ]);
+    const app = testServer({
+      intake: { client, options: OPTIONS },
+      config: testConfig({ participants: [{ key: "A", name: "Manager A", address: a.address }] }),
+    });
+    const mandate = { participant: a.address, participantName: "Manager A", allowedFunds: ["Fund F"], maxCashPerCycle: 5_000_000n * 10n ** 6n, allowedSides: ["BUY", "SELL"] as ("BUY" | "SELL")[], nonce: 1 };
+    const signature = await a.signMessage({ message: mandateToText(mandate) });
+    await app.inject({ method: "POST", url: "/mandates", payload: { mandate: { ...mandate, maxCashPerCycle: mandate.maxCashPerCycle.toString() }, signature } });
+
+    const res = await app.inject({ method: "POST", url: "/intake", payload: { emailText: fixture("email-trapped.txt") } });
+    expect(res.statusCode).toBe(200);
+    expect(res.json().draft.shares).toBe("1000000000000");
+    expect(res.json().check.ok).toBe(false);
+    expect(res.json().check.reasons[0]).toContain("above the signed cap of 5000000");
+    // Nothing was stored: no instruction, nothing to sign.
+    expect((await app.inject({ method: "GET", url: "/instructions" })).json()).toHaveLength(0);
+    await app.close();
+  });
+
+  it("checks a draft inside the mandate as ok", async () => {
+    const a = testAccount();
+    const client = fakeClient([
+      { content: null, toolCalls: [toolCall("draft_instruction", { fund: "Fund F", side: "BUY", units: "100", participant: "Manager A" })], model: "" },
+      { content: "ok", toolCalls: [], model: "" },
+    ]);
+    const app = testServer({ intake: { client, options: OPTIONS }, config: testConfig({ participants: [{ key: "A", name: "Manager A", address: a.address }] }) });
+    const mandate = { participant: a.address, participantName: "Manager A", allowedFunds: ["Fund F"], maxCashPerCycle: 5_000_000n * 10n ** 6n, allowedSides: ["BUY"] as ("BUY" | "SELL")[], nonce: 1 };
+    const signature = await a.signMessage({ message: mandateToText(mandate) });
+    await app.inject({ method: "POST", url: "/mandates", payload: { mandate: { ...mandate, maxCashPerCycle: mandate.maxCashPerCycle.toString() }, signature } });
+    const res = await app.inject({ method: "POST", url: "/intake", payload: { emailText: fixture("email-clear.txt") } });
+    expect(res.json().check).toEqual({ ok: true, reasons: [] });
     await app.close();
   });
 
