@@ -46,3 +46,18 @@ export type Lot = {
   positions: NetPosition[];
   instructionIds: string[];
 };
+
+// Rules a manager signs once on the Flex (S-019). Every instruction is checked
+// against them (S-026). The nonce makes each signed text unique.
+export type Mandate = {
+  participant: Address;
+  participantName: string;
+  allowedFunds: string[];
+  // Cash, 6 decimals
+  maxCashPerCycle: bigint;
+  allowedSides: Side[];
+  nonce: number;
+};
+
+// Escrow balances per participant, read on chain before a lot is built.
+export type Balances = Record<Address, { shares: bigint; cash: bigint }>;

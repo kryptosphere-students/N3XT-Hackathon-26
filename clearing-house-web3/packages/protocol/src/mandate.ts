@@ -1,21 +1,11 @@
 import { formatUnits } from "viem";
-import { CASH_DECIMALS, type Address, type Side } from "@chw3/engine";
+import { CASH_DECIMALS, type Mandate, type Side } from "@chw3/engine";
 
-// Rules a manager signs once on the Flex. The server checks every
-// instruction against them (S-026). The nonce makes each signed text unique.
-export type Mandate = {
-  participant: Address;
-  participantName: string;
-  allowedFunds: string[];
-  // Cash, 6 decimals
-  maxCashPerCycle: bigint;
-  allowedSides: Side[];
-  nonce: number;
-};
+export type { Mandate } from "@chw3/engine";
 
 export const SIDE_LABEL: Record<Side, string> = { BUY: "subscribe", SELL: "redeem" };
 
-// The exact text shown on the Flex and signed with EIP-191.
+// The exact text shown on the Flex and signed with EIP-191 (S-019).
 // Changing one character changes the signature, so this stays stable.
 export function mandateToText(mandate: Mandate): string {
   return [
