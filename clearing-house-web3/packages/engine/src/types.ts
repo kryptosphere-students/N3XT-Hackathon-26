@@ -33,6 +33,9 @@ export type NetPosition = {
   cash: bigint;
 };
 
+// Prefunded balances of each participant in the escrow, 6 decimals.
+export type Balances = Record<Address, { shares: bigint; cash: bigint }>;
+
 // What the escrow settles in one call. Instant mode: one instruction per lot.
 // Netting mode: the net positions of a whole cycle.
 export type Lot = {
