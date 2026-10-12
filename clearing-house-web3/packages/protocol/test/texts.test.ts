@@ -57,7 +57,7 @@ describe("lotApprovalToText", () => {
     };
     const hash = "0xd9e1d479dbe07a9fa30625248c923e1831eb32501690ede4a5355900cccd9ea2" as const;
     expect(lotApprovalToText(lot, A, { fundName: "Fund F", lotHash: hash })).toBe(
-      ["Lot 7, Fund F", "You receive 100 units", "You pay 10500 cash", `Lot hash ${hash}`].join("\n"),
+      ["Lot 7, Fund F", "You receive 100 units", "You pay 10500 cash", "Lot hash 0xd9e1...9ea2", `Full hash ${hash}`].join("\n"),
     );
     expect(lotApprovalToText(lot, FUND, { fundName: "Fund F", lotHash: hash })).toContain("You deliver 100 units");
     expect(() => lotApprovalToText(lot, "0x4444444444444444444444444444444444444444", { fundName: "Fund F", lotHash: hash })).toThrow();
