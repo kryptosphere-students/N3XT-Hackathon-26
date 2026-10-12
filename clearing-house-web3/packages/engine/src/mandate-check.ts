@@ -1,9 +1,8 @@
 // S-026: deterministic check of an instruction against the mandate its manager
 // signed on the Flex. Code decides; the LLM only explains the reasons.
-import type { Mandate } from "@chw3/protocol";
 import { formatUnits } from "viem";
 import { cashOf } from "./netting.ts";
-import { CASH_DECIMALS, type Instruction, type Side } from "./types.ts";
+import { CASH_DECIMALS, type Instruction, type Mandate, type Side } from "./types.ts";
 
 // Label of the mock cash token in readable reasons
 export const CASH_LABEL = "USDC";

@@ -1,7 +1,6 @@
-import type { Mandate } from "@chw3/protocol";
 import { describe, expect, it } from "vitest";
 import { checkInstruction } from "../src/mandate-check.ts";
-import { ONE_CASH, ONE_SHARE, type Address, type Instruction } from "../src/types.ts";
+import { ONE_CASH, ONE_SHARE, type Address, type Instruction, type Mandate } from "../src/types.ts";
 
 const A: Address = "0x1111111111111111111111111111111111111111";
 const B: Address = "0x2222222222222222222222222222222222222222";
