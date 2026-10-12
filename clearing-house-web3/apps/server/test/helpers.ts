@@ -17,6 +17,7 @@ export function testConfig(overrides: Partial<ServerConfig> = {}): ServerConfig 
     navPerUnit: NAV_105,
     chainId: 31337,
     escrow: "0x0000000000000000000000000000000000000000",
+    agentKeySource: "none",
     ...overrides,
   };
 }

@@ -7,6 +7,7 @@ import { configFromEnv } from "./routes/config.ts";
 import { llmConfigFromEnv } from "./agents/config.ts";
 import { createLlmClient } from "./agents/llm.ts";
 import type { IntakeDeps } from "./routes/intake.ts";
+import { loadAgentKey } from "./agents/secret.ts";
 
 const DEFAULT_PORT = 8787;
 
@@ -20,18 +21,20 @@ if (existsSync(ENV_FILE)) process.loadEnvFile(ENV_FILE);
 
 const port = Number(process.env.SERVER_PORT ?? DEFAULT_PORT);
 const store = createStore(process.env.STORE_DIR ?? DEFAULT_STORE_DIR);
-const config = configFromEnv(process.env);
+// S-023: the LLM key comes from Ledger Key Ring when secrets/openrouter.enc exists
+// and WALLET_PASS is set, from .env otherwise. Only the source is logged, never the key.
+const agentKey = loadAgentKey(process.env, ROOT);
+console.log(`agent key: ${agentKey.note}`);
+const config = configFromEnv(process.env, agentKey.source);
 
 // Without a key the server still runs: only POST /intake answers 503.
 let intake: IntakeDeps | null = null;
-if (process.env.OPENROUTER_API_KEY) {
-  const llm = llmConfigFromEnv(process.env);
+if (agentKey.key) {
+  const llm = llmConfigFromEnv({ ...process.env, OPENROUTER_API_KEY: agentKey.key });
   intake = {
     client: createLlmClient(llm),
     options: { model: llm.model, fallbackModel: llm.fallbackModel, knownFunds: config.funds.map((f) => f.name), log: console.log },
   };
-} else {
-  console.log("OPENROUTER_API_KEY missing: POST /intake disabled");
 }
 
 // Without contract addresses and the agent key, lots can be built and approved but not settled.

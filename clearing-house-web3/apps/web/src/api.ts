@@ -20,6 +20,7 @@ export type ServerConfig = {
   navPerUnit: string;
   chainId: number;
   escrow: Address;
+  agentKeySource: "key-ring" | "env" | "none";
 };
 
 export type StoredMandate = {
