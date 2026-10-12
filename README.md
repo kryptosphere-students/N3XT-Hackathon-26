@@ -103,8 +103,7 @@ Deployed on 12 Oct by `0xb9d8118635755abCf21DaA6dEd46f964702F8ffC`, which is als
 
 - The escrow trusts the engine key to have verified the participants' approvals. The signatures are published in `LotSettled`, so anyone can check them afterwards. Verifying them inside the contract is roadmap.
 - The escrow is prefunded by the owner at deployment with test tokens. Nobody signs an `approve` on the Flex, because our test tokens have no clear signing descriptor.
-- The NAV is a demo constant (105 cash per unit) until the NAV mock lands. Its hash is published with the lot.
-- The engine functions in the server (`apps/server/src/engine-adapter.ts`) are provisional until the engine package is merged.
+- The NAV comes from a mock fund administrator file (`packages/engine/fixtures/nav-fund-f.json`): holdings, liabilities, shares outstanding. The engine computes 105.000000 from it and publishes the hash of inputs and result with the lot. No price oracle.
 - One fund, three participants, JSON files as storage. No regulation, no real money.
 
 ## Business model

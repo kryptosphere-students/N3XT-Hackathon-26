@@ -1,0 +1,12 @@
+{
+  "fundName": "Fund F",
+  "navDate": "2026-10-13",
+  "source": "mock fund administrator",
+  "holdings": [
+    { "asset": "EUR government bond 2030", "quantity": "60000", "price": "101.25" },
+    { "asset": "Cash at depositary", "quantity": "4525000", "price": "1" }
+  ],
+  "liabilities": "100000",
+  "sharesOutstanding": "100000",
+  "navPerUnit": "105.000000"
+}

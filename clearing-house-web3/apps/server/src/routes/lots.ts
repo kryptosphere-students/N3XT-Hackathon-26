@@ -159,7 +159,7 @@ export function registerLotRoutes(app: FastifyInstance, store: Store, config: Se
       fund: fund.address,
       fundName: fund.name,
       navPerUnit: config.navPerUnit.toString(),
-      navHash: navHash({ fund: fund.address, cycleId, navPerUnit: config.navPerUnit, source: "demo" }),
+      navHash: navHash(config.navInputs),
       positions: fromPositions(positions),
       instructionIds: lot.instructionIds,
       lotHash: chain ? lotHash(lot, chain.shareToken, chain.cashToken) : lotHash(lot, fund.address, fund.address),

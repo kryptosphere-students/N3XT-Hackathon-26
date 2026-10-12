@@ -2,7 +2,7 @@
 id: S-041
 epic: E-004
 title: Publication du hash des entrées et du résultat de NAV
-status: in-progress
+status: done
 priority: must
 estimate: S
 owner: équipe

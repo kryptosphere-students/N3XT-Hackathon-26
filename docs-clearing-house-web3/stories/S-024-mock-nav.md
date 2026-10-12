@@ -2,7 +2,7 @@
 id: S-024
 epic: E-006
 title: Mock serveur NAV
-status: backlog
+status: done
 priority: must
 estimate: S
 owner: équipe

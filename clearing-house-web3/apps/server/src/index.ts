@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { buildServer } from "./app.ts";
 import { createStore } from "./store.ts";
@@ -16,6 +16,8 @@ const DEFAULT_PORT = 8787;
 const ROOT = resolve(import.meta.dirname, "../../..");
 const ENV_FILE = resolve(ROOT, ".env");
 const DEFAULT_STORE_DIR = resolve(ROOT, "data/store");
+// NAV inputs of the mock fund administrator (S-024), NAV_FIXTURE in .env to use another file
+const DEFAULT_NAV_FIXTURE = resolve(ROOT, "packages/engine/fixtures/nav-fund-f.json");
 
 if (existsSync(ENV_FILE)) process.loadEnvFile(ENV_FILE);
 
@@ -25,7 +27,8 @@ const store = createStore(process.env.STORE_DIR ?? DEFAULT_STORE_DIR);
 // and WALLET_PASS is set, from .env otherwise. Only the source is logged, never the key.
 const agentKey = loadAgentKey(process.env, ROOT);
 console.log(`agent key: ${agentKey.note}`);
-const config = configFromEnv(process.env, agentKey.source);
+const navFixture = JSON.parse(readFileSync(process.env.NAV_FIXTURE ?? DEFAULT_NAV_FIXTURE, "utf8"));
+const config = configFromEnv(process.env, navFixture, agentKey.source);
 
 // Without a key the server still runs: only POST /intake answers 503.
 let intake: IntakeDeps | null = null;
