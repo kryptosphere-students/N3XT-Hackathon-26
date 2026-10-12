@@ -2,7 +2,7 @@
 id: S-030
 epic: E-007
 title: Squelette Vite, React et viem
-status: backlog
+status: done
 priority: must
 estimate: XS
 owner: équipe

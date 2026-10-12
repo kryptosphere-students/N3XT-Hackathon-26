@@ -2,7 +2,7 @@
 id: S-021
 epic: E-005
 title: Approbation du lot en EIP-191, règlement envoyé par le moteur
-status: backlog
+status: in-progress
 priority: must
 estimate: L
 owner: Mark

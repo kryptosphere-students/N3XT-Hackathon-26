@@ -2,7 +2,7 @@
 id: S-042
 epic: E-003
 title: Mode instantané et mode netting dans le même moteur
-status: in-progress
+status: done
 priority: must
 estimate: M
 owner: équipe

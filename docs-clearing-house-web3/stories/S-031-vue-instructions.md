@@ -2,7 +2,7 @@
 id: S-031
 epic: E-007
 title: Vue instructions et statut de signature
-status: backlog
+status: done
 priority: must
 estimate: M
 owner: équipe

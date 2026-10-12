@@ -2,7 +2,7 @@
 id: S-034
 epic: E-007
 title: Bouton scénario d'attaque
-status: backlog
+status: done
 priority: must
 estimate: XS
 owner: équipe
