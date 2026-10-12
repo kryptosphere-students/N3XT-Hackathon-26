@@ -35,7 +35,7 @@ Vue condensée des 8 epics et des 44 stories. Détail dans chaque fichier.
 | S-043 | Initialiser le monorepo | E-001 | must | S | done | — |
 | S-005 | Connexion WebHID au Flex | E-002 | must | S | done | — |
 | S-006 | Test Clear Signing EIP-712 sur Flex (EIP-191 retenu) | E-002 | must | S | done | S-005 |
-| S-007 | Trois comptes dérivés sur le Flex | E-002 | must | XS | in-progress | S-005 |
+| S-007 | Trois comptes dérivés sur le Flex | E-002 | must | XS | done | S-005 |
 | S-008 | wallet-cli et ring init | E-002 | should | M | backlog | S-005, Q-08 |
 | S-009 | Token de parts à liste blanche | E-003 | must | M | done | — |
 | S-010 | Mock cash | E-003 | must | XS | done | — |
@@ -49,8 +49,8 @@ Vue condensée des 8 epics et des 44 stories. Détail dans chaque fichier.
 | S-017 | Hash du lot côté TypeScript | E-004 | must | S | backlog | S-012, S-015 |
 | S-018 | Tests de propriétés du netting | E-004 | must | S | backlog | S-015 à S-017 |
 | S-041 | Publication du hash des entrées et du résultat de NAV | E-004 | must | S | backlog | S-024 |
-| S-019 | Signature EIP-191 des règles de mandat | E-005 | must | M | in-progress | S-005 |
-| S-020 | Signature EIP-191 des instructions | E-005 | must | M | in-progress | S-006 |
+| S-019 | Signature EIP-191 des règles de mandat | E-005 | must | M | done | S-005 |
+| S-020 | Signature EIP-191 des instructions | E-005 | must | M | done | S-006 |
 | S-021 | Approbation du lot en EIP-191, règlement envoyé par le moteur | E-005 | must | L | backlog | S-007, S-011, S-014, S-020 |
 | S-022 | Refus des instructions et règles non signées | E-005 | must | S | done | S-019, S-020 |
 | S-023 | Configuration et clés agents dans Key Ring | E-005 | bonus | M | backlog | S-008 |
@@ -76,4 +76,4 @@ Vue condensée des 8 epics et des 44 stories. Détail dans chaque fichier.
 ## Compteurs
 
 - Priorité : 40 `must`, 1 `should` (S-008), 1 `bonus` (S-023), 2 `cut` (S-025, S-033). Total 44.
-- Statut : 12 `done` (S-005, S-006, S-009 à S-013, S-022, S-027, S-029, S-043, S-044), 1 `ready` (S-004), 9 `in-progress` (S-001 à S-003, S-007, S-014, S-019, S-020, S-038, S-042), 2 `cut`, 20 `backlog`. Total 44.
+- Statut : 15 `done` (S-005 à S-007, S-009 à S-013, S-019, S-020, S-022, S-027, S-029, S-043, S-044), 1 `ready` (S-004), 6 `in-progress` (S-001 à S-003, S-014, S-038, S-042), 2 `cut`, 20 `backlog`. Total 44.

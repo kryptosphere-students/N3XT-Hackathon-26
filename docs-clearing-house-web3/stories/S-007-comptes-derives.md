@@ -2,7 +2,7 @@
 id: S-007
 epic: E-002
 title: Trois comptes dérivés sur le Flex
-status: in-progress
+status: done
 priority: must
 estimate: XS
 owner: équipe
@@ -27,3 +27,4 @@ En tant que **développeur**, je veux **trois adresses stables pour A, B et C su
 ## Notes
 - Les chemins suivent la convention Ledger Live : `44'/60'/{account}'/0/0`. Pas de préfixe `m/`.
 - Une dérivation fausse produit une adresse valide mais différente, sans erreur. Vérifier contre Ledger Live.
+- Fait le 12 octobre : les trois adresses lues sur la Flex depuis `apps/web`, chacune confirmée sur l'écran, reportées dans `.env`.
