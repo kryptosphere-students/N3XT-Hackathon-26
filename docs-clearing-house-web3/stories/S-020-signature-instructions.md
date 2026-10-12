@@ -2,7 +2,7 @@
 id: S-020
 epic: E-005
 title: Signature EIP-191 des instructions
-status: ready
+status: in-progress
 priority: must
 estimate: M
 owner: Mark

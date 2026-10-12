@@ -2,7 +2,7 @@
 id: S-027
 epic: E-006
 title: Outils LLM en liste blanche
-status: backlog
+status: done
 priority: must
 estimate: M
 owner: équipe
@@ -30,3 +30,4 @@ En tant que **responsable sécurité**, je veux **que le LLM n'appelle que des o
 ## Notes
 - Le skill `claude-api` recommande `fallbacks` par défaut sur `claude-opus-5-5`. Confirmer la syntaxe dans la doc live (`shared/live-sources.md`).
 - Ne jamais forcer `tool_choice` (`any` ou `tool`) : renvoie une erreur 400 sur ce modèle.
+- Fait le 12 octobre (D12) : API compatible OpenAI via OpenRouter, pas de SDK Anthropic. Un seul outil `draft_instruction` pour le POC, validé par zod. Les outils de lecture NAV et positions ne sont pas nécessaires à la prise d'ordres.

@@ -2,7 +2,7 @@
 id: S-022
 epic: E-005
 title: Refus des instructions et règles non signées
-status: backlog
+status: done
 priority: must
 estimate: S
 owner: équipe

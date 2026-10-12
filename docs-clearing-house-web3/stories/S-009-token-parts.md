@@ -2,7 +2,7 @@
 id: S-009
 epic: E-003
 title: Token de parts à liste blanche
-status: backlog
+status: done
 priority: must
 estimate: M
 owner: équipe

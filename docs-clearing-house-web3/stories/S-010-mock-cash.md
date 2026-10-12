@@ -2,7 +2,7 @@
 id: S-010
 epic: E-003
 title: Mock cash
-status: backlog
+status: done
 priority: must
 estimate: XS
 owner: équipe

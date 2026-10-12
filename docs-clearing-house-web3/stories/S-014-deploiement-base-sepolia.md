@@ -2,7 +2,7 @@
 id: S-014
 epic: E-003
 title: Déploiement Base Sepolia et vérification
-status: backlog
+status: in-progress
 priority: must
 estimate: S
 owner: équipe

@@ -2,7 +2,7 @@
 id: S-012
 epic: E-003
 title: Événement LotSettled (hash du lot, hash NAV, signatures)
-status: backlog
+status: done
 priority: must
 estimate: S
 owner: équipe

@@ -2,7 +2,7 @@
 id: S-011
 epic: E-003
 title: Escrow DvP avec préfinancement
-status: backlog
+status: done
 priority: must
 estimate: L
 owner: équipe

@@ -108,11 +108,32 @@ Chaîne locale, pour itérer sans faucet :
 anvil
 ```
 
-Déploiement local (le script `Deploy.s.sol` est écrit dans S-014) :
+Déploiement local, avec le premier compte d'anvil comme déployeur et fonds, et les comptes suivants comme agent et participants. Pas de clé privée sur la ligne de commande : anvil a ses comptes déverrouillés.
 
 ```bash
-forge script contracts/script/Deploy.s.sol --root contracts --rpc-url http://127.0.0.1:8545 --broadcast
+cd contracts
+AGENT_PUBLIC_KEY=0x70997970C51812dc3A010C7d01b50e0d17dc79C8 \
+PARTICIPANT_A_ADDRESS=0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC \
+PARTICIPANT_B_ADDRESS=0x90F79bf6EB2c4f870365E785982E1f101E93b906 \
+PARTICIPANT_C_ADDRESS=0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65 \
+DEPLOYER_PRIVATE_KEY= \
+forge script script/Deploy.s.sol --rpc-url http://127.0.0.1:8545 --broadcast --unlocked --sender 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
 ```
+
+Déploiement sur Base Sepolia (S-014), depuis `clearing-house-web3/`, avec le `.env` chargé dans le shell. Il faut `DEPLOYER_PRIVATE_KEY`, `AGENT_PUBLIC_KEY`, `PARTICIPANT_A_ADDRESS`, `PARTICIPANT_B_ADDRESS`, `PARTICIPANT_C_ADDRESS` remplis, et le déployeur financé (faucet, Q-10). `FUND_ADDRESS` vide : le déployeur fait office de fonds.
+
+```bash
+set -a; source .env; set +a
+forge script contracts/script/Deploy.s.sol --root contracts --rpc-url "$RPC_URL" --broadcast
+```
+
+Le script affiche `SHARE_TOKEN_ADDRESS`, `CASH_TOKEN_ADDRESS` et `ESCROW_ADDRESS` : les reporter dans `.env` (et `VITE_ESCROW_ADDRESS`) et dans le README racine. Vérification sur l'explorateur, avec `ETHERSCAN_API_KEY` rempli :
+
+```bash
+forge script contracts/script/Deploy.s.sol --root contracts --rpc-url "$RPC_URL" --broadcast --verify --verifier etherscan --etherscan-api-key "$ETHERSCAN_API_KEY"
+```
+
+Les logs de diffusion vont dans `contracts/broadcast/`, exclu du dépôt.
 
 Serveur :
 

@@ -8,12 +8,21 @@ Vue condensée des 8 epics et des 44 stories. Détail dans chaque fichier.
 |---|---|---|---|---|
 | [E-001](E-001-gouvernance-conformite.md) | Gouvernance et conformité | S-001 à S-004, S-043 | Must | in-progress |
 | [E-002](E-002-validation-ledger.md) | Validation Ledger en amont | S-005 à S-008 | Must | in-progress |
-| [E-003](E-003-contrats-testnet.md) | Contrats sur testnet | S-009 à S-014, S-042 | Must | backlog |
+| [E-003](E-003-contrats-testnet.md) | Contrats sur testnet | S-009 à S-014, S-042 | Must | in-progress |
 | [E-004](E-004-moteur-netting.md) | Moteur de netting et NAV | S-015 à S-018, S-041 | Must | backlog |
-| [E-005](E-005-signatures-ledger.md) | Signatures Ledger et garde-fous | S-019 à S-023 | Must | backlog |
-| [E-006](E-006-agents-nav-llm.md) | Agents, NAV et LLM | S-024 à S-029, S-044 | Must | backlog |
+| [E-005](E-005-signatures-ledger.md) | Signatures Ledger et garde-fous | S-019 à S-023 | Must | in-progress |
+| [E-006](E-006-agents-nav-llm.md) | Agents, NAV et LLM | S-024 à S-029, S-044 | Must | in-progress |
 | [E-007](E-007-tableau-de-bord.md) | Tableau de bord | S-030 à S-034 | Must | backlog |
 | [E-008](E-008-demo-soumission.md) | Démo, soumission et pitch | S-035 à S-040 | Must | backlog |
+
+## Répartition (D12)
+
+| Qui | Stories |
+|---|---|
+| Mark | Contrats (S-009 à S-014, S-042), signatures (S-007, S-019 à S-022), plomberie de l'agent (S-029, S-027, S-044), interface (S-030 à S-034) |
+| Louis | Moteur (S-015 à S-018), S-026 checkInstruction, contenu de l'agent (prompt système, trois emails de démo), S-024 et S-041 |
+| Coupées | S-025 (vérification de la NAV par le code), S-033 (lien vers l'explorateur) |
+| Bonus | S-023 Key Ring, seulement s'il reste du temps |
 
 ## Stories
 
@@ -26,36 +35,36 @@ Vue condensée des 8 epics et des 44 stories. Détail dans chaque fichier.
 | S-043 | Initialiser le monorepo | E-001 | must | S | done | — |
 | S-005 | Connexion WebHID au Flex | E-002 | must | S | done | — |
 | S-006 | Test Clear Signing EIP-712 sur Flex (EIP-191 retenu) | E-002 | must | S | done | S-005 |
-| S-007 | Trois comptes dérivés sur le Flex | E-002 | must | XS | ready | S-005 |
+| S-007 | Trois comptes dérivés sur le Flex | E-002 | must | XS | in-progress | S-005 |
 | S-008 | wallet-cli et ring init | E-002 | should | M | backlog | S-005, Q-08 |
-| S-009 | Token de parts à liste blanche | E-003 | must | M | backlog | — |
-| S-010 | Mock cash | E-003 | must | XS | backlog | — |
-| S-011 | Escrow DvP avec préfinancement | E-003 | must | L | backlog | S-009, S-010 |
-| S-012 | Événement LotSettled (hash du lot, hash NAV, signatures) | E-003 | must | S | backlog | S-011 |
-| S-013 | Tests Foundry unitaires et de propriétés | E-003 | must | M | backlog | S-009 à S-012 |
-| S-014 | Déploiement Base Sepolia et vérification | E-003 | must | S | backlog | S-013 |
-| S-042 | Mode instantané et mode netting dans le même moteur | E-003 | must | M | backlog | S-011, S-016 |
+| S-009 | Token de parts à liste blanche | E-003 | must | M | done | — |
+| S-010 | Mock cash | E-003 | must | XS | done | — |
+| S-011 | Escrow DvP avec préfinancement | E-003 | must | L | done | S-009, S-010 |
+| S-012 | Événement LotSettled (hash du lot, hash NAV, signatures) | E-003 | must | S | done | S-011 |
+| S-013 | Tests Foundry unitaires et de propriétés | E-003 | must | M | done | S-009 à S-012 |
+| S-014 | Déploiement Base Sepolia et vérification | E-003 | must | S | in-progress | S-013 |
+| S-042 | Mode instantané et mode netting dans le même moteur | E-003 | must | M | in-progress | S-011, S-016 |
 | S-015 | Soldes nets en bigint | E-004 | must | M | backlog | — |
 | S-016 | Vérification de couverture | E-004 | must | S | backlog | S-015 |
 | S-017 | Hash du lot côté TypeScript | E-004 | must | S | backlog | S-012, S-015 |
 | S-018 | Tests de propriétés du netting | E-004 | must | S | backlog | S-015 à S-017 |
 | S-041 | Publication du hash des entrées et du résultat de NAV | E-004 | must | S | backlog | S-024 |
-| S-019 | Signature EIP-191 des règles de mandat | E-005 | must | M | backlog | S-005 |
-| S-020 | Signature EIP-191 des instructions | E-005 | must | M | ready | S-006 |
+| S-019 | Signature EIP-191 des règles de mandat | E-005 | must | M | in-progress | S-005 |
+| S-020 | Signature EIP-191 des instructions | E-005 | must | M | in-progress | S-006 |
 | S-021 | Approbation du lot en EIP-191, règlement envoyé par le moteur | E-005 | must | L | backlog | S-007, S-011, S-014, S-020 |
-| S-022 | Refus des instructions et règles non signées | E-005 | must | S | backlog | S-019, S-020 |
-| S-023 | Configuration et clés agents dans Key Ring | E-005 | should | M | backlog | S-008 |
+| S-022 | Refus des instructions et règles non signées | E-005 | must | S | done | S-019, S-020 |
+| S-023 | Configuration et clés agents dans Key Ring | E-005 | bonus | M | backlog | S-008 |
 | S-024 | Mock serveur NAV | E-006 | must | S | backlog | — |
-| S-025 | Agent de rapprochement NAV | E-006 | must | M | backlog | S-024 |
+| S-025 | Agent de rapprochement NAV | E-006 | cut | M | cut | S-024 |
 | S-026 | Contrôle des instructions contre le mandat | E-006 | must | M | backlog | S-020, S-044 |
-| S-027 | Outils LLM en liste blanche | E-006 | must | M | backlog | S-025, S-026, S-029 |
+| S-027 | Outils LLM en liste blanche | E-006 | must | M | done | S-029 |
 | S-028 | Scénario d'injection bloqué (email piégé) | E-006 | must | S | backlog | S-027, S-044 |
-| S-029 | Clé LLM de test et plafond de dépense | E-006 | must | XS | backlog | Q-01 |
-| S-044 | Agent de prise d'ordres (email vers brouillon) | E-006 | must | M | backlog | S-027, S-029 |
+| S-029 | Clé LLM de test et plafond de dépense | E-006 | must | XS | done | Q-01 |
+| S-044 | Agent de prise d'ordres (email vers brouillon) | E-006 | must | M | done | S-027, S-029 |
 | S-030 | Squelette Vite, React et viem | E-007 | must | XS | backlog | — |
 | S-031 | Vue instructions et statut de signature | E-007 | must | M | backlog | S-020, S-030 |
 | S-032 | Vue gross contre net | E-007 | must | S | backlog | S-015, S-030 |
-| S-033 | Vue statut de règlement et liens explorateur | E-007 | should | S | backlog | S-021 |
+| S-033 | Vue statut de règlement et liens explorateur | E-007 | cut | S | cut | S-021 |
 | S-034 | Bouton scénario d'attaque | E-007 | must | XS | backlog | S-028, S-031 |
 | S-035 | Script de démo de 3 minutes | E-008 | must | XS | backlog | S-021, S-028, S-034 |
 | S-036 | Vidéo de secours | E-008 | must | S | backlog | S-035 |
@@ -66,5 +75,5 @@ Vue condensée des 8 epics et des 44 stories. Détail dans chaque fichier.
 
 ## Compteurs
 
-- Priorité : 41 `must`, 3 `should` (S-008, S-023, S-033). Total 44.
-- Statut : 3 `done` (S-005, S-006, S-043), 3 `ready` (S-004, S-007, S-020), 4 `in-progress` (S-001 à S-003, S-038), 34 `backlog`. Total 44.
+- Priorité : 40 `must`, 1 `should` (S-008), 1 `bonus` (S-023), 2 `cut` (S-025, S-033). Total 44.
+- Statut : 12 `done` (S-005, S-006, S-009 à S-013, S-022, S-027, S-029, S-043, S-044), 1 `ready` (S-004), 9 `in-progress` (S-001 à S-003, S-007, S-014, S-019, S-020, S-038, S-042), 2 `cut`, 20 `backlog`. Total 44.
