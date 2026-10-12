@@ -148,3 +148,21 @@ npm run dev -w apps/web
 ```
 
 Les ABI des contrats sont générées par `forge build` dans `contracts/out/`, exclu du dépôt. Lancer `forge build` avant de démarrer le serveur ou le web.
+
+## 5. Ledger Key Ring pour la clé de l'agent (S-023)
+
+La clé OpenRouter est chiffrée avec Key Ring dans `clearing-house-web3/secrets/openrouter.enc` (exclu du dépôt par `secrets*`). Le serveur la déchiffre au démarrage avec `wallet-cli ring decrypt` en sous-processus, mot de passe du ring dans `WALLET_PASS`. Sans le fichier chiffré, ou sans `WALLET_PASS`, il repasse sur `OPENROUTER_API_KEY` du `.env` et l'affiche au démarrage.
+
+Une fois par machine, Flex branchée avec l'app Ledger Sync ouverte, dans PowerShell depuis `clearing-house-web3/` :
+
+```powershell
+npm i -g @ledgerhq/wallet-cli@2.11.0
+$s = Read-Host "Ring password" -AsSecureString
+$env:WALLET_PASS = [Runtime.InteropServices.Marshal]::PtrToStringBSTR([Runtime.InteropServices.Marshal]::SecureStringToBSTR($s))
+wallet-cli ring init --name mark-laptop
+New-Item -ItemType Directory -Force secrets | Out-Null
+(Get-Content .env | Select-String '^OPENROUTER_API_KEY=').Line.Split('=')[1].Trim('"') | wallet-cli ring encrypt --key clearing-house-config -o secrets\openrouter.enc
+wallet-cli ring decrypt --key clearing-house-config -i secrets\openrouter.enc -o $env:TEMP\k.txt; (Get-Content $env:TEMP\k.txt).Length; Remove-Item $env:TEMP\k.txt
+```
+
+Le dernier bloc affiche seulement la longueur de la clé déchiffrée. `WALLET_PASS` vit dans la session PowerShell : à refaire dans chaque terminal avant `npm run dev -w apps/server`. Ensuite, `OPENROUTER_API_KEY` peut être retiré du `.env`. Le mot de passe du ring ne va nulle part sur le disque. Une perte est irrécupérable : `ring init` à refaire avec la même seed et un nouveau mot de passe, puis rechiffrer.
