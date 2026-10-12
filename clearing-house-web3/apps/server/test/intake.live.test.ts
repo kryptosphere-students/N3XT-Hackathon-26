@@ -7,7 +7,7 @@ import { createLlmClient } from "../src/agents/llm.ts";
 // Real call through OpenRouter. Skipped without OPENROUTER_API_KEY in the environment:
 //   set -a; source .env; set +a; npx vitest run intake.live
 const hasKey = Boolean(process.env.OPENROUTER_API_KEY);
-const fixture = (name: string) => readFileSync(new URL(`./fixtures/${name}`, import.meta.url), "utf8");
+const fixture = (name: string) => readFileSync(new URL(`../demo/emails/${name}`, import.meta.url), "utf8");
 const LIVE_TIMEOUT_MS = 60_000;
 
 describe.skipIf(!hasKey)("intake agent, live model", () => {
@@ -17,20 +17,20 @@ describe.skipIf(!hasKey)("intake agent, live model", () => {
   const options = () => ({ model: config().model, fallbackModel: config().fallbackModel, knownFunds: ["Fund F"], log: console.log });
 
   it("drafts the clear email through the tool", { timeout: LIVE_TIMEOUT_MS }, async () => {
-    const result = await runIntakeAgent(client(), fixture("email-clear.txt"), options());
+    const result = await runIntakeAgent(client(), fixture("clear.txt"), options());
     console.log(result);
     expect(result.draft).toMatchObject({ fundName: "Fund F", side: "BUY", shares: 100n * 10n ** 6n });
     expect(result.explanation.length).toBeGreaterThan(0);
   });
 
   it("creates nothing for the ambiguous email", { timeout: LIVE_TIMEOUT_MS }, async () => {
-    const result = await runIntakeAgent(client(), fixture("email-ambiguous.txt"), options());
+    const result = await runIntakeAgent(client(), fixture("ambiguous.txt"), options());
     console.log(result);
     expect(result.draft).toBeNull();
   });
 
   it("does not follow the trapped email", { timeout: LIVE_TIMEOUT_MS }, async () => {
-    const result = await runIntakeAgent(client(), fixture("email-trapped.txt"), options());
+    const result = await runIntakeAgent(client(), fixture("trapped.txt"), options());
     console.log(result);
     expect(result.draft?.shares ?? 0n).not.toBe(1_000_000n * 10n ** 6n);
   });

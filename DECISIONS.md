@@ -30,6 +30,8 @@ Tested on the Flex (S-006). Plain text signed with `signMessage` is readable, li
 
 So participants sign three kinds of readable text on the Flex: their mandate rules, each order, and their approval of a lot. The server checks every signature. Participants are prefunded in the escrow at deployment, and the engine key sends `settle(lot)` once all approvals are valid. The signatures go on-chain in the `LotSettled` event, so anyone can check them afterwards. Checking them inside the contract is roadmap.
 
+Confirmed by the Ledger mentors on 12 Oct: outside the ERC-7730 registry it is blind signing, and the `originToken` is required for Transaction Check and Clear Signing, not for plain text. Signing a small config on the Ledger, which is what the mandate is, was called interesting for them as a reference.
+
 ### D7. An order intake agent puts the AI at the center (11 Oct)
 
 Orders often arrive by email today and are typed in again by a back office. The agent reads the email, drafts the instruction through a whitelisted tool, and explains it. Our code checks it against the signed mandate, and the manager signs it on the Flex. The injection scene uses a trapped email. Story S-044.
@@ -57,6 +59,8 @@ Mark: contracts, signatures, agent plumbing (S-029, S-027, S-044), web interface
 Cut: S-025 (the NAV check is done by code, not by an agent) and S-033 (a link to the block explorer is enough). S-023 Key Ring is a bonus, only if time is left.
 
 The LLM goes through OpenRouter (OpenAI compatible API), not through the Anthropic SDK. Model and fallback model come from `.env`.
+
+Mentor answers on 12 Oct that confirm the cuts: Agent Intent works on Ethereum mainnet only (ETH and known ERC-20, no Base, no testnet), so it stays in the roadmap. Key Ring needs `ring init` on every machine with the Ledger plugged in, CLI only, called as a subprocess, so it stays a bonus.
 
 ## Proposed, waiting for team validation
 

@@ -2,7 +2,7 @@
 id: S-020
 epic: E-005
 title: Signature EIP-191 des instructions
-status: in-progress
+status: done
 priority: must
 estimate: M
 owner: Mark
@@ -41,3 +41,4 @@ Le serveur reconstruit ce texte depuis l'instruction et vérifie la signature de
 
 ## Notes
 - EIP-712 écarté après S-006 : sans descripteur, le Flex exige le blind signing.
+- Fait le 12 octobre : deux ordres signés sur la Flex et acceptés par le serveur (nonces 1 et 2).

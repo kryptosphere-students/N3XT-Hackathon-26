@@ -2,7 +2,7 @@
 id: S-028
 epic: E-006
 title: Scénario d'injection bloqué
-status: backlog
+status: done
 priority: must
 estimate: S
 owner: équipe

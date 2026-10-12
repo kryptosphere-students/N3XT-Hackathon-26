@@ -2,7 +2,7 @@
 id: S-037
 epic: E-008
 title: README : frontière, adresses, limites
-status: backlog
+status: in-progress
 priority: must
 estimate: S
 owner: équipe

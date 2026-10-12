@@ -2,7 +2,7 @@
 id: S-032
 epic: E-007
 title: Vue gross contre net
-status: backlog
+status: done
 priority: must
 estimate: S
 owner: équipe

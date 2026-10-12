@@ -25,31 +25,17 @@ export function Accounts({ addresses, onAddresses }: { addresses: Addresses; onA
         return;
       }
     }
-    setStatus("Three addresses read. Copy them into .env (PARTICIPANT_A_ADDRESS, B, C).");
+    setStatus("Three addresses read and confirmed on the device.");
   }
 
+  const done = PARTICIPANTS.filter((p) => addresses[p.key]).length;
+
   return (
-    <section>
-      <h2>2. Three accounts on one Flex</h2>
+    <div>
       <button onClick={readAll} disabled={!signer}>
-        Read the three addresses
+        Read the three addresses ({done}/3)
       </button>
-      <table>
-        <tbody>
-          {PARTICIPANTS.map((p) => (
-            <tr key={p.key}>
-              <td>{p.name}</td>
-              <td>
-                <code>{p.path}</code>
-              </td>
-              <td>
-                <code>{addresses[p.key] ?? "..."}</code>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      {status && <p>{status}</p>}
-    </section>
+      {status && <p className="hint">{status}</p>}
+    </div>
   );
 }

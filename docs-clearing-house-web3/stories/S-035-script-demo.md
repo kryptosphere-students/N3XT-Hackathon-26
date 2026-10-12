@@ -2,7 +2,7 @@
 id: S-035
 epic: E-008
 title: Script de démo de 3 minutes
-status: backlog
+status: done
 priority: must
 estimate: XS
 owner: équipe

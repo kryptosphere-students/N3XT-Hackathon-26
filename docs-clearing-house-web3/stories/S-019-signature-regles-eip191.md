@@ -2,7 +2,7 @@
 id: S-019
 epic: E-005
 title: Signature EIP-191 des règles de mandat
-status: in-progress
+status: done
 priority: must
 estimate: M
 owner: équipe
@@ -27,3 +27,4 @@ En tant que **gérant**, je veux **signer mes règles de mandat sur mon Flex**, 
 
 ## Notes
 - Le texte doit être stable : toute modification change le message signé.
+- Fait le 12 octobre : mandat de Manager A signé sur la Flex et accepté par le serveur (nonce 1). Texte multi-lignes lisible sur l'écran.

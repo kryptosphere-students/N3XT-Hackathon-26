@@ -13,7 +13,7 @@ const DEFAULT_FUND = "Fund F";
 const DEFAULT_MAX_CASH = "5000000";
 
 // S-019: the manager signs the mandate text on the Flex, the server verifies and stores it.
-export function MandateForm({ addresses }: { addresses: Addresses }) {
+export function MandateForm({ addresses, onSigned }: { addresses: Addresses; onSigned: () => void }) {
   const { signer } = useDmk();
   const [who, setWho] = useState<ParticipantKey>("A");
   const [funds, setFunds] = useState(DEFAULT_FUND);
@@ -45,14 +45,14 @@ export function MandateForm({ addresses }: { addresses: Addresses }) {
       const signature = await signText(signer, p.path, text);
       await postMandate(mandate, signature);
       setStatus(`Mandate of ${p.name} signed and accepted by the server (nonce ${nonce}).`);
+      onSigned();
     } catch (e) {
       setStatus(describeDeviceError(e));
     }
   }
 
   return (
-    <section>
-      <h2>3. Mandate</h2>
+    <div>
       <label>
         Manager
         <select value={who} onChange={(e) => setWho(e.target.value as ParticipantKey)}>
@@ -80,8 +80,8 @@ export function MandateForm({ addresses }: { addresses: Addresses }) {
       <button onClick={signAndSend} disabled={!signer || !address || sides.length === 0}>
         Sign the mandate on the Flex
       </button>
-      {!address && <p className="hint">Read the addresses first (step 2).</p>}
+      {!address && <p className="hint">Connect the Flex and read the addresses first.</p>}
       {status && <pre>{status}</pre>}
-    </section>
+    </div>
   );
 }
