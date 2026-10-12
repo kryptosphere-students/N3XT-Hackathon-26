@@ -17,12 +17,20 @@ const DEFAULT_KEY_NAME = "clearing-house-config";
 
 export type Runner = (command: string, args: string[], env: NodeJS.ProcessEnv) => { status: number | null; stderr: string };
 
-const defaultRunner: Runner = (command, args, env) => {
-  const run = spawnSync(command, args, { env, shell: true, encoding: "utf8", stdio: ["ignore", "ignore", "pipe"] });
+// wallet-cli is a .cmd shim on Windows, so it has to go through a shell. With
+// shell: true Node joins the arguments with spaces and does not quote them, so a
+// repo path with a space (D:\N3XT Hackathon ...) would be cut at that space.
+export function quoteArg(arg: string): string {
+  return /\s/.test(arg) ? `"${arg}"` : arg;
+}
+
+export const runCommand: Runner = (command, args, env) => {
+  const line = [command, ...args.map(quoteArg)].join(" ");
+  const run = spawnSync(line, { env, shell: true, encoding: "utf8", stdio: ["ignore", "ignore", "pipe"] });
   return { status: run.status, stderr: run.stderr ?? "" };
 };
 
-export function loadAgentKey(env: NodeJS.ProcessEnv, root: string, runner: Runner = defaultRunner): AgentKey {
+export function loadAgentKey(env: NodeJS.ProcessEnv, root: string, runner: Runner = runCommand): AgentKey {
   const encrypted = join(root, ENCRYPTED_KEY_FILE);
   const fallback = (): AgentKey =>
     env.OPENROUTER_API_KEY

@@ -1,8 +1,8 @@
-import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { ENCRYPTED_KEY_FILE, loadAgentKey, type Runner } from "../src/agents/secret.ts";
+import { ENCRYPTED_KEY_FILE, loadAgentKey, quoteArg, runCommand, type Runner } from "../src/agents/secret.ts";
 
 // Random test values, nothing real.
 const ENV_KEY = "env-key-for-tests";
@@ -60,5 +60,21 @@ describe("agent key through Ledger Key Ring (S-023)", () => {
   it("answers none when nothing is available", () => {
     const root = mkdtempSync(join(tmpdir(), "chw3-secret-"));
     expect(loadAgentKey({}, root).source).toBe("none");
+  });
+
+  it("keeps a path with spaces whole when the command goes through the shell", () => {
+    expect(quoteArg(String.raw`D:\N3XT Hackathon\secrets\openrouter.enc`)).toBe(String.raw`"D:\N3XT Hackathon\secrets\openrouter.enc"`);
+    expect(quoteArg("clearing-house-config")).toBe("clearing-house-config");
+
+    // Real subprocess: a script in a directory with a space copies its first
+    // argument (also with a space) to its second one, like ring decrypt -i/-o.
+    const dir = join(mkdtempSync(join(tmpdir(), "chw3-secret-")), "with space");
+    mkdirSync(dir);
+    const script = join(dir, "copy.cjs");
+    writeFileSync(script, 'require("node:fs").copyFileSync(process.argv[2], process.argv[3]);');
+    writeFileSync(join(dir, "in.txt"), RING_KEY);
+    const run = runCommand("node", [script, join(dir, "in.txt"), join(dir, "out.txt")], process.env);
+    expect(run.status).toBe(0);
+    expect(readFileSync(join(dir, "out.txt"), "utf8")).toBe(RING_KEY);
   });
 });
