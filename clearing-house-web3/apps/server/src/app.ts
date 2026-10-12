@@ -9,6 +9,7 @@ import { registerNonceRoutes } from "./routes/nonces.ts";
 import { registerConfigRoutes, type ServerConfig } from "./routes/config.ts";
 import { registerIntakeRoutes, type IntakeDeps } from "./routes/intake.ts";
 import { registerLotRoutes } from "./routes/lots.ts";
+import { registerDemoRoutes } from "./routes/demo.ts";
 
 export type ServerDeps = {
   store: Store;
@@ -27,5 +28,6 @@ export function buildServer({ store, config, intake = null, chain = null }: Serv
   registerConfigRoutes(app, config);
   registerIntakeRoutes(app, store, config, intake);
   registerLotRoutes(app, store, config, chain);
+  registerDemoRoutes(app);
   return app;
 }

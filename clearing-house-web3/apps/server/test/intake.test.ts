@@ -5,7 +5,7 @@ import type { ChatMessage, ChatResult, LlmClient, ToolCall } from "../src/agents
 import { mandateToText } from "@chw3/protocol";
 import { testAccount, testConfig, testServer } from "./helpers.ts";
 
-const fixture = (name: string) => readFileSync(new URL(`./fixtures/${name}`, import.meta.url), "utf8");
+const fixture = (name: string) => readFileSync(new URL(`../demo/emails/${name}`, import.meta.url), "utf8");
 
 const OPTIONS = { model: "fake/main", fallbackModel: "fake/fallback", knownFunds: ["Fund F"] };
 
@@ -33,7 +33,7 @@ describe("intake agent (S-027, S-044)", () => {
       { content: null, toolCalls: [toolCall("draft_instruction", { fund: "Fund F", side: "BUY", units: "100", participant: "Manager A" })], model: "" },
       { content: "Draft: Manager A subscribes 100 units of Fund F.", toolCalls: [], model: "" },
     ]);
-    const result = await runIntakeAgent(client, fixture("email-clear.txt"), OPTIONS);
+    const result = await runIntakeAgent(client, fixture("clear.txt"), OPTIONS);
     expect(result.draft).toEqual({ fundName: "Fund F", participantName: "Manager A", side: "BUY", shares: 100n * 10n ** 6n });
     expect(result.explanation).toContain("100 units");
     expect(result.refusedTools).toEqual([]);
@@ -43,7 +43,7 @@ describe("intake agent (S-027, S-044)", () => {
 
   it("creates nothing for an ambiguous email", async () => {
     const client = fakeClient([{ content: "The fund and the number of units are missing.", toolCalls: [], model: "" }]);
-    const result = await runIntakeAgent(client, fixture("email-ambiguous.txt"), OPTIONS);
+    const result = await runIntakeAgent(client, fixture("ambiguous.txt"), OPTIONS);
     expect(result.draft).toBeNull();
     expect(result.explanation).toContain("missing");
   });
@@ -54,7 +54,7 @@ describe("intake agent (S-027, S-044)", () => {
       { content: null, toolCalls: [toolCall("send_transaction", { to: "0x1", value: "1" })], model: "" },
       { content: "I cannot do that.", toolCalls: [], model: "" },
     ]);
-    const result = await runIntakeAgent(client, fixture("email-trapped.txt"), { ...OPTIONS, log: (line) => log.push(line) });
+    const result = await runIntakeAgent(client, fixture("trapped.txt"), { ...OPTIONS, log: (line) => log.push(line) });
     expect(result.draft).toBeNull();
     expect(result.refusedTools).toEqual(["send_transaction"]);
     expect(log.join("\n")).toContain("refused tool send_transaction");
@@ -113,7 +113,7 @@ describe("POST /intake", () => {
     const signature = await a.signMessage({ message: mandateToText(mandate) });
     await app.inject({ method: "POST", url: "/mandates", payload: { mandate: { ...mandate, maxCashPerCycle: mandate.maxCashPerCycle.toString() }, signature } });
 
-    const res = await app.inject({ method: "POST", url: "/intake", payload: { emailText: fixture("email-trapped.txt") } });
+    const res = await app.inject({ method: "POST", url: "/intake", payload: { emailText: fixture("trapped.txt") } });
     expect(res.statusCode).toBe(200);
     expect(res.json().draft.shares).toBe("1000000000000");
     expect(res.json().check.ok).toBe(false);
@@ -133,7 +133,7 @@ describe("POST /intake", () => {
     const mandate = { participant: a.address, participantName: "Manager A", allowedFunds: ["Fund F"], maxCashPerCycle: 5_000_000n * 10n ** 6n, allowedSides: ["BUY"] as ("BUY" | "SELL")[], nonce: 1 };
     const signature = await a.signMessage({ message: mandateToText(mandate) });
     await app.inject({ method: "POST", url: "/mandates", payload: { mandate: { ...mandate, maxCashPerCycle: mandate.maxCashPerCycle.toString() }, signature } });
-    const res = await app.inject({ method: "POST", url: "/intake", payload: { emailText: fixture("email-clear.txt") } });
+    const res = await app.inject({ method: "POST", url: "/intake", payload: { emailText: fixture("clear.txt") } });
     expect(res.json().check).toEqual({ ok: true, reasons: [] });
     await app.close();
   });
