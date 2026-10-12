@@ -33,6 +33,29 @@ export type NetPosition = {
   cash: bigint;
 };
 
+// One asset held by the fund, as reported by the fund administrator (S-024).
+export type NavHolding = {
+  asset: string;
+  // Units held, 6 decimals
+  quantity: bigint;
+  // Cash for one unit, 6 decimals
+  price: bigint;
+};
+
+// Everything the NAV is computed from (S-041). The NAV itself is not an input:
+// computeNav derives it, and navHash covers both.
+export type NavInputs = {
+  fundName: string;
+  // ISO date, for example 2026-10-13
+  navDate: string;
+  source: string;
+  holdings: NavHolding[];
+  // Cash, 6 decimals
+  liabilities: bigint;
+  // Shares, 6 decimals
+  sharesOutstanding: bigint;
+};
+
 // Prefunded balances of each participant in the escrow, 6 decimals.
 export type Balances = Record<Address, { shares: bigint; cash: bigint }>;
 
