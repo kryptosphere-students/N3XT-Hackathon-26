@@ -2,7 +2,7 @@
 id: S-014
 epic: E-003
 title: Déploiement Base Sepolia et vérification
-status: in-progress
+status: done
 priority: must
 estimate: S
 owner: équipe
@@ -28,3 +28,4 @@ En tant que **jury**, je veux **vérifier les contrats sur l'explorateur**, afin
 ## Notes
 - Le faucet Alchemy donne 0,1 ETH par 24 h par adresse. Vérifier les conditions sur la page avant de compter dessus (Q-10).
 - Les clés sont des clés de test, jamais de production.
+- Fait le 12 octobre : déployé et vérifié sur Basescan, adresses dans le README racine et dans `.env`. La vérification lancée depuis `forge script --root contracts --verify` échoue (chemins résolus depuis le mauvais dossier) : utiliser `forge verify-contract` depuis `contracts/`.

@@ -42,7 +42,7 @@ Vue condensée des 8 epics et des 44 stories. Détail dans chaque fichier.
 | S-011 | Escrow DvP avec préfinancement | E-003 | must | L | done | S-009, S-010 |
 | S-012 | Événement LotSettled (hash du lot, hash NAV, signatures) | E-003 | must | S | done | S-011 |
 | S-013 | Tests Foundry unitaires et de propriétés | E-003 | must | M | done | S-009 à S-012 |
-| S-014 | Déploiement Base Sepolia et vérification | E-003 | must | S | in-progress | S-013 |
+| S-014 | Déploiement Base Sepolia et vérification | E-003 | must | S | done | S-013 |
 | S-042 | Mode instantané et mode netting dans le même moteur | E-003 | must | M | in-progress | S-011, S-016 |
 | S-015 | Soldes nets en bigint | E-004 | must | M | backlog | — |
 | S-016 | Vérification de couverture | E-004 | must | S | backlog | S-015 |
@@ -76,4 +76,4 @@ Vue condensée des 8 epics et des 44 stories. Détail dans chaque fichier.
 ## Compteurs
 
 - Priorité : 40 `must`, 1 `should` (S-008), 1 `bonus` (S-023), 2 `cut` (S-025, S-033). Total 44.
-- Statut : 15 `done` (S-005 à S-007, S-009 à S-013, S-019, S-020, S-022, S-027, S-029, S-043, S-044), 1 `ready` (S-004), 6 `in-progress` (S-001 à S-003, S-014, S-038, S-042), 2 `cut`, 20 `backlog`. Total 44.
+- Statut : 16 `done` (S-005 à S-007, S-009 à S-014, S-019, S-020, S-022, S-027, S-029, S-043, S-044), 1 `ready` (S-004), 5 `in-progress` (S-001 à S-003, S-038, S-042), 2 `cut`, 20 `backlog`. Total 44.
