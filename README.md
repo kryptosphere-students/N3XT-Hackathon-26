@@ -19,6 +19,18 @@ Three participants hold units of one fund: two managers and a depositary. Their 
 
 Both go through the same `settle(lot)`. The agent never computes an amount and never signs. The trapped email of the demo is refused by the signed mandate, and the Flex is never asked to sign it.
 
+## Screenshots
+
+The dashboard on a local anvil, driven by `npm run screenshots` (three anvil accounts stand in for the Flex, which is why the Flex badge says not connected).
+
+| The agent drafts, the code checks the mandate | The trapped email is refused before any signature |
+|---|---|
+| ![agent draft](docs-clearing-house-web3/screenshots/03-agent-draft.png) | ![trapped email](docs-clearing-house-web3/screenshots/05-trapped-email.png) |
+
+| Netted lot settled on chain, gross against net | Instant lot of one order |
+|---|---|
+| ![lot settled](docs-clearing-house-web3/screenshots/07-lot-settled.png) | ![instant](docs-clearing-house-web3/screenshots/08-instant-settled.png) |
+
 ## Who signs what
 
 | Action | Done by | Approved by | Proof on the Ledger side |
