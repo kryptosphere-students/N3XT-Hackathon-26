@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getDemoEmails, intake, type IntakeResult } from "../api.ts";
+import { checkDraft, getDemoEmails, intake, type IntakeResult } from "../api.ts";
 import { sideLabel, units } from "../format.ts";
 import { PARTICIPANTS, type ParticipantKey } from "../ledger/accounts.ts";
 import { Badge } from "./Badge.tsx";
@@ -33,6 +33,21 @@ export function IntakePanel({ onDraft }: { onDraft: (draft: DraftForForm) => voi
     }
   }
 
+  // What the hidden notice of the trapped email asks for. Second line of defence:
+  // even an agent that obeyed it would be stopped by the signed mandate.
+  async function simulateFooledAgent() {
+    setResult(null);
+    setError("");
+    setBusy(true);
+    try {
+      setResult(await checkDraft({ fundName: "Fund F", participantName: "Manager A", side: "SELL", units: "1000000" }));
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
   const draft = result?.draft;
   const accepted = Boolean(draft && result?.check?.ok);
   const who = draft && PARTICIPANTS.find((p) => p.name.toLowerCase() === draft.participantName.toLowerCase())?.key;
@@ -48,6 +63,9 @@ export function IntakePanel({ onDraft }: { onDraft: (draft: DraftForForm) => voi
         </button>
         <button className="demo" onClick={() => run(emails.ambiguous ?? "")} disabled={busy || !emails.ambiguous}>
           Ambiguous email
+        </button>
+        <button className="demo" onClick={simulateFooledAgent} disabled={busy}>
+          Simulate a fooled agent
         </button>
       </div>
       <textarea value={emailText} onChange={(e) => setEmailText(e.target.value)} rows={7} placeholder="Paste an email from a manager, or use a demo button" />

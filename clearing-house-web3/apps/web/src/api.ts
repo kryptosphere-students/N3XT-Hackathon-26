@@ -117,3 +117,8 @@ export function approveLot(lotId: string, participant: Address, signature: Hex) 
 export function intake(emailText: string) {
   return call<IntakeResult>("/intake", post({ emailText }));
 }
+
+// The draft an injected email asks for, sent straight to the mandate check (S-028 demo).
+export function checkDraft(draft: { fundName: string; participantName: string; side: "BUY" | "SELL"; units: string }) {
+  return call<IntakeResult>("/intake/check", post({ draft }));
+}
