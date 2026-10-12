@@ -13,11 +13,13 @@
     "test": "npm run test --workspaces --if-present",
     "lint": "eslint . --max-warnings 0",
     "typecheck": "npm run typecheck --workspaces --if-present",
-    "demo:local": "node scripts/demo-local.mjs"
+    "demo:local": "node scripts/demo-local.mjs",
+    "screenshots": "tsx scripts/screenshots.mjs"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",
     "eslint": "^10.12.0",
+    "playwright": "^1.58.2",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.71.1"
   }
