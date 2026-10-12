@@ -68,7 +68,9 @@ export function MandatesPanel({ config, addresses, version }: { config: ServerCo
             <td>
               <strong>{config.funds[0]?.name}</strong>
             </td>
-            <td className="muted">operated by the clearing house</td>
+            <td className="muted" style={{ whiteSpace: "normal" }}>
+              operated by the clearing house
+            </td>
             <td>
               <code title={config.funds[0]?.address}>{shortAddress(config.funds[0]?.address ?? "")}</code>
             </td>

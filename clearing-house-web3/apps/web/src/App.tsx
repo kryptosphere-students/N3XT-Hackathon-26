@@ -24,6 +24,8 @@ function Card({ step, title, wide, children }: { step: number; title: string; wi
   );
 }
 
+const CONFIG_RETRY_MS = 2000;
+
 // One page, top to bottom: who signs, what arrives, what is signed, what settles.
 export default function App() {
   const [addresses, setAddresses] = useState<Addresses>({});
@@ -32,8 +34,26 @@ export default function App() {
   const [version, setVersion] = useState(0);
   const [serverError, setServerError] = useState("");
 
+  // The page is often opened before the server, or while tsx watch restarts it:
+  // keep trying until the config arrives.
   useEffect(() => {
-    getConfig().then(setConfig).catch((e: Error) => setServerError("Server not reachable: " + e.message));
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let stopped = false;
+    const load = () =>
+      getConfig()
+        .then((c) => {
+          setConfig(c);
+          setServerError("");
+        })
+        .catch((e: Error) => {
+          setServerError("Server not reachable: " + e.message + ". Retrying.");
+          if (!stopped) timer = setTimeout(load, CONFIG_RETRY_MS);
+        });
+    load();
+    return () => {
+      stopped = true;
+      clearTimeout(timer);
+    };
   }, []);
 
   const refresh = () => setVersion((v) => v + 1);

@@ -1,18 +1,19 @@
 :root {
-  --bg: #f4f5f8;
-  --card: #ffffff;
-  --text: #1f2430;
-  --muted: #5f6676;
-  --border: #e1e4ea;
-  --accent: #2f54c7;
-  --accent-soft: #e8edfb;
-  --ok: #1f7a4d;
-  --ok-soft: #e3f3ea;
-  --warn: #9a6400;
-  --warn-soft: #fff3d6;
-  --bad: #b42318;
-  --bad-soft: #fde8e6;
-  --code-bg: #f0f2f6;
+  --bg: #0b0d12;
+  --card: #13161e;
+  --field: #0e1117;
+  --text: #e9ecf2;
+  --muted: #98a1b4;
+  --border: #272c38;
+  --accent: #6b8bff;
+  --accent-soft: rgba(107, 139, 255, 0.16);
+  --ok: #41d08a;
+  --ok-soft: rgba(65, 208, 138, 0.14);
+  --warn: #f2b84b;
+  --warn-soft: rgba(242, 184, 75, 0.14);
+  --bad: #ff6f6f;
+  --bad-soft: rgba(255, 111, 111, 0.14);
+  --code-bg: #1b2029;
   --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
   --mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
   --radius: 10px;
@@ -20,7 +21,7 @@
   font: 16px/1.5 var(--sans);
   color: var(--text);
   background: var(--bg);
-  color-scheme: light;
+  color-scheme: dark;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -31,6 +32,7 @@
 body {
   margin: 0;
   min-width: 1100px;
+  background: var(--bg);
 }
 
 #root {

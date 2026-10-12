@@ -33,6 +33,7 @@
 .card {
   background: var(--card);
   border: 1px solid var(--border);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset;
   border-radius: var(--radius);
   padding: 22px 24px 24px;
   min-width: 0;
@@ -135,7 +136,7 @@ textarea {
   padding: 8px 10px;
   border: 1px solid var(--border);
   border-radius: 6px;
-  background: #fff;
+  background: var(--field);
 }
 
 input:focus,
@@ -168,12 +169,12 @@ button:disabled {
 }
 
 button.secondary {
-  background: #fff;
+  background: transparent;
   color: var(--accent);
 }
 
 button.demo {
-  background: #fff;
+  background: transparent;
   color: var(--text);
   border: 1px dashed var(--muted);
   font-weight: 500;
@@ -225,7 +226,6 @@ td {
 td.wrap {
   white-space: normal;
   width: 100%;
-  min-width: 260px;
 }
 
 tr:last-child td {
@@ -244,8 +244,9 @@ td.num {
   margin: 12px 0;
   padding: 14px 16px;
   border-radius: 8px;
-  background: #1c2230;
-  color: #eef1f7;
+  background: #000;
+  border: 1px solid #2f3542;
+  color: #f4f6fa;
   font-family: var(--mono);
   font-size: 15px;
   white-space: pre-wrap;
@@ -255,7 +256,7 @@ td.num {
 .flex-preview .label {
   font-family: var(--sans);
   font-size: 13px;
-  color: #9aa3b5;
+  color: #8a93a6;
   margin-bottom: 6px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
