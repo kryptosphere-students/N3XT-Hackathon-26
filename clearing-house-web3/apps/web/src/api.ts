@@ -88,6 +88,7 @@ export const getConfig = () => call<ServerConfig>("/config");
 export const getMandates = () => call<StoredMandate[]>("/mandates");
 export const getInstructions = () => call<StoredInstruction[]>("/instructions");
 export const getLots = () => call<LotView[]>("/lots");
+export const getDemoEmails = () => call<Record<"clear" | "ambiguous" | "trapped", string>>("/demo/emails");
 export const getNonces = (participant: Address) => call<{ mandate: number; instruction: number }>(`/participants/${participant}/nonces`);
 
 // bigint goes over the wire as a decimal string (see server schemas.ts).

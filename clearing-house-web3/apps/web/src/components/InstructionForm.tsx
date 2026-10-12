@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { parseUnits } from "viem";
 import { SHARE_DECIMALS, type Side } from "@chw3/engine";
 import { instructionToText, type InstructionPayload } from "@chw3/protocol";
-import { getConfig, getNonces, postInstruction, type ServerConfig } from "../api.ts";
+import { getNonces, postInstruction, type ServerConfig } from "../api.ts";
 import { PARTICIPANTS, participant, type ParticipantKey } from "../ledger/accounts.ts";
 import { useDmk } from "../ledger/dmk.tsx";
 import { describeDeviceError } from "../ledger/errors.ts";
 import { signText } from "../ledger/sign.ts";
 import type { Addresses } from "./Accounts.tsx";
+import type { DraftForForm } from "./IntakePanel.tsx";
 
 const ORDER_ID_BYTES = 3;
 
@@ -20,11 +21,13 @@ function today(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
+type Props = { config: ServerConfig | null; addresses: Addresses; draft: DraftForForm | null; onSigned: () => void };
+
 // S-020: the manager reads the order on the Flex and signs it. The server
-// verifies the signature; the mandate check (S-026) comes after.
-export function InstructionForm({ addresses }: { addresses: Addresses }) {
+// verifies the signature, then the mandate (S-026). A draft from the agent
+// only prefills the fields: the Flex shows the final text.
+export function InstructionForm({ config, addresses, draft, onSigned }: Props) {
   const { signer } = useDmk();
-  const [config, setConfig] = useState<ServerConfig | null>(null);
   const [who, setWho] = useState<ParticipantKey>("A");
   const [side, setSide] = useState<Side>("BUY");
   const [units, setUnits] = useState("100");
@@ -32,8 +35,12 @@ export function InstructionForm({ addresses }: { addresses: Addresses }) {
   const [status, setStatus] = useState("");
 
   useEffect(() => {
-    getConfig().then(setConfig).catch((e: Error) => setStatus("Server not reachable: " + e.message));
-  }, []);
+    if (!draft) return;
+    setWho(draft.who);
+    setSide(draft.side);
+    setUnits(draft.units);
+    setStatus("Prefilled from the agent's draft. Check the fields, then sign on the Flex.");
+  }, [draft]);
 
   const address = addresses[who];
   const fund = config?.funds[0];
@@ -44,14 +51,7 @@ export function InstructionForm({ addresses }: { addresses: Addresses }) {
     try {
       const { instruction: nonce } = await getNonces(address);
       const payload: InstructionPayload = {
-        instruction: {
-          id: newOrderId(),
-          cycleId,
-          fund: fund.address,
-          participant: address,
-          side,
-          shares: parseUnits(units, SHARE_DECIMALS),
-        },
+        instruction: { id: newOrderId(), cycleId, fund: fund.address, participant: address, side, shares: parseUnits(units, SHARE_DECIMALS) },
         fundName: fund.name,
         participantName: p.name,
         nonce,
@@ -59,16 +59,20 @@ export function InstructionForm({ addresses }: { addresses: Addresses }) {
       const text = instructionToText(payload);
       setStatus("Read and sign on the Flex:\n" + text);
       const signature = await signText(signer, p.path, text);
-      await postInstruction(payload, signature);
-      setStatus(`Order ${payload.instruction.id} signed and accepted by the server (nonce ${nonce}).`);
+      const stored = await postInstruction(payload, signature);
+      setStatus(
+        stored.status === "signed"
+          ? `Order ${stored.id} signed and accepted (nonce ${nonce}).`
+          : `Order ${stored.id} signed but refused by the mandate: ${stored.reasons.join("; ")}`,
+      );
+      onSigned();
     } catch (e) {
       setStatus(describeDeviceError(e));
     }
   }
 
   return (
-    <section>
-      <h2>4. Order</h2>
+    <div>
       <label>
         Manager
         <select value={who} onChange={(e) => setWho(e.target.value as ParticipantKey)}>
@@ -101,7 +105,8 @@ export function InstructionForm({ addresses }: { addresses: Addresses }) {
       <button onClick={signAndSend} disabled={!signer || !address || !fund}>
         Sign the order on the Flex
       </button>
+      {!address && <p className="hint">Connect the Flex and read the addresses first.</p>}
       {status && <pre>{status}</pre>}
-    </section>
+    </div>
   );
 }
