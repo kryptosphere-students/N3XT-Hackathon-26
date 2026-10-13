@@ -29,8 +29,8 @@ Vue condensée des 8 epics et des 44 stories. Détail dans chaque fichier.
 | ID | Story | Epic | Priorité | Taille | Statut | Dépend de |
 |---|---|---|---|---|---|---|
 | S-001 | DISCLOSURE.md | E-001 | must | XS | done | — |
-| S-002 | DECISIONS.md, décision de périmètre | E-001 | must | XS | in-progress | Q-04 |
-| S-003 | DX_FEEDBACK.md | E-001 | must | XS | in-progress | — |
+| S-002 | DECISIONS.md, décision de périmètre | E-001 | must | XS | done | Q-04 |
+| S-003 | DX_FEEDBACK.md | E-001 | must | XS | done | — |
 | S-004 | Hygiène des secrets | E-001 | must | S | ready | — |
 | S-043 | Initialiser le monorepo | E-001 | must | S | done | — |
 | S-005 | Connexion WebHID au Flex | E-002 | must | S | done | — |
@@ -51,7 +51,7 @@ Vue condensée des 8 epics et des 44 stories. Détail dans chaque fichier.
 | S-041 | Publication du hash des entrées et du résultat de NAV | E-004 | must | S | done | S-024 |
 | S-019 | Signature EIP-191 des règles de mandat | E-005 | must | M | done | S-005 |
 | S-020 | Signature EIP-191 des instructions | E-005 | must | M | done | S-006 |
-| S-021 | Approbation du lot en EIP-191, règlement envoyé par le moteur | E-005 | must | L | in-progress | S-007, S-011, S-014, S-020 |
+| S-021 | Approbation du lot en EIP-191, règlement envoyé par le moteur | E-005 | must | L | done | S-007, S-011, S-014, S-020 |
 | S-022 | Refus des instructions et règles non signées | E-005 | must | S | done | S-019, S-020 |
 | S-023 | Configuration et clés agents dans Key Ring | E-005 | bonus | M | done | S-008 |
 | S-024 | Mock serveur NAV | E-006 | must | S | done | — |
@@ -68,7 +68,7 @@ Vue condensée des 8 epics et des 44 stories. Détail dans chaque fichier.
 | S-034 | Bouton scénario d'attaque | E-007 | must | XS | done | S-028, S-031 |
 | S-035 | Script de démo de 3 minutes | E-008 | must | XS | done | S-021, S-028, S-034 |
 | S-036 | Vidéo de secours | E-008 | must | S | backlog | S-035 |
-| S-037 | README : frontière, adresses, limites | E-008 | must | S | in-progress | S-014, S-021 |
+| S-037 | README : frontière, adresses, limites | E-008 | must | S | done | S-014, S-021 |
 | S-038 | Plan de présentation HTML | E-008 | must | S | in-progress | — |
 | S-039 | Soumission : formulaire, dépôt, post | E-008 | must | XS | backlog | S-036, S-037 |
 | S-040 | Deux répétitions du pitch | E-008 | must | S | backlog | S-035, S-038 |
