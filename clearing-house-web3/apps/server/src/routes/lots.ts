@@ -144,7 +144,9 @@ export function registerLotRoutes(app: FastifyInstance, store: Store, config: Se
     const fund = config.funds[0]!;
     const instructions = selected.map((i) => ({ ...i, shares: BigInt(i.shares) }));
     const positions = netPositions(instructions, config.navPerUnit, fund.address);
-    const id = BigInt(listLots(store).length + 1);
+    let id = BigInt(listLots(store).length + 1);
+    // After a store reset, ids restart at 1 but the escrow still remembers settled lots: skip them.
+    if (chain) while (await chain.isSettled(id)) id += 1n;
     const lot: Lot = { id, cycleId, fund: fund.address, navPerUnit: config.navPerUnit, positions, instructionIds: selected.map((i) => i.id) };
 
     if (chain) {
