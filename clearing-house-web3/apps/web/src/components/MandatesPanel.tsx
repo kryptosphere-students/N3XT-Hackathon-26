@@ -26,7 +26,6 @@ export function MandatesPanel({ config, addresses, version }: { config: ServerCo
           <th>Flex account</th>
           <th>Address</th>
           <th>Mandate</th>
-          <th className="num">Cap per cycle</th>
         </tr>
       </thead>
       <tbody>
@@ -52,14 +51,13 @@ export function MandatesPanel({ config, addresses, version }: { config: ServerCo
                   <>
                     <Badge tone="ok">Signed on Flex</Badge>{" "}
                     <span className="small muted">
-                      {mandate.allowedFunds.join(", ")}, {mandate.allowedSides.map((s) => (s === "BUY" ? "subscribe" : "redeem")).join(" and ")}, nonce {mandate.nonce}
+                      {mandate.allowedFunds.join(", ")}, {mandate.allowedSides.map((s) => (s === "BUY" ? "subscribe" : "redeem")).join(" and ")}, cap {cash(mandate.maxCashPerCycle)} cash per cycle, nonce {mandate.nonce}
                     </span>
                   </>
                 ) : (
                   <Badge>No mandate</Badge>
                 )}
               </td>
-              <td className="num">{mandate ? `${cash(mandate.maxCashPerCycle)} cash` : ""}</td>
             </tr>
           );
         })}
@@ -75,7 +73,6 @@ export function MandatesPanel({ config, addresses, version }: { config: ServerCo
               <code title={config.funds[0]?.address}>{shortAddress(config.funds[0]?.address ?? "")}</code>
             </td>
             <td className="muted">none needed</td>
-            <td></td>
           </tr>
         )}
       </tbody>
