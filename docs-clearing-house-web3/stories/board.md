@@ -28,7 +28,7 @@ Vue condensée des 8 epics et des 44 stories. Détail dans chaque fichier.
 
 | ID | Story | Epic | Priorité | Taille | Statut | Dépend de |
 |---|---|---|---|---|---|---|
-| S-001 | DISCLOSURE.md | E-001 | must | XS | in-progress | — |
+| S-001 | DISCLOSURE.md | E-001 | must | XS | done | — |
 | S-002 | DECISIONS.md, décision de périmètre | E-001 | must | XS | in-progress | Q-04 |
 | S-003 | DX_FEEDBACK.md | E-001 | must | XS | in-progress | — |
 | S-004 | Hygiène des secrets | E-001 | must | S | ready | — |

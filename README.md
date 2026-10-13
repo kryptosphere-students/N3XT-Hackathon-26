@@ -150,7 +150,7 @@ Cendro is sold as software to the depositary or administrator, who operates it f
 | `clearing-house-web3/` | POC code: contracts, engine, protocol, server, web |
 | `docs-clearing-house-web3/` | Product docs (French): framing, POC spec, backlog, demo script, developer guide |
 | `DISCLOSURE.md` | What existed before the hackathon |
-| `DECISIONS.md` | Decision log, D1 to D12 |
+| `DECISIONS.md` | Decision log, D1 to D13 |
 | `DX_FEEDBACK.md` | Developer experience log on the Ledger stack |
 
 MIT license, see `LICENSE`.
