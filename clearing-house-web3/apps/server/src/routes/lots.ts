@@ -86,14 +86,30 @@ export function grossAndNet(lot: StoredLot, instructions: StoredInstruction[]) {
   };
 }
 
-export function lotView(store: Store, lot: StoredLot) {
+// Delay measured for S-042: from the first signed order of the lot to the settlement,
+// and from the lot creation (approvals on the Flex) to the settlement. Seconds.
+function delays(lot: StoredLot, instructions: StoredInstruction[]) {
+  if (!lot.settledAt) return null;
+  const inLot = instructions.filter((i) => lot.instructionIds.includes(i.id));
+  const firstOrder = Math.min(...inLot.map((i) => Date.parse(i.receivedAt)));
+  const settled = Date.parse(lot.settledAt);
+  const seconds = (from: number) => Math.round((settled - from) / 1000);
+  return { fromFirstOrder: seconds(firstOrder), fromLotCreation: seconds(Date.parse(lot.createdAt)) };
+}
+
+export function lotView(store: Store, lot: StoredLot, config?: ServerConfig) {
   const engineLot = toLot(lot);
+  const names = Object.fromEntries([
+    ...(config?.participants ?? []).map((p) => [p.address.toLowerCase(), p.name]),
+    [lot.fund.toLowerCase(), lot.fundName],
+  ]);
   const texts = Object.fromEntries(
     lot.approvers.map((participant) => [participant, lotApprovalToText(engineLot, participant, { fundName: lot.fundName, lotHash: lot.lotHash })]),
   );
   const approvedBy = lot.approvals.map((a) => a.participant);
   const missing = lot.approvers.filter((p) => !approvedBy.some((a) => a.toLowerCase() === p.toLowerCase()));
-  return { ...lot, texts, missing, ...grossAndNet(lot, listInstructions(store)) };
+  const instructions = listInstructions(store);
+  return { ...lot, texts, names, missing, ...grossAndNet(lot, instructions), delays: delays(lot, instructions) };
 }
 
 function saveLot(store: Store, lot: StoredLot) {
@@ -105,12 +121,12 @@ function markInstructions(store: Store, ids: string[], patch: Partial<StoredInst
 }
 
 export function registerLotRoutes(app: FastifyInstance, store: Store, config: ServerConfig, chain: Chain | null) {
-  app.get("/lots", async () => listLots(store).map((lot) => lotView(store, lot)));
+  app.get("/lots", async () => listLots(store).map((lot) => lotView(store, lot, config)));
 
   app.get("/lots/:id", async (request, reply) => {
     const lot = listLots(store).find((l) => l.id === (request.params as { id: string }).id);
     if (!lot) return reply.code(404).send({ error: "unknown lot" });
-    return lotView(store, lot);
+    return lotView(store, lot, config);
   });
 
   // Build a lot from the signed orders of a cycle. Instant mode takes one order.
@@ -143,7 +159,7 @@ export function registerLotRoutes(app: FastifyInstance, store: Store, config: Se
       fund: fund.address,
       fundName: fund.name,
       navPerUnit: config.navPerUnit.toString(),
-      navHash: navHash({ fund: fund.address, cycleId, navPerUnit: config.navPerUnit, source: "demo" }),
+      navHash: navHash(config.navInputs),
       positions: fromPositions(positions),
       instructionIds: lot.instructionIds,
       lotHash: chain ? lotHash(lot, chain.shareToken, chain.cashToken) : lotHash(lot, fund.address, fund.address),
@@ -154,7 +170,7 @@ export function registerLotRoutes(app: FastifyInstance, store: Store, config: Se
     };
     store.append(COLLECTION, stored);
     markInstructions(store, stored.instructionIds, { status: "in_lot", lotId: stored.id });
-    return reply.code(201).send(lotView(store, stored));
+    return reply.code(201).send(lotView(store, stored, config));
   });
 
   // One EIP-191 approval per participant. The last valid one triggers the settlement.
@@ -181,7 +197,7 @@ export function registerLotRoutes(app: FastifyInstance, store: Store, config: Se
     lot.status = complete ? "approved" : "pending";
     saveLot(store, lot);
     if (complete) await settle(lot);
-    return reply.code(201).send(lotView(store, lot));
+    return reply.code(201).send(lotView(store, lot, config));
   });
 
   // Retry a settlement that failed on chain. Approvals are checked again first.
@@ -189,10 +205,10 @@ export function registerLotRoutes(app: FastifyInstance, store: Store, config: Se
     const lot = listLots(store).find((l) => l.id === (request.params as { id: string }).id);
     if (!lot) return reply.code(404).send({ error: "unknown lot" });
     if (lot.status === "settled") return reply.code(409).send({ error: "lot already settled" });
-    const missing = lotView(store, lot).missing;
+    const missing = lotView(store, lot, config).missing;
     if (missing.length > 0) return reply.code(409).send({ error: "approvals missing", participants: missing });
     await settle(lot);
-    return lotView(store, lot);
+    return lotView(store, lot, config);
   });
 
   // Every approval is re-verified right before the transaction. Nothing is sent otherwise.

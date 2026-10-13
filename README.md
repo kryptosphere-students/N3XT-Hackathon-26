@@ -19,6 +19,18 @@ Three participants hold units of one fund: two managers and a depositary. Their 
 
 Both go through the same `settle(lot)`. The agent never computes an amount and never signs. The trapped email of the demo is refused by the signed mandate, and the Flex is never asked to sign it.
 
+## Screenshots
+
+The dashboard on a local anvil, driven by `npm run screenshots` (three anvil accounts stand in for the Flex, which is why the Flex badge says not connected).
+
+| The agent drafts, the code checks the mandate | The trapped email is refused before any signature |
+|---|---|
+| ![agent draft](docs-clearing-house-web3/screenshots/03-agent-draft.png) | ![trapped email](docs-clearing-house-web3/screenshots/05-trapped-email.png) |
+
+| Netted lot settled on chain, gross against net | Instant lot of one order |
+|---|---|
+| ![lot settled](docs-clearing-house-web3/screenshots/07-lot-settled.png) | ![instant](docs-clearing-house-web3/screenshots/08-instant-settled.png) |
+
 ## Who signs what
 
 | Action | Done by | Approved by | Proof on the Ledger side |
@@ -32,6 +44,7 @@ Both go through the same `settle(lot)`. The agent never computes an amount and n
 | Approve a lot (what I receive, what I pay) | Each participant | Each participant, on the Flex | EIP-191 signature of the approval text with the lot hash |
 | Send `settle(lot)` | Engine key, only once every approval is valid | Checked by code before sending | Signatures published in `LotSettled` |
 | Prefund the escrow | Deployer (owner), at deployment | none | none, test tokens |
+| Decrypt the agent's LLM key at startup | Code (`wallet-cli ring decrypt`, subprocess) | The developer, who sets `WALLET_PASS` in the terminal | Key derived from the Ledger seed (Key Ring) |
 
 What the agent does alone: read, extract, explain. What a human approves on the device: the mandate, every order, every lot. The agent and the code never see a private key: the Flex holds the participants' keys, the engine key holds test ETH for gas.
 
@@ -39,7 +52,8 @@ What the agent does alone: read, extract, explain. What a human approves on the 
 
 - Device Management Kit over WebHID, with the Ethereum signer: [`apps/web/src/ledger/dmk.tsx`](clearing-house-web3/apps/web/src/ledger/dmk.tsx) (provider), [`sign.ts`](clearing-house-web3/apps/web/src/ledger/sign.ts) (`getAddress` with `checkOnDevice`, `signMessage`), [`accounts.ts`](clearing-house-web3/apps/web/src/ledger/accounts.ts) (three derivation paths as constants), [`errors.ts`](clearing-house-web3/apps/web/src/ledger/errors.ts) (user rejection told apart from errors).
 - The texts shown on the Flex: [`packages/protocol`](clearing-house-web3/packages/protocol/src). The same code builds the text in the browser and rebuilds it on the server for `verifyMessage`.
-- Clear Signing: not available for our own contracts without an ERC-7730 descriptor, so every human signature is EIP-191 text (decision D6, confirmed by the Ledger mentors). Agent Intent and Key Ring are in the roadmap, see `DECISIONS.md` D12.
+- Ledger Key Ring (`wallet-cli ring`): the agent's OpenRouter key is stored encrypted in `secrets/openrouter.enc` and decrypted at startup by [`apps/server/src/agents/secret.ts`](clearing-house-web3/apps/server/src/agents/secret.ts), in a subprocess, with the ring password taken from `WALLET_PASS` in the developer's terminal. The key never sits in clear on disk and never reaches a log. Without the encrypted file the server falls back to `.env` and says so on the page.
+- Clear Signing: not available for our own contracts without an ERC-7730 descriptor, so every human signature is EIP-191 text (decision D6, confirmed by the Ledger mentors). Agent Intent is in the roadmap, see `DECISIONS.md` D12.
 
 ## Architecture
 
@@ -89,8 +103,7 @@ Deployed on 12 Oct by `0xb9d8118635755abCf21DaA6dEd46f964702F8ffC`, which is als
 
 - The escrow trusts the engine key to have verified the participants' approvals. The signatures are published in `LotSettled`, so anyone can check them afterwards. Verifying them inside the contract is roadmap.
 - The escrow is prefunded by the owner at deployment with test tokens. Nobody signs an `approve` on the Flex, because our test tokens have no clear signing descriptor.
-- The NAV is a demo constant (105 cash per unit) until the NAV mock lands. Its hash is published with the lot.
-- The engine functions in the server (`apps/server/src/engine-adapter.ts`) are provisional until the engine package is merged.
+- The NAV comes from a mock fund administrator file (`packages/engine/fixtures/nav-fund-f.json`): holdings, liabilities, shares outstanding. The engine computes 105.000000 from it and publishes the hash of inputs and result with the lot. No price oracle.
 - One fund, three participants, JSON files as storage. No regulation, no real money.
 
 ## Business model

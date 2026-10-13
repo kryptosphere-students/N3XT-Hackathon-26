@@ -2,7 +2,7 @@
 id: S-015
 epic: E-004
 title: Soldes nets en bigint
-status: backlog
+status: done
 priority: must
 estimate: M
 owner: équipe

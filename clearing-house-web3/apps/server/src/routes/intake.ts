@@ -1,5 +1,7 @@
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
+import { parseUnits } from "viem";
+import { SHARE_DECIMALS } from "@chw3/engine";
 import { runIntakeAgent, type Draft, type IntakeOptions } from "../agents/intake.ts";
 import type { LlmClient } from "../agents/llm.ts";
 import { checkInstruction, type InstructionCheck } from "../engine-adapter.ts";
@@ -33,9 +35,37 @@ export function checkDraft(store: Store, config: ServerConfig, draft: Draft, cyc
   });
 }
 
+const UNITS_PATTERN = /^\d+(\.\d{1,6})?$/;
+
+const draftBodySchema = z.object({
+  draft: z.object({
+    fundName: z.string().min(1).max(40),
+    participantName: z.string().min(1).max(40),
+    side: z.enum(["BUY", "SELL"]),
+    units: z.string().regex(UNITS_PATTERN),
+  }),
+  cycleId: z.string().min(1).max(40).optional(),
+});
+
 // S-044: POST /intake { emailText } returns a draft (or null), a short explanation
 // and the mandate check of the draft.
+// S-028: POST /intake/check { draft } skips the model and runs only the mandate check,
+// for the demo of an agent that obeyed the injection. Nothing is stored either way.
 export function registerIntakeRoutes(app: FastifyInstance, store: Store, config: ServerConfig, deps: IntakeDeps | null) {
+  app.post("/intake/check", async (request, reply) => {
+    const parsed = draftBodySchema.safeParse(request.body);
+    if (!parsed.success) return reply.code(400).send({ error: "invalid body", issues: parsed.error.issues });
+    const { draft: input, cycleId } = parsed.data;
+    const draft: Draft = { fundName: input.fundName, participantName: input.participantName, side: input.side, shares: parseUnits(input.units, SHARE_DECIMALS) };
+    return {
+      draft: { ...draft, shares: draft.shares.toString() },
+      explanation: "No model involved: this is the draft the hidden notice asked for, as if an agent had obeyed it.",
+      modelUsed: "none (simulated fooled agent)",
+      refusedTools: [],
+      check: checkDraft(store, config, draft, cycleId ?? today()),
+    };
+  });
+
   app.post("/intake", async (request, reply) => {
     if (!deps) return reply.code(503).send({ error: "LLM not configured (OPENROUTER_API_KEY missing)" });
     const parsed = intakeBodySchema.safeParse(request.body);

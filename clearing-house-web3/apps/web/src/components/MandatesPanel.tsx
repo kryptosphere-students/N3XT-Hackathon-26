@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-import { formatUnits } from "viem";
-import { CASH_DECIMALS } from "@chw3/engine";
 import { getMandates, type ServerConfig, type StoredMandate } from "../api.ts";
+import { cash, shortAddress } from "../format.ts";
 import { PARTICIPANTS } from "../ledger/accounts.ts";
 import type { Addresses } from "./Accounts.tsx";
-
-const short = (address: string) => `${address.slice(0, 6)}...${address.slice(-4)}`;
+import { Badge } from "./Badge.tsx";
 
 // Who is who: the three Flex accounts, their address in .env, and the mandate in force.
 export function MandatesPanel({ config, addresses, version }: { config: ServerConfig | null; addresses: Addresses; version: number }) {
@@ -25,8 +23,8 @@ export function MandatesPanel({ config, addresses, version }: { config: ServerCo
       <thead>
         <tr>
           <th>Participant</th>
-          <th>Flex path</th>
-          <th>Address (.env)</th>
+          <th>Flex account</th>
+          <th>Address</th>
           <th>Mandate</th>
         </tr>
       </thead>
@@ -38,30 +36,43 @@ export function MandatesPanel({ config, addresses, version }: { config: ServerCo
           const mismatch = configured && read && configured.toLowerCase() !== read.toLowerCase();
           return (
             <tr key={p.key}>
-              <td>{p.name}</td>
+              <td>
+                <strong>{p.name}</strong>
+              </td>
               <td>
                 <code>{p.path}</code>
               </td>
               <td>
-                {configured ? <code title={configured}>{short(configured)}</code> : "not in .env"}
-                {mismatch && <span className="error"> (Flex gives another address)</span>}
+                {configured ? <code title={configured}>{shortAddress(configured)}</code> : <span className="muted">not in .env</span>}
+                {mismatch && <div className="small" style={{ color: "var(--bad)" }}>Flex gives another address</div>}
               </td>
-              <td>
-                {mandate
-                  ? `${mandate.allowedFunds.join(", ")}, max ${formatUnits(BigInt(mandate.maxCashPerCycle), CASH_DECIMALS)} cash per cycle, ${mandate.allowedSides.map((s) => (s === "BUY" ? "subscribe" : "redeem")).join(" and ")}, signed (nonce ${mandate.nonce})`
-                  : "none signed"}
+              <td className="wrap">
+                {mandate ? (
+                  <>
+                    <Badge tone="ok">Signed on Flex</Badge>{" "}
+                    <span className="small muted">
+                      {mandate.allowedFunds.join(", ")}, {mandate.allowedSides.map((s) => (s === "BUY" ? "subscribe" : "redeem")).join(" and ")}, cap {cash(mandate.maxCashPerCycle)} cash per cycle, nonce {mandate.nonce}
+                    </span>
+                  </>
+                ) : (
+                  <Badge>No mandate</Badge>
+                )}
               </td>
             </tr>
           );
         })}
         {config && (
           <tr>
-            <td>{config.funds[0]?.name}</td>
-            <td>none (operated by the clearing house)</td>
             <td>
-              <code title={config.funds[0]?.address}>{short(config.funds[0]?.address ?? "")}</code>
+              <strong>{config.funds[0]?.name}</strong>
             </td>
-            <td>n/a</td>
+            <td className="muted" style={{ whiteSpace: "normal" }}>
+              operated by the clearing house
+            </td>
+            <td>
+              <code title={config.funds[0]?.address}>{shortAddress(config.funds[0]?.address ?? "")}</code>
+            </td>
+            <td className="muted">none needed</td>
           </tr>
         )}
       </tbody>

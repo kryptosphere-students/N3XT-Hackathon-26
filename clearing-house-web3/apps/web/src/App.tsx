@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import { getConfig, type ServerConfig } from "./api.ts";
 import { DmkProvider } from "./ledger/dmk.tsx";
+import { Header } from "./components/Header.tsx";
 import { ConnectLedger } from "./components/ConnectLedger.tsx";
 import { Accounts, type Addresses } from "./components/Accounts.tsx";
 import { MandatesPanel } from "./components/MandatesPanel.tsx";
@@ -11,9 +12,21 @@ import { InstructionForm } from "./components/InstructionForm.tsx";
 import { OrdersTable } from "./components/OrdersTable.tsx";
 import { Settlement } from "./components/Settlement.tsx";
 
-const BASE_SEPOLIA = 84532;
+function Card({ step, title, wide, children }: { step: number; title: string; wide?: boolean; children: React.ReactNode }) {
+  return (
+    <section className={`card${wide ? " wide" : ""}`}>
+      <h2>
+        <span className="step">{step}.</span>
+        {title}
+      </h2>
+      {children}
+    </section>
+  );
+}
 
-// One page, left to right: who signs, what arrives, what is signed, what settles.
+const CONFIG_RETRY_MS = 2000;
+
+// One page, top to bottom: who signs, what arrives, what is signed, what settles.
 export default function App() {
   const [addresses, setAddresses] = useState<Addresses>({});
   const [config, setConfig] = useState<ServerConfig | null>(null);
@@ -21,63 +34,63 @@ export default function App() {
   const [version, setVersion] = useState(0);
   const [serverError, setServerError] = useState("");
 
+  // The page is often opened before the server, or while tsx watch restarts it:
+  // keep trying until the config arrives.
   useEffect(() => {
-    getConfig().then(setConfig).catch((e: Error) => setServerError("Server not reachable: " + e.message));
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let stopped = false;
+    const load = () =>
+      getConfig()
+        .then((c) => {
+          setConfig(c);
+          setServerError("");
+        })
+        .catch((e: Error) => {
+          setServerError("Server not reachable: " + e.message + ". Retrying.");
+          if (!stopped) timer = setTimeout(load, CONFIG_RETRY_MS);
+        });
+    load();
+    return () => {
+      stopped = true;
+      clearTimeout(timer);
+    };
   }, []);
 
   const refresh = () => setVersion((v) => v + 1);
 
   return (
     <DmkProvider>
-      <header>
-        <h1>Clearing house</h1>
-        <p className="hint">
-          DvP settlement of fund units, instant or netted. Every human signature is readable text on the Ledger Flex (EIP-191). The agent drafts, the code checks, the manager signs.
-          {config && config.chainId === BASE_SEPOLIA && (
-            <>
-              {" "}
-              Escrow on Base Sepolia: <a href={`https://sepolia.basescan.org/address/${config.escrow}`}>{config.escrow}</a>
-            </>
-          )}
-        </p>
-        {serverError && <p className="error">{serverError}</p>}
-      </header>
-
+      <Header config={config} />
+      {serverError && <p className="notice bad">{serverError}</p>}
       <div className="grid">
-        <section>
-          <h2>1. Ledger Flex</h2>
+        <Card step={1} title="Ledger Flex">
           <ConnectLedger />
           <Accounts addresses={addresses} onAddresses={setAddresses} />
-        </section>
+        </Card>
 
-        <section>
-          <h2>2. Participants and mandates</h2>
+        <Card step={2} title="Participants and signed mandates">
           <MandatesPanel config={config} addresses={addresses} version={version} />
           <details>
             <summary>Sign a mandate on the Flex</summary>
             <MandateForm addresses={addresses} onSigned={refresh} />
           </details>
-        </section>
+        </Card>
 
-        <section>
-          <h2>3. Order intake agent</h2>
+        <Card step={3} title="Order intake agent">
           <IntakePanel onDraft={setDraft} />
-        </section>
+        </Card>
 
-        <section>
-          <h2>4. Order to sign</h2>
+        <Card step={4} title="Order to sign on the Flex">
           <InstructionForm config={config} addresses={addresses} draft={draft} onSigned={refresh} />
-        </section>
+        </Card>
 
-        <section className="wide">
-          <h2>5. Orders</h2>
+        <Card step={5} title="Orders" wide>
           <OrdersTable version={version} />
-        </section>
+        </Card>
 
-        <section className="wide">
-          <h2>6. Settlement, gross against net</h2>
+        <Card step={6} title="Settlement, gross against net" wide>
           <Settlement addresses={addresses} version={version} onChange={refresh} />
-        </section>
+        </Card>
       </div>
     </DmkProvider>
   );

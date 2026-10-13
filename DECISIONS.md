@@ -62,6 +62,10 @@ The LLM goes through OpenRouter (OpenAI compatible API), not through the Anthrop
 
 Mentor answers on 12 Oct that confirm the cuts: Agent Intent works on Ethereum mainnet only (ETH and known ERC-20, no Base, no testnet), so it stays in the roadmap. Key Ring needs `ring init` on every machine with the Ledger plugged in, CLI only, called as a subprocess, so it stays a bonus.
 
+### D13. One engine, written by Louis, merged on 12 Oct (12 Oct)
+
+The engine functions agreed on 12 Oct (`netPositions`, `checkCoverage`, `lotHash`, `checkInstruction`, `navHash`, plus `computeNav` from the fund administrator's inputs) were written by Louis in `packages/engine` (branch `louis/engine`) while Mark used a provisional copy in the server. The branch was merged on the evening of 12 Oct, the provisional copy deleted, and the server now reads the engine through `apps/server/src/engine-adapter.ts` only. The NAV of the demo comes from `packages/engine/fixtures/nav-fund-f.json` (105.000000) and its hash from `navHash`. The `Mandate` type lives in `packages/engine/src/types.ts` and is re-exported by `packages/protocol`.
+
 ## Proposed, waiting for team validation
 
 - **Device**: one Ledger Flex with three derived accounts (`44'/60'/n'/0/0`).

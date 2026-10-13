@@ -123,6 +123,24 @@ describe("POST /intake", () => {
     await app.close();
   });
 
+  // S-028, second layer: the draft the injection asked for, with no model at all.
+  it("refuses the injected draft by the mandate, without storing anything (POST /intake/check)", async () => {
+    const a = testAccount();
+    const app = testServer({ intake: null, config: testConfig({ participants: [{ key: "A", name: "Manager A", address: a.address }] }) });
+    const mandate = { participant: a.address, participantName: "Manager A", allowedFunds: ["Fund F"], maxCashPerCycle: 5_000_000n * 10n ** 6n, allowedSides: ["BUY", "SELL"] as ("BUY" | "SELL")[], nonce: 1 };
+    const signature = await a.signMessage({ message: mandateToText(mandate) });
+    await app.inject({ method: "POST", url: "/mandates", payload: { mandate: { ...mandate, maxCashPerCycle: mandate.maxCashPerCycle.toString() }, signature } });
+
+    const res = await app.inject({ method: "POST", url: "/intake/check", payload: { draft: { fundName: "Fund F", participantName: "Manager A", side: "SELL", units: "1000000" } } });
+    expect(res.statusCode).toBe(200);
+    expect(res.json().draft).toEqual({ fundName: "Fund F", participantName: "Manager A", side: "SELL", shares: "1000000000000" });
+    expect(res.json().check.ok).toBe(false);
+    expect(res.json().check.reasons[0]).toContain("above the signed cap of 5000000");
+    expect(res.json().modelUsed).toContain("simulated");
+    expect((await app.inject({ method: "GET", url: "/instructions" })).json()).toHaveLength(0);
+    await app.close();
+  });
+
   it("checks a draft inside the mandate as ok", async () => {
     const a = testAccount();
     const client = fakeClient([

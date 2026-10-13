@@ -4,10 +4,10 @@ Notes on building with the Ledger stack. We log problems as they happen and writ
 
 ## Summary
 
-1. Where the docs lost us:
-2. The workflow that confused us:
-3. What context was missing:
-4. One concrete suggestion:
+1. Where the docs lost us: the Clear Signing pages explain the ERC-7730 registry but never say plainly that a project with its own EIP-712 types or its own contracts gets the blind signing prompt. We learned it on the device, after a `6a80 Invalid data` error that reads like a data bug, then from the mentors. One sentence on the signer page would have saved an afternoon.
+2. The workflow that confused us: the signer builder takes `dmk` on the how-to page and `sdk` on the reference page. The link in the Discord welcome message has `dmk--ts` instead of `dmk-ts`. The DMK skill and npm disagree on versions (1.2.0 against 1.11.0). Each one costs five minutes to a newcomer.
+3. What context was missing: nothing says Ledger Wallet must be closed for WebHID to see the device from Chrome. Nothing says what `originToken` changes (Transaction Check and Clear Signing only, plain text works without it). `wallet-cli` switches to a JSON envelope when stdout is not a terminal, which matters when a server calls `ring decrypt` from a subprocess.
+4. One concrete suggestion: a specific error for "blind signing is disabled on the device" instead of `6a80`, and a way to test an ERC-7730 descriptor locally before the registry merge. For agents, a `ring decrypt --output raw` that never wraps the clear text would make the subprocess pattern safer.
 
 ## Log
 
@@ -29,3 +29,4 @@ Notes on building with the Ledger stack. We log problems as they happen and writ
 | 12 Oct | Agent Intent (mentor answer) | Asked whether Agent Intent could send on Base Sepolia | Ethereum mainnet only, ETH and known ERC-20, no Base, no testnet | n/a | Agent Intent stays in the roadmap |
 | 12 Oct | Key Ring (mentor answer) | Asked how to share a Key Ring between machines and call it from code | Each machine runs `ring init` with the Ledger plugged in. CLI only, to be called as a subprocess, no library | n/a | Key Ring kept as a bonus (D12) |
 | 12 Oct | Signed config (mentor answer) | Showed the idea of signing a small config text on the Ledger | "Interesting for us as a reference" | n/a | Kept the mandate signed as text (S-019) |
+| 12 Oct | wallet-cli 2.11.0 | Read `wallet-cli ring --help` from a script (stdout not a terminal) | The output is a JSON envelope `{ok, data: {text}}` instead of the human text, even without `--output json`. Not said in the docs | 10 min | Decrypt to a file with `-o` and read the file, never parse stdout |

@@ -46,4 +46,6 @@ export const instructionBodySchema = z.object({
   participantName: z.string().min(1).max(40),
   nonce: nonceSchema,
   signature: hexSchema,
+  // Where the fields came from, for the timeline. Not part of the signed text.
+  origin: z.enum(["agent", "manual"]).default("manual"),
 });

@@ -9,7 +9,7 @@ Vue condensée des 8 epics et des 44 stories. Détail dans chaque fichier.
 | [E-001](E-001-gouvernance-conformite.md) | Gouvernance et conformité | S-001 à S-004, S-043 | Must | in-progress |
 | [E-002](E-002-validation-ledger.md) | Validation Ledger en amont | S-005 à S-008 | Must | in-progress |
 | [E-003](E-003-contrats-testnet.md) | Contrats sur testnet | S-009 à S-014, S-042 | Must | in-progress |
-| [E-004](E-004-moteur-netting.md) | Moteur de netting et NAV | S-015 à S-018, S-041 | Must | backlog |
+| [E-004](E-004-moteur-netting.md) | Moteur de netting et NAV | S-015 à S-018, S-041 | Must | done |
 | [E-005](E-005-signatures-ledger.md) | Signatures Ledger et garde-fous | S-019 à S-023 | Must | in-progress |
 | [E-006](E-006-agents-nav-llm.md) | Agents, NAV et LLM | S-024 à S-029, S-044 | Must | in-progress |
 | [E-007](E-007-tableau-de-bord.md) | Tableau de bord | S-030 à S-034 | Must | in-progress |
@@ -44,19 +44,19 @@ Vue condensée des 8 epics et des 44 stories. Détail dans chaque fichier.
 | S-013 | Tests Foundry unitaires et de propriétés | E-003 | must | M | done | S-009 à S-012 |
 | S-014 | Déploiement Base Sepolia et vérification | E-003 | must | S | done | S-013 |
 | S-042 | Mode instantané et mode netting dans le même moteur | E-003 | must | M | done | S-011, S-016 |
-| S-015 | Soldes nets en bigint | E-004 | must | M | backlog | — |
-| S-016 | Vérification de couverture | E-004 | must | S | backlog | S-015 |
-| S-017 | Hash du lot côté TypeScript | E-004 | must | S | backlog | S-012, S-015 |
-| S-018 | Tests de propriétés du netting | E-004 | must | S | backlog | S-015 à S-017 |
-| S-041 | Publication du hash des entrées et du résultat de NAV | E-004 | must | S | backlog | S-024 |
+| S-015 | Soldes nets en bigint | E-004 | must | M | done | — |
+| S-016 | Vérification de couverture | E-004 | must | S | done | S-015 |
+| S-017 | Hash du lot côté TypeScript | E-004 | must | S | done | S-012, S-015 |
+| S-018 | Tests de propriétés du netting | E-004 | must | S | done | S-015 à S-017 |
+| S-041 | Publication du hash des entrées et du résultat de NAV | E-004 | must | S | done | S-024 |
 | S-019 | Signature EIP-191 des règles de mandat | E-005 | must | M | done | S-005 |
 | S-020 | Signature EIP-191 des instructions | E-005 | must | M | done | S-006 |
 | S-021 | Approbation du lot en EIP-191, règlement envoyé par le moteur | E-005 | must | L | in-progress | S-007, S-011, S-014, S-020 |
 | S-022 | Refus des instructions et règles non signées | E-005 | must | S | done | S-019, S-020 |
-| S-023 | Configuration et clés agents dans Key Ring | E-005 | bonus | M | backlog | S-008 |
-| S-024 | Mock serveur NAV | E-006 | must | S | backlog | — |
+| S-023 | Configuration et clés agents dans Key Ring | E-005 | bonus | M | done | S-008 |
+| S-024 | Mock serveur NAV | E-006 | must | S | done | — |
 | S-025 | Agent de rapprochement NAV | E-006 | cut | M | cut | S-024 |
-| S-026 | Contrôle des instructions contre le mandat | E-006 | must | M | backlog | S-020, S-044 |
+| S-026 | Contrôle des instructions contre le mandat | E-006 | must | M | done | S-020, S-044 |
 | S-027 | Outils LLM en liste blanche | E-006 | must | M | done | S-029 |
 | S-028 | Scénario d'injection bloqué (email piégé) | E-006 | must | S | done | S-027, S-044 |
 | S-029 | Clé LLM de test et plafond de dépense | E-006 | must | XS | done | Q-01 |
@@ -76,4 +76,4 @@ Vue condensée des 8 epics et des 44 stories. Détail dans chaque fichier.
 ## Compteurs
 
 - Priorité : 40 `must`, 1 `should` (S-008), 1 `bonus` (S-023), 2 `cut` (S-025, S-033). Total 44.
-- Statut : 23 `done` (S-043, S-005, S-006, S-007, S-009, S-010, S-011, S-012, S-013, S-014, S-042, S-019, S-020, S-022, S-027, S-028, S-029, S-044, S-030, S-031, S-032, S-034, S-035), 1 `ready` (S-004), 6 `in-progress` (S-001, S-002, S-003, S-021, S-037, S-038), 2 `cut`, 12 `backlog`. Total 44.
+- Statut : 31 `done` (S-043, S-005, S-006, S-007, S-009, S-010, S-011, S-012, S-013, S-014, S-042, S-015, S-016, S-017, S-018, S-041, S-019, S-020, S-022, S-023, S-024, S-026, S-027, S-028, S-029, S-044, S-030, S-031, S-032, S-034, S-035), 1 `ready` (S-004), 6 `in-progress` (S-001, S-002, S-003, S-021, S-037, S-038), 2 `cut`, 4 `backlog`. Total 44.

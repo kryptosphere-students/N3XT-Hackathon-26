@@ -2,7 +2,7 @@
 id: S-018
 epic: E-004
 title: Tests de propriétés du netting
-status: backlog
+status: done
 priority: must
 estimate: S
 owner: équipe

@@ -32,10 +32,12 @@ export function Accounts({ addresses, onAddresses }: { addresses: Addresses; onA
 
   return (
     <div>
-      <button onClick={readAll} disabled={!signer}>
-        Read the three addresses ({done}/3)
-      </button>
-      {status && <p className="hint">{status}</p>}
+      <div className="actions">
+        <button className="secondary" onClick={readAll} disabled={!signer}>
+          Read the three addresses ({done}/3)
+        </button>
+      </div>
+      {status && <p className="muted small">{status}</p>}
     </div>
   );
 }

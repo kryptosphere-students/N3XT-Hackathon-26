@@ -7,7 +7,7 @@ import { anvil } from "viem/chains";
 import { ONE_CASH } from "@chw3/engine";
 import { instructionToText, mandateToText } from "@chw3/protocol";
 import { createChain, escrowAbi } from "../src/chain.ts";
-import { testAccount, testServer } from "./helpers.ts";
+import { testAccount, testConfig, testServer } from "./helpers.ts";
 
 // End to end on a local anvil: deploy with the forge script, sign with the
 // anvil accounts, settle through the server, read the result on chain.
@@ -84,7 +84,7 @@ describe.skipIf(!hasFoundry)("settlement on anvil (S-021, S-042)", () => {
     const deployer = privateKeyToAccount(keys[0]!).address;
     const app = testServer({
       chain,
-      config: { funds: [{ name: "Fund F", address: deployer }], participants: [], navPerUnit: 105n * ONE_CASH, chainId: anvil.id, escrow: deployed.escrow },
+      config: testConfig({ funds: [{ name: "Fund F", address: deployer }], chainId: anvil.id, escrow: deployed.escrow }),
     });
     const a = privateKeyToAccount(keyA!);
     const b = privateKeyToAccount(keyB!);
