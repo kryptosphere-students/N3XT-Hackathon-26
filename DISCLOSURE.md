@@ -27,3 +27,12 @@ Code adapted from documentation or examples has a comment with a link to the sou
 We used Claude and Claude Code as tools: to question our choices, to explain documentation, to write and review documentation, and to suggest code that we then read, tested and changed. Our Claude Code configuration stays on our machines and is not part of the submission. The product choices, the architecture, the financial logic and the integration are ours.
 
 At runtime, the intake agent calls a language model through OpenRouter (DeepSeek, with a Qwen fallback). The model only drafts an order from an email. It computes nothing, signs nothing, and every draft goes through the mandate check written in code before a human sees it.
+
+
+## Assets in the pitch deck
+
+The logos of BNP Paribas, Societe Generale and CACEIS belong to their owners. They only illustrate who does fund settlement today. They are not partners of the project and did not endorse it.
+
+## Video and slides
+
+The demo video was edited with the help of Claude from our own screen captures and photos of the Flex. The pitch deck was drafted with Claude and written and checked by us.
