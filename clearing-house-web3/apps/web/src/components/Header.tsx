@@ -16,7 +16,9 @@ export function Header({ config }: { config: ServerConfig | null }) {
   return (
     <header className="header">
       <div>
-        <h1>Clearing House</h1>
+        <h1>
+          Cendro <span className="subtitle">settlement engine for tokenized funds</span>
+        </h1>
         <p className="tagline">DvP settlement of fund units, instant or netted. The agent drafts, the code checks, the manager signs on a Ledger Flex.</p>
       </div>
       <div className="status">

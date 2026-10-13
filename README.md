@@ -1,6 +1,8 @@
-# Clearing House web3 · Ledger N3XT Hackathon 2026
+# Cendro · settlement engine for tokenized funds
 
-A settlement engine for fund units, with Ledger signatures and an AI intake agent. Built by the Kryptosphere team for the Ledger N3XT hackathon (OP3N 2026).
+Ledger N3XT Hackathon 2026 · Team Kryptosphere
+
+Cendro, settlement engine for tokenized funds, settles fund units against cash, with Ledger signatures and an AI intake agent. It is a settlement engine, not a central securities depository. Built by team Kryptosphere for the Ledger N3XT hackathon (OP3N 2026).
 
 ## Problem
 
