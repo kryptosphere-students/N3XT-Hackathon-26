@@ -4,80 +4,50 @@ Texte à l'écran et oral en anglais. Les rubriques « À dire » ci-dessous ré
 
 Chaque chiffre vient du dépôt ; sa source est indiquée.
 
-## Partie principale, 5 minutes
+## Partie principale, 5 minutes (V2)
 
-### 1. Title, 0:00 à 0:15 (L)
+V2 du 13 octobre : ajout de la vision marché (chaîne de valeur, slides 2 et 5), tirée de l'étude « Veille stratégique 2026 : la tokenisation de parts de fonds » (février 2026). La slide « Why now » est fusionnée dans la slide Problème pour tenir les 5 minutes.
 
-- **À l'écran** : le symbole, puis « Cendro », puis « settlement engine for tokenized funds ». En bas : « Team Kryptosphere · Ledger N3XT 2026 ».
-- **Visuel** : les deux formes du symbole se referment lentement.
-- **À dire** : « We are Kryptosphere. This is Cendro, a settlement engine for tokenized funds. »
+| # | Slide | Qui | Temps | Intention |
+|---|---|---|---|---|
+| 1 | Title | L | 0:00 à 0:15 | Cendro, settlement engine for tokenized funds, Team Kryptosphere |
+| 2 | The market today | L | 0:15 à 0:50 | La chaîne de valeur actuelle en 7 acteurs et 3 temps (J, J+1, J+2/3), trois frictions, le dépositaire du fonds qui supervise tout |
+| 3 | Problem | L | 0:50 à 1:15 | Qui a approuvé cet ordre ? Un email. Et un agent IA qui lit cet email peut être trompé |
+| 4 | What Cendro does | L | 1:15 à 1:35 | L'agent lit, le code vérifie, la personne signe sur un Ledger |
+| 5 | Where Cendro plugs in | L | 1:35 à 1:55 | La même chaîne : ordres signés à J, NAV inchangée (hashée), netting et DvP dès l'approbation ; le dépositaire est notre acheteur |
+| 6 | The path of one order | M | 1:55 à 2:25 | Six étapes, du mail au `settle(lot)`, et le texte affiché sur la Flex |
+| 7 | The trapped email | M | 2:25 à 2:50 | Deux couches : l'agent ignore la consigne, le mandat refuse quand même |
+| 8 | Settlement | M | 2:50 à 3:20 | 14 700 → 6 300 de cash (−57 %), 11 s de l'ordre au règlement, une transaction |
+| 9 | Ledger, inside the product | M | 3:20 à 3:45 | DMK (texte lisible), Key Ring, Clear Signing en prochaine étape |
+| 10 | Who it is for | L | 3:45 à 4:20 | Logos CACEIS, BNP Paribas Securities Services (initiatives 2025), SGSS (à qualifier) ; licence, intégration, frais par instruction |
+| 11 | Proof and limits | M | 4:20 à 4:45 | 115 tests, 3 contrats vérifiés ; ce qu'on assume |
+| 12 | Close | L | 4:45 à 5:00 | Signed by people. Settled by code. |
 
-### 2. Problem, 0:15 à 0:50 (L)
+### Le diagramme de chaîne de valeur (slides 2 et 5)
 
-- **À l'écran** : « Who approved this order? » en grand. En dessous, trois étapes barrées en cascade : « Email → Retyped by a back office → Settled T+2 ».
-- **Visuel** : un faux fil d'email flou derrière la question.
-- **À dire** : les ordres arrivent par email, sont ressaisis, réglés deux ou trois jours plus tard. La preuve qu'un gérant a approuvé un ordre est un email, pas une signature vérifiable.
-- **Source** : README, Problem.
+Simplification de la slide 14 de l'étude (modèle traditionnel) :
 
-### 3. Why now, 0:50 à 1:10 (L)
+| # | Acteur | Rôle simplifié | Temps |
+|---|---|---|---|
+| 01 | Investor & distributor | Passe l'ordre, KYC chez le distributeur | J |
+| 02 | Account keeper | Contrôle l'ordre, bloque le cash | J |
+| 03 | Transfer agent | Centralise avant le cut-off, à cours inconnu | J |
+| 04 | Fund admin | Calcule la NAV | J+1 |
+| 05 | Asset manager | Valide la NAV | J+1 |
+| 06 | Transfer agent | Matching, netting, mise à jour du registre | J+2/3 |
+| 07 | Central securities depository | DvP parts contre cash (ex. T2S) | J+2/3 |
 
-- **À l'écran** : deux lignes. « Tokenized units move in seconds. » / « Approval still sits in an inbox. » Puis, en rouge : « And now an AI agent reads that inbox. »
-- **À dire** : les parts tokenisées existent, mais l'approbation n'a pas changé. Un agent IA qui lit les emails peut être trompé par l'email qu'il lit.
+Bande transverse : le dépositaire du fonds, qui contrôle les flux, la NAV et les limites du prospectus. Frictions reprises de la slide 16 de l'étude (preuve d'approbation, NAV quotidienne réconciliée, trois registres et risque de contrepartie). La plateforme d'acheminement des ordres est fondue dans l'agent de transfert pour garder sept acteurs.
 
-### 4. What Cendro does, 1:10 à 1:35 (L)
+### Sources des logos (slide 10)
 
-- **À l'écran** : trois colonnes, dans cet ordre, avec leur couleur de rôle. « The agent reads. » / « The code checks. » / « The person signs, on a Ledger. »
-- **En dessous** : « Settlement: units and cash move together, or not at all. »
-- **À dire** : c'est la frontière que Ledger demande de nommer. Cendro n'est pas un dépositaire central : c'est un moteur de règlement.
-
-### 5. The path of one order, 1:35 à 2:10 (M)
-
-- **À l'écran** : la ligne de flux en cinq étapes. Email → Draft (agent, one tool) → Mandate check (code) → Order signed on the Flex → Lot approved → `settle(lot)` on Base Sepolia.
-- **Visuel** : chaque étape s'allume à son tour. Le cadre Flex montre le texte de l'ordre : « Subscribe 100 units ».
-- **À dire** : l'agent n'a qu'un outil et ne calcule aucun montant. Le code vérifie le mandat signé. Chaque signature humaine est un texte lisible sur l'appareil.
-- **Source** : `guide-oral.md`, section 1.
-
-### 6. The trapped email, 2:10 à 2:40 (M)
-
-- **À l'écran** : la capture `05-trapped-email.png`, avec l'encadré rouge « refused, above the signed cap ». Titre : « Fooled agent. Nothing to sign. »
-- **Visuel** : le symbole reste ouvert. Le cadre Flex est vide, marqué « The Flex is never asked ».
-- **À dire** : deux couches. L'agent ignore la consigne cachée ; et même s'il obéissait, le mandat signé refuse avant toute signature.
-- **Source** : `video-script.md`, plan 5.
-
-### 7. Settlement, 2:40 à 3:15 (M)
-
-- **À l'écran** : « 140 units, 14,700 cash gross » qui devient « 60 units, 6,300 cash net ». Puis « −57 % cash moved ». Puis la capture `07-lot-settled.png` et l'événement `LotSettled`.
-- **Visuel** : les deux formes du symbole se referment au moment du règlement.
-- **À dire** : chaque participant approuve sur la Flex ce qu'il reçoit et ce qu'il paie, avec le hash du lot. Une seule transaction. Le mode instantané utilise le même contrat.
-- **Sources** : `guide-oral.md`, question 6 et section 5. Le chiffre de 57 % se recalcule : 6 300 / 14 700 = 43 % du cash brut, donc 57 % de cash en moins.
-
-### 8. Ledger, inside the product, 3:15 à 3:45 (M)
-
-- **À l'écran** : trois cartes. « Device Management Kit: every human signature is readable text (EIP-191) » / « Key Ring: the agent's API key is encrypted with a key derived from the Ledger seed » / « Clear Signing: tested, needs ERC-7730 for our own types; that is our next step ».
-- **À dire** : on a testé le Clear Signing sur la Flex, on a choisi le texte lisible pour ne jamais demander de blind signing.
-- **Source** : `DECISIONS.md` D6, README.
-
-### 9. Who it is for, 3:45 à 4:20 (L)
-
-- **À l'écran** : « Built for fund depositaries and administrators that run tokenized share classes. » Puis : « Software licence · integration · fixed fee per settled instruction. No share of the cash saved. »
-- **En petit** : « Example of the segment: CACEIS ran the infrastructure of Amundi's tokenized money market share class (2025). No relationship. »
-- **À dire** : pas un dépositaire central en premier client. Pas de part sur les économies du netting, pour ne pas entrer en conflit avec notre client.
-- **Source** : README, Who it is for et Business model.
-
-### 10. Proof and limits, 4:20 à 4:45 (M)
-
-- **À l'écran**, colonne gauche : « 115 tests passing · 3 verified contracts on Base Sepolia · netted lot settled on chain ». Colonne droite, sobre : « The escrow trusts the engine key (on-chain verification ready on a branch) · test tokens, prefunded · mock NAV file ».
-- **À dire** : ce qui marche, et ce qu'on assume. Les limites viennent de nous.
-- **Sources** : `npm test` du 13 octobre (29 + 46 + 4 + 36), README, Limits we accept.
-
-### 11. Close, 4:45 à 5:00 (L)
-
-- **À l'écran** : « Signed by people. Settled by code. » Puis « Cendro · settlement engine for tokenized funds », l'URL du dépôt et un QR code.
-- **À dire** : « Cendro. Signed by people, settled by code. Thank you. »
+- CACEIS : infrastructure et plateforme d'ordres de la part tokenisée du fonds monétaire d'Amundi, première souscription le 4 novembre 2025 (étude, slide 27).
+- BNP Paribas Securities Services : agent de transfert de la part tokenisée du fonds monétaire de BNP Paribas AM sur Allfunds Blockchain, annoncée le 22 mai 2025 (étude, slide 27).
+- Société Générale Securities Services : aucune initiative trouvée dans l'étude, d'où « To qualify ». Le logo est celui du groupe Société Générale.
 
 ## Annexes, pour les questions
 
-Affichées seulement si une question les appelle. Accessibles par un raccourci (touches 1 à 7 après la slide de fin).
+Affichées seulement si une question les appelle. Accessibles en tapant le numéro de slide (14 à 20) puis Entrée.
 
 | # | Titre | Contenu | Question qui l'appelle |
 |---|---|---|---|

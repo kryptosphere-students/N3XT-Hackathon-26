@@ -547,7 +547,7 @@ h2.sm { font-size: 72px; }
 .node.agent { --node-color: var(--fog); }
 .node.code { --node-color: var(--verdigris); }
 .node.person { --node-color: var(--seal); }
-.node.chain { --node-color: var(--bone-2); }
+.node.onchain { --node-color: var(--bone-2); }
 
 .lower {
     display: flex;
@@ -868,6 +868,125 @@ h2.sm { font-size: 72px; }
 }
 .equation .res { color: var(--verdigris); font-weight: 600; }
 
+
+/* ===========================================
+   VALUE CHAIN DIAGRAM (slides "The market today" and "Where Cendro plugs in")
+   7 actors on one grid row, grouped in three time bands. Connectors draw in sequence.
+   Simplified from our market study (Feb 2026).
+   =========================================== */
+.chain {
+    margin-top: 46px;
+    display: grid;
+    grid-template-columns: repeat(7, 200px);
+    column-gap: 32px;
+    row-gap: 16px;
+}
+.chain .band {
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--font-mono);
+    font-size: 18px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fog);
+}
+.chain .band b { color: var(--bone); font-weight: 600; }
+.chain .b1 { grid-column: 1 / 4; }
+.chain .b2 { grid-column: 4 / 6; }
+.chain .b3 { grid-column: 6 / 8; }
+.chain .actor {
+    position: relative;
+    padding: 20px 20px 22px;
+    min-height: 200px;
+    border-radius: 16px;
+    background: var(--slate);
+    border: 1px solid var(--line);
+    transition: opacity 0.6s ease, border-color 0.6s ease, box-shadow 0.6s ease;
+}
+.chain .actor .num { font-family: var(--font-mono); font-size: 16px; color: var(--fog); }
+.chain .actor .name { margin-top: 8px; font-family: var(--font-display); font-weight: 700; font-size: 27px; line-height: 1.1; color: var(--bone); }
+.chain .actor .act { margin-top: 10px; font-size: 20px; line-height: 1.4; color: var(--fog); }
+/* connector arrow to the next actor */
+.chain .actor:not(.end)::after {
+    content: "";
+    position: absolute;
+    right: -31px;
+    top: calc(50% - 7px);
+    width: 30px;
+    height: 14px;
+    background: var(--fog);
+    clip-path: polygon(0 42%, 62% 42%, 62% 0, 100% 50%, 62% 100%, 62% 58%, 0 58%);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.45s var(--ease);
+    transition-delay: calc(500ms + var(--d, 0) * 110ms);
+}
+.slide.visible .chain .actor::after { transform: scaleX(1); }
+.chain .friction, .chain .plug {
+    padding: 16px 20px;
+    border-radius: 14px;
+    font-size: 21px;
+    line-height: 1.4;
+    color: var(--bone-2);
+}
+.chain .friction { background: rgba(229, 72, 77, 0.07); border: 1px solid rgba(229, 72, 77, 0.35); }
+.chain .friction::before { content: "●"; color: var(--cinnabar); margin-right: 10px; font-size: 16px; vertical-align: 2px; }
+.chain .s3 { grid-column: span 3; }
+.chain .s2 { grid-column: span 2; }
+.chain .custody {
+    grid-column: 1 / 8;
+    margin-top: 14px;
+    padding: 20px 26px;
+    border-radius: 16px;
+    border: 1px dashed rgba(237, 232, 223, 0.28);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    font-size: 24px;
+    color: var(--bone-2);
+    transition: border-color 0.6s ease, background 0.6s ease;
+}
+.chain .custody b { color: var(--bone); }
+.chain .custody .tag { flex: none; font-family: var(--font-mono); font-size: 17px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fog); }
+.chain-source { margin-top: 22px; font-family: var(--font-mono); font-size: 17px; color: var(--fog); letter-spacing: 0.03em; }
+
+/* "Where Cendro plugs in": the same chain with Cendro's steps highlighted */
+.chain.cendro .actor.dim { opacity: 0.42; }
+.chain.cendro .actor.on { border-color: rgba(242, 166, 90, 0.75); box-shadow: 0 0 0 4px rgba(242, 166, 90, 0.10); }
+.chain.cendro .actor.on-v { border-color: rgba(63, 191, 159, 0.8); box-shadow: 0 0 0 4px rgba(63, 191, 159, 0.10); }
+.chain .plug.seal-plug { background: rgba(242, 166, 90, 0.10); border: 1px solid rgba(242, 166, 90, 0.55); }
+.chain .plug.fog-plug { background: rgba(138, 147, 160, 0.08); border: 1px solid rgba(138, 147, 160, 0.35); }
+.chain .plug.ver-plug { background: rgba(63, 191, 159, 0.10); border: 1px solid rgba(63, 191, 159, 0.55); }
+.chain .plug b { display: block; font-family: var(--font-mono); font-size: 16px; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 6px; }
+.chain .plug.seal-plug b { color: var(--seal); }
+.chain .plug.fog-plug b { color: var(--fog); }
+.chain .plug.ver-plug b { color: var(--verdigris); }
+.chain.cendro .custody { border: 1px solid rgba(242, 166, 90, 0.6); background: rgba(242, 166, 90, 0.06); }
+.chain.cendro .custody .tag { color: var(--seal); }
+
+/* ===========================================
+   LOGO PLATES (slide "Who it is for")
+   Third-party logos sit on light plates: several contain black text.
+   =========================================== */
+.logos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 40px; }
+.logo-card .plate {
+    height: 118px;
+    border-radius: 16px;
+    background: #F4F1EA;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 22px 36px;
+}
+.logo-card .plate img { max-height: 66px; max-width: 100%; object-fit: contain; }
+.logo-card .tag { margin-top: 16px; font-family: var(--font-mono); font-size: 16px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--verdigris); }
+.logo-card .tag.qualify { color: var(--seal); }
+.logo-card .cap { margin-top: 6px; font-size: 22px; line-height: 1.4; color: var(--bone-2); }
+
 /* ===========================================
    STATIC MODE (?static in the URL)
    No animation: every element in its final state. Used for screenshots and PDF export.
@@ -971,10 +1090,37 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(242, 166, 90, 0
         <p class="sub reveal" style="--d:4">settlement engine for tokenized funds</p>
         <p class="team reveal" style="--d:6">Team Kryptosphere · Ledger N3XT Hackathon 2026</p>
     </div>
-    <aside class="notes">Louis, 0:00 to 0:15. "Hi, we are Kryptosphere. This is Cendro, a settlement engine for tokenized funds. In five minutes: the problem, how it works, what we built on Ledger, and who would buy it."</aside>
+    <aside class="notes">Louis, 0:00 to 0:15. "Hi, we are Kryptosphere. This is Cendro, a settlement engine for tokenized funds. In five minutes: how fund orders settle today, what Cendro changes, what we built on Ledger, and who would buy it."</aside>
 </section>
 
-<!-- ============ 2. PROBLEM ============ -->
+<!-- ============ 2. THE MARKET TODAY (value chain) ============ -->
+<section class="slide" data-title="The market today" data-who="Louis">
+    <div class="frame">
+        <p class="kicker reveal" style="--d:0">The market today</p>
+        <h2 class="sm reveal" style="--d:1">How a fund order settles today.</h2>
+        <div class="chain">
+            <div class="band b1 reveal" style="--d:2"><b>Day J</b><span>order</span></div>
+            <div class="band b2 reveal" style="--d:2"><b>J+1</b><span>valuation</span></div>
+            <div class="band b3 reveal" style="--d:2"><b>J+2 to J+3</b><span>settlement</span></div>
+            <div class="actor reveal" style="--d:3"><p class="num">01</p><p class="name">Investor &amp; distributor</p><p class="act">Places the order. KYC by the distributor.</p></div>
+            <div class="actor reveal" style="--d:4"><p class="num">02</p><p class="name">Account keeper</p><p class="act">Checks the order, blocks the cash.</p></div>
+            <div class="actor reveal" style="--d:5"><p class="num">03</p><p class="name">Transfer agent</p><p class="act">Centralises orders before the cut-off, at an unknown price.</p></div>
+            <div class="actor reveal" style="--d:6"><p class="num">04</p><p class="name">Fund admin</p><p class="act">Computes the NAV from closing prices.</p></div>
+            <div class="actor reveal" style="--d:7"><p class="num">05</p><p class="name">Asset manager</p><p class="act">Validates the NAV.</p></div>
+            <div class="actor reveal" style="--d:8"><p class="num">06</p><p class="name">Transfer agent</p><p class="act">Matches and nets the flows, updates the register.</p></div>
+            <div class="actor end reveal" style="--d:9"><p class="num">07</p><p class="name">Central securities depository</p><p class="act">Settles units against cash (DvP), e.g. on T2S.</p></div>
+            <div class="friction s3 reveal" style="--d:11">The proof of approval is an email; checks and formats repeat at each step.</div>
+            <div class="friction s2 reveal" style="--d:12">One NAV a day, sent on, then reconciled.</div>
+            <div class="friction s2 reveal" style="--d:13">Three ledgers to reconcile. Counterparty risk until DvP.</div>
+            <div class="custody reveal" style="--d:14"><span><b>Fund depositary</b> · holds the fund's assets and cash, and checks the NAV, the orders and the prospectus limits at every step.</span><span class="tag">Oversees the whole chain</span></div>
+        </div>
+        <p class="chain-source reveal" style="--d:15">Simplified from our market study on fund tokenization (Feb 2026). Example: bearer units settled through a CSD.</p>
+    </div>
+    <footer class="chrome"><span class="brand"><svg viewBox="0 0 120 120"><use href="#mk-units" fill="#EDE8DF"/><use href="#mk-cash" fill="#F2A65A"/></svg><b>Cendro</b> settlement engine for tokenized funds</span><span class="page"></span></footer>
+    <aside class="notes">Louis, 0:15 to 0:50. "First, how a fund order settles today. On day J, the investor orders through a distributor, the account keeper blocks the cash, and the transfer agent centralises the orders before the cut-off, at a price nobody knows yet. On J+1, the administrator computes the NAV and the asset manager validates it. On J+2 or J+3, the transfer agent matches and nets, and the central depository settles units against cash. Seven hand-offs, three ledgers to reconcile, and the depositary of the fund watching all of it."</aside>
+</section>
+
+<!-- ============ 3. PROBLEM ============ -->
 <section class="slide" data-title="Problem" data-who="Louis">
     <div class="inbox reveal fade" style="--d:0" aria-hidden="true">
         <b>Subject: Subscription Fund F</b><br><br>
@@ -990,23 +1136,10 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(242, 166, 90, 0
             <span class="step-chip">Settled T+2 or T+3</span>
         </div>
         <p class="lead reveal" style="--d:5; margin-top:70px">The proof that a manager approved it sits in an inbox, not in a signature anyone can check.</p>
+        <p class="statement-red reveal" style="--d:7; margin-top:44px; font-size:36px">And now an AI agent reads that inbox. <span class="cinnabar">It can be fooled by the very email it reads.</span></p>
     </div>
     <footer class="chrome"><span class="brand"><svg viewBox="0 0 120 120"><use class="units" href="#mk-units" fill="#EDE8DF"/><use href="#mk-cash" fill="#F2A65A"/></svg><b>Cendro</b> settlement engine for tokenized funds</span><span class="page"></span></footer>
-    <aside class="notes">Louis, 0:15 to 0:50. "Today, subscriptions and redemptions of fund units still run by email. A manager sends an order, a back office retypes it, a transfer agent centralises it before the cut-off, and cash and units move two or three days later. Ask who approved a given order: the answer is an email thread. Not a signature anyone can verify."</aside>
-</section>
-
-<!-- ============ 3. WHY NOW ============ -->
-<section class="slide" data-title="Why now" data-who="Louis">
-    <div class="frame">
-        <p class="kicker reveal" style="--d:0">Why now</p>
-        <div style="margin-top:56px">
-            <p class="statement reveal" style="--d:1">Tokenized fund units move in seconds.</p>
-            <p class="statement dim reveal" style="--d:3">Their approval still sits in an inbox.</p>
-        </div>
-        <p class="statement-red reveal" style="--d:6">And now an AI agent reads that inbox. <span class="cinnabar">It can be fooled by the very email it reads.</span></p>
-    </div>
-    <footer class="chrome"><span class="brand"><svg viewBox="0 0 120 120"><use href="#mk-units" fill="#EDE8DF"/><use href="#mk-cash" fill="#F2A65A"/></svg><b>Cendro</b> settlement engine for tokenized funds</span><span class="page"></span></footer>
-    <aside class="notes">Louis, 0:50 to 1:10. "Tokenized share classes exist: units can move on chain in seconds. But the approval around them has not changed. And the next step everyone is building is an AI agent that reads those emails. An agent that reads an email can be manipulated by that email. So who approved what becomes an even harder question."</aside>
+    <aside class="notes">Louis, 0:50 to 1:15. "So in this chain, who approved a given order? The answer is an email thread, retyped by a back office, settled two or three days later. Not a signature anyone can verify. Tokenized share classes now move units in seconds, but this approval has not changed. And the next thing everyone is building is an AI agent that reads those emails. An agent can be fooled by the very email it reads."</aside>
 </section>
 
 <!-- ============ 4. WHAT CENDRO DOES ============ -->
@@ -1037,10 +1170,36 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(242, 166, 90, 0
         </div>
     </div>
     <footer class="chrome"><span class="brand"><svg viewBox="0 0 120 120"><use href="#mk-units" fill="#EDE8DF"/><use href="#mk-cash" fill="#F2A65A"/></svg><b>Cendro</b> settlement engine for tokenized funds</span><span class="page"></span></footer>
-    <aside class="notes">Louis, 1:10 to 1:35. "Cendro draws the line Ledger asked us to name. The agent reads and drafts, and that is all. The code checks every draft against a mandate the manager signed. And the person signs every order and every settlement on a Ledger, in plain text. Then units and cash settle together on chain, or nothing moves. To be clear: Cendro is a settlement engine, not a central depository." Hand over to Mark.</aside>
+    <aside class="notes">Louis, 1:15 to 1:35. "Cendro draws the line Ledger asked us to name. The agent reads and drafts, and that is all. The code checks every draft against a mandate the manager signed. And the person signs every order and every settlement on a Ledger, in plain text. Then units and cash settle together on chain, or nothing moves. To be clear: Cendro is a settlement engine, not a central depository."</aside>
 </section>
 
-<!-- ============ 5. THE PATH OF ONE ORDER ============ -->
+<!-- ============ 5. WHERE CENDRO PLUGS IN ============ -->
+<section class="slide" data-title="Where Cendro plugs in" data-who="Louis">
+    <div class="frame">
+        <p class="kicker reveal" style="--d:0">Cendro in the chain</p>
+        <h2 class="sm reveal" style="--d:1">Where Cendro plugs in.</h2>
+        <div class="chain cendro">
+            <div class="band b1 reveal" style="--d:2"><b>Day J</b><span>order</span></div>
+            <div class="band b2 reveal" style="--d:2"><b>J+1</b><span>valuation</span></div>
+            <div class="band b3 reveal" style="--d:2"><b>Settlement</b><span>right after approval</span></div>
+            <div class="actor on reveal" style="--d:3"><p class="num">01</p><p class="name">Investor &amp; distributor</p><p class="act">Order by email, as today.</p></div>
+            <div class="actor on reveal" style="--d:4"><p class="num">02</p><p class="name">Account keeper</p><p class="act">Reads the agent's draft instead of retyping.</p></div>
+            <div class="actor on reveal" style="--d:5"><p class="num">03</p><p class="name">Transfer agent</p><p class="act">Receives orders signed on a Ledger.</p></div>
+            <div class="actor dim reveal" style="--d:6"><p class="num">04</p><p class="name">Fund admin</p><p class="act">Computes the NAV.</p></div>
+            <div class="actor dim reveal" style="--d:7"><p class="num">05</p><p class="name">Asset manager</p><p class="act">Validates the NAV.</p></div>
+            <div class="actor on-v reveal" style="--d:8"><p class="num">06</p><p class="name">Transfer agent</p><p class="act">Gets the net lot from the engine.</p></div>
+            <div class="actor on-v end reveal" style="--d:9"><p class="num">07</p><p class="name">Escrow on chain</p><p class="act">Units and cash in one transaction.</p></div>
+            <div class="plug seal-plug s3 reveal" style="--d:11"><b>Cendro · signed orders</b>The agent drafts, the code checks the signed mandate, the manager signs on a Ledger.</div>
+            <div class="plug fog-plug s2 reveal" style="--d:12"><b>Unchanged</b>The administrator's NAV, hashed with each lot.</div>
+            <div class="plug ver-plug s2 reveal" style="--d:13"><b>Cendro · netting and DvP</b>One transaction once every participant approves.</div>
+            <div class="custody reveal" style="--d:14"><span><b>Fund depositary</b> · operates Cendro under licence for the participants of its funds.</span><span class="tag">Our buyer</span></div>
+        </div>
+    </div>
+    <footer class="chrome"><span class="brand"><svg viewBox="0 0 120 120"><use href="#mk-units" fill="#EDE8DF"/><use href="#mk-cash" fill="#F2A65A"/></svg><b>Cendro</b> settlement engine for tokenized funds</span><span class="page"></span></footer>
+    <aside class="notes">Louis, 1:35 to 1:55. "Here is where Cendro plugs into that chain. On day J, the order still arrives by email, but the agent drafts it, our code checks it against the signed mandate, and the manager signs it on a Ledger. The NAV stays with the administrator: we only hash it with each lot. And settlement no longer waits for J+2: the engine nets the cycle and settles units against cash in one transaction, once every participant approves. The depositary of the fund operates it, which is why it is our buyer. Mark will show you how it works." Hand over to Mark.</aside>
+</section>
+
+<!-- ============ 6. THE PATH OF ONE ORDER ============ -->
 <section class="slide" data-title="The path of one order" data-who="Mark">
     <div class="frame">
         <p class="kicker reveal" style="--d:0">How it works</p>
@@ -1051,7 +1210,7 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(242, 166, 90, 0
             <div class="node code reveal" style="--d:5"><div class="dot">3</div><p class="tag">Code</p><p class="what">Mandate check</p><p class="how">Fund, side, cap per cycle</p></div>
             <div class="node person reveal" style="--d:6"><div class="dot">4</div><p class="tag">Person</p><p class="what">Order signed on the Flex</p><p class="how">EIP-191 text</p></div>
             <div class="node person reveal" style="--d:7"><div class="dot">5</div><p class="tag">Each participant</p><p class="what">Lot approved on the Flex</p><p class="how">What I receive, what I pay</p></div>
-            <div class="node chain reveal" style="--d:8"><div class="dot">6</div><p class="tag">Chain</p><p class="what"><span class="mono" style="font-size:26px">settle(lot)</span></p><p class="how">Base Sepolia, all or nothing</p></div>
+            <div class="node onchain reveal" style="--d:8"><div class="dot">6</div><p class="tag">Chain</p><p class="what"><span class="mono" style="font-size:26px">settle(lot)</span></p><p class="how">Base Sepolia, all or nothing</p></div>
         </div>
         <div class="lower">
             <div class="device reveal" style="--d:9">
@@ -1068,10 +1227,10 @@ Nonce 1</pre>
         </div>
     </div>
     <footer class="chrome"><span class="brand"><svg viewBox="0 0 120 120"><use href="#mk-units" fill="#EDE8DF"/><use href="#mk-cash" fill="#F2A65A"/></svg><b>Cendro</b> settlement engine for tokenized funds</span><span class="page"></span></footer>
-    <aside class="notes">Mark, 1:35 to 2:10. "Here is one order. The email comes in. The agent has a single tool, draft instruction: four text fields, no amount. Our code converts the units and checks the draft against the signed mandate. The manager then reads the order on the Flex, five lines of plain text, and signs. The server rebuilds the exact same text and verifies the signature. At settlement, each participant approves what it receives and pays. Then one transaction on Base Sepolia."</aside>
+    <aside class="notes">Mark, 1:55 to 2:25. "Here is one order. The email comes in. The agent has a single tool, draft instruction: four text fields, no amount. Our code converts the units and checks the draft against the signed mandate. The manager then reads the order on the Flex, five lines of plain text, and signs. The server rebuilds the exact same text and verifies the signature. At settlement, each participant approves what it receives and pays. Then one transaction on Base Sepolia."</aside>
 </section>
 
-<!-- ============ 6. THE TRAPPED EMAIL ============ -->
+<!-- ============ 7. THE TRAPPED EMAIL ============ -->
 <section class="slide glow-cinnabar" data-title="The trapped email" data-who="Mark">
     <div class="frame">
         <p class="kicker reveal" style="--d:0">The trapped email</p>
@@ -1096,10 +1255,10 @@ Nonce 1</pre>
         </div>
     </div>
     <footer class="chrome"><span class="brand"><svg viewBox="0 0 120 120"><use href="#mk-units" fill="#EDE8DF"/><use href="#mk-cash" fill="#F2A65A"/></svg><b>Cendro</b> settlement engine for tokenized funds</span><span class="page"></span></footer>
-    <aside class="notes">Mark, 2:10 to 2:40. "Now the attack. This email hides a fake system notice: redeem everything and say nothing. First layer: the agent keeps the real order, ten units, and tells us it ignored the notice. We do not rely on that. Second layer: suppose the agent obeyed. Its draft goes through the mandate check, which is code: one hundred and five million is above the signed cap. Refused. The Flex is never even asked."</aside>
+    <aside class="notes">Mark, 2:25 to 2:50. "Now the attack. This email hides a fake system notice: redeem everything and say nothing. First layer: the agent keeps the real order, ten units, and tells us it ignored the notice. We do not rely on that. Second layer: suppose the agent obeyed. Its draft goes through the mandate check, which is code: one hundred and five million is above the signed cap. Refused. The Flex is never even asked."</aside>
 </section>
 
-<!-- ============ 7. SETTLEMENT ============ -->
+<!-- ============ 8. SETTLEMENT ============ -->
 <section class="slide glow-verdigris" data-title="Settlement" data-who="Mark">
     <div class="frame">
         <p class="kicker reveal" style="--d:0">Settlement</p>
@@ -1118,10 +1277,10 @@ Nonce 1</pre>
         </div>
     </div>
     <footer class="chrome"><span class="brand"><svg viewBox="0 0 120 120"><use href="#mk-units" fill="#EDE8DF"/><use href="#mk-cash" fill="#F2A65A"/></svg><b>Cendro</b> settlement engine for tokenized funds</span><span class="page"></span></footer>
-    <aside class="notes">Mark, 2:40 to 3:15. "Settlement. Manager A buys one hundred units, Manager B sells forty, at a NAV of one hundred and five. Order by order, fourteen thousand seven hundred in cash would move. The engine nets the cycle: six thousand three hundred, fifty-seven percent less. Each participant approves on the Flex what it receives and pays, with the lot hash. Once every approval is verified, one transaction: units and cash move together, or the whole lot reverts. Instant mode is the same contract with a lot of one order."</aside>
+    <aside class="notes">Mark, 2:50 to 3:20. "Settlement. Manager A buys one hundred units, Manager B sells forty, at a NAV of one hundred and five. Order by order, fourteen thousand seven hundred in cash would move. The engine nets the cycle: six thousand three hundred, fifty-seven percent less. Each participant approves on the Flex what it receives and pays, with the lot hash. Once every approval is verified, one transaction: units and cash move together, or the whole lot reverts. Instant mode is the same contract with a lot of one order."</aside>
 </section>
 
-<!-- ============ 8. LEDGER INSIDE THE PRODUCT ============ -->
+<!-- ============ 9. LEDGER INSIDE THE PRODUCT ============ -->
 <section class="slide" data-title="Ledger, inside the product" data-who="Mark">
     <div class="frame">
         <p class="kicker reveal" style="--d:0">Ledger, inside the product</p>
@@ -1144,32 +1303,43 @@ Lot hash 0xe619…af39</pre>
         </div>
     </div>
     <footer class="chrome"><span class="brand"><svg viewBox="0 0 120 120"><use href="#mk-units" fill="#EDE8DF"/><use href="#mk-cash" fill="#F2A65A"/></svg><b>Cendro</b> settlement engine for tokenized funds</span><span class="page"></span></footer>
-    <aside class="notes">Mark, 3:15 to 3:45. "What we used from Ledger. The Device Management Kit over WebHID: every human signature is plain text, so the Flex shows every word, never a hex blob. Ledger Key Ring keeps the agent's API key encrypted with a key derived from the seed. And Clear Signing: we tested it on the Flex. Our own EIP-712 types would need an ERC-7730 descriptor, so we chose readable text over blind signing. Descriptors are our next step." Hand over to Louis.</aside>
+    <aside class="notes">Mark, 3:20 to 3:45. "What we used from Ledger. The Device Management Kit over WebHID: every human signature is plain text, so the Flex shows every word, never a hex blob. Ledger Key Ring keeps the agent's API key encrypted with a key derived from the seed. And Clear Signing: we tested it on the Flex. Our own EIP-712 types would need an ERC-7730 descriptor, so we chose readable text over blind signing. Descriptors are our next step." Hand over to Louis.</aside>
 </section>
 
-<!-- ============ 9. WHO IT IS FOR ============ -->
+<!-- ============ 10. WHO IT IS FOR ============ -->
 <section class="slide" data-title="Who it is for" data-who="Louis">
     <div class="frame">
         <p class="kicker reveal" style="--d:0">Who it is for</p>
         <h2 class="sm reveal" style="--d:1">Fund depositaries and administrators running tokenized share classes.</h2>
-        <div class="chips reveal" style="--d:3">
-            <span class="chip"><b>Signatories</b> sign on their own Ledger</span>
-            <span class="chip"><b>Back office</b> reads drafts instead of retyping</span>
-            <span class="chip"><b>Auditors</b> recompute every hash</span>
+        <div class="logos">
+            <div class="logo-card reveal" style="--d:3">
+                <div class="plate"><img src="assets/logo-caceis_processed.png" alt="CACEIS Investor Services"></div>
+                <p class="tag">Live in 2025</p>
+                <p class="cap">Infrastructure and order platform of Amundi's tokenized money market share class.</p>
+            </div>
+            <div class="logo-card reveal" style="--d:4">
+                <div class="plate"><img src="assets/logo-bp2s_processed.png" alt="BNP Paribas Securities Services"></div>
+                <p class="tag">Live in 2025</p>
+                <p class="cap">Transfer agent of BNP Paribas AM's tokenized money market share class on Allfunds Blockchain.</p>
+            </div>
+            <div class="logo-card reveal" style="--d:5">
+                <div class="plate"><img src="assets/logo-sgss_processed.png" alt="Societe Generale"></div>
+                <p class="tag qualify">To qualify</p>
+                <p class="cap">Société Générale Securities Services: no public tokenized fund initiative found yet.</p>
+            </div>
         </div>
-        <div class="model">
-            <div class="tile reveal" style="--d:4"><p class="n">01</p><p class="t">Software licence</p><p class="d">Annual, per client, capped by funds or participants.</p></div>
-            <div class="tile reveal" style="--d:5"><p class="n">02</p><p class="t">Integration</p><p class="d">Transfer agent register, NAV feed, client messaging.</p></div>
-            <div class="tile reveal" style="--d:6"><p class="n">03</p><p class="t">Fee per instruction</p><p class="d">Fixed, per settled instruction, with support and an SLA.</p></div>
+        <div class="model" style="margin-top:40px">
+            <div class="tile reveal" style="--d:6"><p class="n">01</p><p class="t">Software licence</p><p class="d">Annual, per client, capped by funds or participants.</p></div>
+            <div class="tile reveal" style="--d:7"><p class="n">02</p><p class="t">Integration</p><p class="d">Transfer agent register, NAV feed, client messaging.</p></div>
+            <div class="tile reveal" style="--d:8"><p class="n">03</p><p class="t">Fee per instruction</p><p class="d">Fixed, per settled instruction, with support and an SLA.</p></div>
         </div>
-        <p class="no-share reveal" style="--d:7">No share of the cash saved by netting: our client bills its own participants, and we never compete with it.</p>
-        <p class="small reveal" style="--d:8; margin-top:26px">Example of the segment: CACEIS ran the infrastructure of Amundi's tokenized money market share class in 2025. We have no relationship with them.</p>
+        <p class="small reveal" style="--d:9; margin-top:26px">No share of the cash saved by netting: our client bills its own participants. Examples from public announcements; we have no relationship with these companies.</p>
     </div>
     <footer class="chrome"><span class="brand"><svg viewBox="0 0 120 120"><use href="#mk-units" fill="#EDE8DF"/><use href="#mk-cash" fill="#F2A65A"/></svg><b>Cendro</b> settlement engine for tokenized funds</span><span class="page"></span></footer>
-    <aside class="notes">Louis, 3:45 to 4:20. "Who buys this? Fund depositaries and administrators that already run tokenized share classes. The segment exists: CACEIS ran the infrastructure of Amundi's tokenized money market share class last year. Not central depositories first: they already settle at scale, with the longest buying cycles. The model is software: a licence, integration, and a fixed fee per settled instruction. We take no share of the cash saved by netting, because our client bills its participants and we should never compete with it."</aside>
+    <aside class="notes">Louis, 3:45 to 4:20. "Who buys this? The depositaries and administrators that already run tokenized share classes. They exist: CACEIS ran the order platform of Amundi's tokenized money market share class, and BNP Paribas Securities Services is the transfer agent of BNP Paribas AM's tokenized share class on Allfunds Blockchain, both in 2025. Société Générale Securities Services is next on our list to qualify. The model is software: a licence, integration, and a fixed fee per settled instruction. We take no share of the cash saved by netting, because our client bills its participants and we never compete with it."</aside>
 </section>
 
-<!-- ============ 10. PROOF AND LIMITS ============ -->
+<!-- ============ 11. PROOF AND LIMITS ============ -->
 <section class="slide" data-title="Proof and limits" data-who="Mark">
     <div class="frame">
         <p class="kicker reveal" style="--d:0">Proof and limits</p>
@@ -1197,7 +1367,7 @@ Lot hash 0xe619…af39</pre>
     <aside class="notes">Mark, 4:20 to 4:45. "What runs today: a hundred and fifteen tests, three verified contracts on Base Sepolia, netted and instant lots settled end to end with the Flex. And what we assume, said by us: the escrow trusts the engine key to have checked the approvals, the signatures are public in the event, and verifying them on chain is already on a branch. Test tokens, a mock NAV file, no oracle yet." Hand over to Louis. [Check before the final: a lot settled on Base Sepolia, not only on the local chain.]</aside>
 </section>
 
-<!-- ============ 11. CLOSE ============ -->
+<!-- ============ 12. CLOSE ============ -->
 <section class="slide close-slide title-slide" data-title="Close" data-who="Louis">
     <div class="center">
         <svg class="mark closes reveal fade" style="--d:0" viewBox="0 0 120 120" aria-hidden="true"><use class="units" href="#mk-units"/><use class="cash" href="#mk-cash"/></svg>
@@ -1214,13 +1384,13 @@ Lot hash 0xe619…af39</pre>
         <p class="kicker reveal" style="--d:0">Appendix · for questions</p>
         <h2 class="reveal" style="--d:1">Details, if you ask.</h2>
         <ol class="reveal" style="--d:3">
-            <li>Who signs what · slide 13</li>
-            <li>Why plain text, not EIP-712 · slide 14</li>
-            <li>The escrow and the lot hash · slide 15</li>
-            <li>The NAV · slide 16</li>
-            <li>The agent's guardrails · slide 17</li>
-            <li>What a pilot needs · slide 18</li>
-            <li>Building on Ledger · slide 19</li>
+            <li>Who signs what · slide 14</li>
+            <li>Why plain text, not EIP-712 · slide 15</li>
+            <li>The escrow and the lot hash · slide 16</li>
+            <li>The NAV · slide 17</li>
+            <li>The agent's guardrails · slide 18</li>
+            <li>What a pilot needs · slide 19</li>
+            <li>Building on Ledger · slide 20</li>
         </ol>
     </div>
     <aside class="notes">Q&amp;A index. Type the slide number then Enter to jump.</aside>

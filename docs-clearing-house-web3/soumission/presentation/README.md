@@ -6,16 +6,16 @@ Cadrage avant de coder la présentation HTML, avec la skill `frontend-slides`.
 |---|---|
 | [01-cadrage.md](01-cadrage.md) | Contexte, objectifs, critères du jury, densité, démo, contraintes, ce qu'on ne dit pas |
 | [02-branding.md](02-branding.md) | Identité Cendro, ton, système graphique, trois directions visuelles, palette, typographie, mouvement |
-| [03-plan-slides.md](03-plan-slides.md) | 11 slides en 5 minutes, puis 7 annexes pour les questions, avec textes, visuels, oral et sources |
+| [03-plan-slides.md](03-plan-slides.md) | 12 slides en 5 minutes (V2, avec la chaîne de valeur du marché), puis 7 annexes pour les questions, avec textes, visuels, oral et sources |
 
-## Version actuelle : `cendro-pitch.html` (V1)
+## Version actuelle : `cendro-pitch.html` (V2)
 
-Direction visuelle C, « Settlement Desk ». 19 slides : 11 pour les 5 minutes, puis un intercalaire et 7 annexes pour les questions. Un seul fichier, polices embarquées (fonctionne sans réseau), captures recadrées dans `assets/`.
+Direction visuelle C, « Settlement Desk ». 20 slides : 12 pour les 5 minutes (dont la chaîne de valeur du marché, slides 2 et 5), puis un intercalaire et 7 annexes pour les questions. Logos des dépositaires sur la slide 10. Un seul fichier, polices embarquées (fonctionne sans réseau), captures recadrées dans `assets/`.
 
 | Touche | Action |
 |---|---|
 | → ou espace / ← | Slide suivante / précédente |
-| Un numéro puis Entrée | Aller à une slide (annexes : 13 à 19) |
+| Un numéro puis Entrée | Aller à une slide (annexes : 14 à 20) |
 | N | Notes d'oral en surimpression (répétition) |
 | P | Fenêtre présentateur pour un second écran : notes, slide suivante, chrono |
 | E | Modifier le texte dans le navigateur ; Cmd+S télécharge le fichier modifié |

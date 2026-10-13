@@ -42,7 +42,7 @@ Le jury rassemble deux profils de Ledger (agence humaine, produit), un profil De
 
 ## 5. Durée et répartition
 
-11 slides principales en 5:00, puis 7 slides d'annexe pour les questions. Répartition proposée : Louis pour le problème, le marché et la conclusion ; Mark pour le produit, la démo et la technique. Détail dans `03-plan-slides.md`.
+12 slides principales en 5:00 (dont la chaîne de valeur du marché), puis 7 slides d'annexe pour les questions. Répartition proposée : Louis pour le problème, le marché et la conclusion ; Mark pour le produit, la démo et la technique. Détail dans `03-plan-slides.md`.
 
 ## 6. La démo dans les 5 minutes
 
