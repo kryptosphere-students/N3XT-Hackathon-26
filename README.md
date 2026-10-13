@@ -6,11 +6,33 @@ Cendro, settlement engine for tokenized funds, settles fund units against cash, 
 
 ## Problem
 
-TODO (Louis).
+Subscriptions and redemptions of fund units still run on manual steps. Orders arrive by email, a back office retypes them, a transfer agent centralises them before a cut-off, the administrator publishes the NAV, and cash and units move two or three days later (T+2 or T+3). Three weaknesses come out of this:
+
+- **Authorisation is weak.** The proof that a manager approved an order sits in an email thread or a back-office log, not in a signature anyone can check.
+- **Retyping creates errors**, and they are found late, during reconciliation.
+- **Tokenized share classes move units on chain in seconds, but the approval around them has not changed.** It is either the manual process above, or a key held by software, where the person who decided is not the one who signs.
+
+An AI agent reading those emails makes the first point worse if nothing bounds it: the agent can be fooled by the email it reads.
+
+What Cendro does not solve: the NAV timetable. Most of the settlement delay comes from cut-offs and NAV publication, which stay with the fund administrator. Cendro shortens what happens around the NAV, not the NAV itself.
 
 ## Who it is for
 
-TODO (Louis).
+**Buyers: fund depositaries and administrators that run tokenized share classes, and the transfer agents that centralise orders.** They own the subscription and redemption process and can operate a settlement engine for the participants of their funds. CACEIS, for example, provided the infrastructure of Amundi's tokenized money market fund share class in 2025. We have no relationship with them; it shows the segment exists.
+
+**Users:**
+
+- portfolio managers and authorised signatories, each with their own Ledger, who sign mandates, orders and lot approvals;
+- back-office teams, who read the agent's drafts and the lots instead of retyping emails;
+- auditors, who recompute the lot hash and the NAV hash from the published data.
+
+**Not for:**
+
+- retail investors;
+- central securities depositories as a first client: they already settle delivery versus payment at scale and have the longest buying cycles;
+- funds whose signatories will not hold a hardware signer.
+
+**Where it fits best:** funds with flows in both directions within a cycle, where netting reduces what moves, and with orders drafted by an agent, where a signed mandate matters. For a fund with one-way flows, netting brings nothing; only instant settlement and the signature trail remain.
 
 ## What it does
 
@@ -110,7 +132,16 @@ Deployed on 12 Oct by `0xb9d8118635755abCf21DaA6dEd46f964702F8ffC`, which is als
 
 ## Business model
 
-TODO (Louis).
+Cendro is sold as software to the depositary or administrator, who operates it for the participants of its funds. Cendro holds no funds and takes no settlement risk.
+
+- **Annual licence per client**, capped by number of funds or participants.
+- **Integration fee**: connectors to the transfer agent register, the NAV feed and the client's messaging (for example ISO 20022).
+- **Fixed fee per settled instruction.** Not a share of the cash saved by netting: the client bills its own participants, and a share of the savings would put us in conflict with it.
+- **Support with an SLA.** Ledger devices are bought by the participants, outside the licence.
+
+**Not validated yet:** order volumes per fund, the real netting rate, the price a client would pay, and the integration cost, which is the main margin risk. Selling to a depositary takes months, with a security audit. Next step: interviews with post-trade operations teams.
+
+**What a pilot would need:** approvals verified inside the escrow (done on a branch, not deployed), ERC-7730 descriptors so approvals can be clear-signed typed data, a real NAV feed instead of the mock file, a network chosen with the client, and an external audit of the contracts.
 
 ## Repository
 
